@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/data/remote_source/account/model/change_pswd_request.dart';
+import 'package:testabd/data/remote_source/account/model/change_pswd_response.dart';
 import 'package:testabd/data/remote_source/account/model/country_item_response.dart';
 import 'package:testabd/data/remote_source/account/model/district_item_response.dart';
 import 'package:testabd/data/remote_source/account/model/referrals_list_response.dart';
@@ -37,6 +39,8 @@ abstract class AccountSource {
   Future<List<SettlementItemResponse>> getSettlements(int? districtId);
 
   Future<dynamic> uploadUserImage(String path);
+
+  Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData);
 }
 
 @Injectable(as: AccountSource)
@@ -207,6 +211,23 @@ class AccountSourceImpl implements AccountSource {
         ),
       });
       final response = await _dio.put('/accounts/me/update/', data: formData);
+      return response.data;
+    } on DioException catch (e) {
+      throw e.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<ChangePswdResponse> updatePassword(
+    ChangePswdRequest requestData,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/accounts/me/change-password/',
+        data: requestData.toJson(),
+      );
       return response.data;
     } on DioException catch (e) {
       throw e.handleDioException();

@@ -183,6 +183,42 @@ abstract class AppLocalizations {
   /// In uz, this message translates to:
   /// **'Uz'**
   String get uz;
+
+  /// No description provided for @knowledge_level_beginner.
+  ///
+  /// In uz, this message translates to:
+  /// **'Начинающий'**
+  String get knowledge_level_beginner;
+
+  /// No description provided for @knowledge_level_basic.
+  ///
+  /// In uz, this message translates to:
+  /// **'Базовый'**
+  String get knowledge_level_basic;
+
+  /// No description provided for @knowledge_level_intermediate.
+  ///
+  /// In uz, this message translates to:
+  /// **'Промежуточный'**
+  String get knowledge_level_intermediate;
+
+  /// No description provided for @knowledge_level_advanced.
+  ///
+  /// In uz, this message translates to:
+  /// **'Продвинутый'**
+  String get knowledge_level_advanced;
+
+  /// No description provided for @knowledge_level_expert.
+  ///
+  /// In uz, this message translates to:
+  /// **'Эксперт'**
+  String get knowledge_level_expert;
+
+  /// No description provided for @knowledge_level_none.
+  ///
+  /// In uz, this message translates to:
+  /// **'Нет знания'**
+  String get knowledge_level_none;
 }
 
 class _AppLocalizationsDelegate

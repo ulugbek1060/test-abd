@@ -7,6 +7,7 @@ import 'package:testabd/core/theme/app_icons.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/connections_enum.dart';
 import 'package:testabd/core/utils/formatters.dart';
+import 'package:testabd/core/utils/knowledge_level.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/domain/question_difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
@@ -68,6 +69,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
+
+            // body
             body: state.isLoading
                 ? const Center(child: ProgressView())
                 : CustomScrollView(
@@ -89,7 +92,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                             .following
                             .length
                             .toString(),
-                        fullname:
+                        level: state.myInfoModel?.level ?? KnowledgeLevel.none,
+                        fullName:
                             '${state.myInfoModel?.firstName} ${state.myInfoModel?.lastName}',
                         bio: state.myInfoModel?.bio ?? '',
                         onTestsTap: () {},
@@ -171,8 +175,9 @@ class HeaderSection extends StatelessWidget {
   final String followers;
   final String followings;
   final String tests;
-  final String fullname;
+  final String fullName;
   final String bio;
+  final KnowledgeLevel level;
   final VoidCallback onFollowersTap;
   final VoidCallback onFollowingTap;
   final VoidCallback onTestsTap;
@@ -184,8 +189,9 @@ class HeaderSection extends StatelessWidget {
     required this.followers,
     required this.followings,
     required this.tests,
-    required this.fullname,
+    required this.fullName,
     required this.bio,
+    required this.level,
     required this.onFollowersTap,
     required this.onFollowingTap,
     required this.onTestsTap,
@@ -203,33 +209,75 @@ class HeaderSection extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
+                SizedBox(
                   width: 90,
                   height: 90,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.purple, width: 3),
-                    gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.blue],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: ClipOval(
-                    child: CachedNetworkImage(
-                      width: 46,
-                      height: 46,
-                      imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (_, __) => Image.asset(
-                        AppImages.defaultAvatar,
-                        fit: BoxFit.cover,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.purple, width: 3),
+                            gradient: const LinearGradient(
+                              colors: [Colors.purple, Colors.blue],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              width: 46,
+                              height: 46,
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => Image.asset(
+                                AppImages.defaultAvatar,
+                                fit: BoxFit.cover,
+                              ),
+                              errorWidget: (_, __, ___) => Image.asset(
+                                AppImages.defaultAvatar,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      errorWidget: (_, __, ___) => Image.asset(
-                        AppImages.defaultAvatar,
-                        fit: BoxFit.cover,
+
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                        child: Container(
+                          width: 80,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: const LinearGradient(
+                              colors: [Colors.purple, Colors.blue],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              level.getText(context),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -263,7 +311,7 @@ class HeaderSection extends StatelessWidget {
 
             // fullname bui section
             Text(
-              fullname,
+              fullName,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
@@ -558,7 +606,7 @@ class MyQuestionsSection extends StatelessWidget {
 
           if (question.id == -1) {
             return GestureDetector(
-              onTap: (){
+              onTap: () {
                 context.push(AppRouter.createQuestions);
               },
               child: Container(
@@ -584,7 +632,7 @@ class MyQuestionsSection extends StatelessWidget {
                         Icons.add,
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
-                      const SizedBox(height: 8,),
+                      const SizedBox(height: 8),
                       Text(
                         'Add question',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(

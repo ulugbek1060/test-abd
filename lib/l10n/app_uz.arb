@@ -13,5 +13,11 @@
   "languageRussian": "Ruscha",
   "en": "En",
   "ru": "Ru",
-  "uz": "Uz"
+  "uz": "Uz",
+  "knowledge_level_beginner": "Начинающий",
+  "knowledge_level_basic": "Базовый",
+  "knowledge_level_intermediate": "Промежуточный",
+  "knowledge_level_advanced": "Продвинутый",
+  "knowledge_level_expert": "Эксперт",
+  "knowledge_level_none": "Нет знания"
 }

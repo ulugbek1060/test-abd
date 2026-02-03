@@ -28,6 +28,11 @@ abstract class AccountRepository {
   Future<Either<AppException, List<SettlementModel>>> getSettlements(int? districtId);
   Future<Either<AppException, ReferralListModel>> getReferralsList(int page);
   Future<dynamic> updateProfileImage(String path);
+  Future<Either<AppException, String?>> changePassword({
+    required String oldPswd,
+    required String newPswd,
+    required String confirmPswd,
+  });
 }
 
 abstract class LeaderboardRepository {

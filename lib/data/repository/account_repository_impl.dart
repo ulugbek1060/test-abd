@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/local_source/my_info_hive_service.dart';
 import 'package:testabd/data/remote_source/account/account_source.dart';
+import 'package:testabd/data/remote_source/account/model/change_pswd_request.dart';
 import 'package:testabd/data/remote_source/account/ws_leaderboard_source.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/account/entities/country_model.dart';
@@ -75,7 +76,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, UserProfileModel>> getUserProfile(String username) async {
+  Future<Either<AppException, UserProfileModel>> getUserProfile(
+    String username,
+  ) async {
     try {
       final result = await _accountSource.getProfile(username);
       return Right(UserProfileModel.fromResponse(result));
@@ -87,7 +90,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, UserConnectionsModel>> getUserConnections(int userId) async {
+  Future<Either<AppException, UserConnectionsModel>> getUserConnections(
+    int userId,
+  ) async {
     try {
       final result = await _accountSource.getFollowers(userId);
       return Right(UserConnectionsModel.fromResponse(result));
@@ -111,7 +116,10 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, LeaderboardModel>> getLeaderboard(int page, int pageSize) async {
+  Future<Either<AppException, LeaderboardModel>> getLeaderboard(
+    int page,
+    int pageSize,
+  ) async {
     try {
       final result = await _leaderboardSource.getLeaderboard(page, pageSize);
       return Right(LeaderboardModel.fromResponse(result));
@@ -123,7 +131,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, Unit>> updatePersonalInfo(PersonalInfoDto personalInfoDto) async {
+  Future<Either<AppException, Unit>> updatePersonalInfo(
+    PersonalInfoDto personalInfoDto,
+  ) async {
     try {
       final result = await _accountSource.updateMyInfo(
         personalInfoDto.toRequestBody(),
@@ -153,7 +163,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, List<RegionModel>>> getRegions(int? countryId) async {
+  Future<Either<AppException, List<RegionModel>>> getRegions(
+    int? countryId,
+  ) async {
     try {
       final result = await _accountSource.getRegions(countryId);
       final list = result.map((e) => RegionModel.fromResponse(e)).toList();
@@ -166,7 +178,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, List<DistrictModel>>> getDistricts(int? regionId) async {
+  Future<Either<AppException, List<DistrictModel>>> getDistricts(
+    int? regionId,
+  ) async {
     try {
       final result = await _accountSource.getDistricts(regionId);
       final list = result.map((e) => DistrictModel.fromResponse(e)).toList();
@@ -179,7 +193,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, List<SettlementModel>>> getSettlements(int? districtId) async {
+  Future<Either<AppException, List<SettlementModel>>> getSettlements(
+    int? districtId,
+  ) async {
     try {
       final result = await _accountSource.getSettlements(districtId);
       final list = result.map((e) => SettlementModel.fromResponse(e)).toList();
@@ -192,7 +208,9 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, ReferralListModel>> getReferralsList(int page) async {
+  Future<Either<AppException, ReferralListModel>> getReferralsList(
+    int page,
+  ) async {
     try {
       final result = await _accountSource.getReferralsList();
       return Right(ReferralListModel.fromResponse(result));
@@ -211,6 +229,28 @@ class AccountRepositoryImpl implements AccountRepository {
       // final dbModel = MyInfoModel.toDb(model);
       // _hiveService.saveMyInfo(dbModel);
       return Right(result);
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, String?>> changePassword({
+    required String oldPswd,
+    required String newPswd,
+    required String confirmPswd,
+  }) async {
+    try {
+      final result = await _accountSource.updatePassword(
+        ChangePswdRequest(
+          oldPassword: oldPswd,
+          newPassword: newPswd,
+          confirmPassword: confirmPswd,
+        ),
+      );
+      return Right(result.detail);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

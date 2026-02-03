@@ -49,4 +49,22 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get uz => 'Uz';
+
+  @override
+  String get knowledge_level_beginner => 'Начинающий';
+
+  @override
+  String get knowledge_level_basic => 'Базовый';
+
+  @override
+  String get knowledge_level_intermediate => 'Промежуточный';
+
+  @override
+  String get knowledge_level_advanced => 'Продвинутый';
+
+  @override
+  String get knowledge_level_expert => 'Эксперт';
+
+  @override
+  String get knowledge_level_none => 'Нет знания';
 }

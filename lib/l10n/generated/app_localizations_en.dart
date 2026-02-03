@@ -49,4 +49,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get uz => 'Uz';
+
+  @override
+  String get knowledge_level_beginner => 'Beginner';
+
+  @override
+  String get knowledge_level_basic => 'Basic';
+
+  @override
+  String get knowledge_level_intermediate => 'Intermediate';
+
+  @override
+  String get knowledge_level_advanced => 'Advanced';
+
+  @override
+  String get knowledge_level_expert => 'Expert';
+
+  @override
+  String get knowledge_level_none => 'None';
 }

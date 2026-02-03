@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testabd/di/app_config.dart';
+import 'package:testabd/features/profile/settings/change_pswd_cubit.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  Widget build(BuildContext context) =>
+      BlocProvider(
+          create: (_) => locator<ChangePswdCubit>(),
+          child: _View()
+      );
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+class _View extends StatefulWidget {
+  const _View({super.key});
 
- late final TextEditingController _currentPasswordTextController;
- late final TextEditingController _passwordTextController;
- late final TextEditingController _confirmPasswordTextController;
+  @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+  late final TextEditingController _currentPasswordTextController;
+  late final TextEditingController _passwordTextController;
+  late final TextEditingController _confirmPasswordTextController;
 
   @override
   void initState() {
@@ -38,7 +51,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           child: SizedBox(
             height: 52,
             child: ElevatedButton(
-              onPressed: (){},
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
                 shape: RoundedRectangleBorder(
@@ -106,10 +119,7 @@ class _Header extends StatelessWidget {
 
         SizedBox(height: 6),
 
-        Text(
-          "Change your password",
-          style: TextStyle(color: Colors.grey),
-        ),
+        Text("Change your password", style: TextStyle(color: Colors.grey)),
       ],
     );
   }

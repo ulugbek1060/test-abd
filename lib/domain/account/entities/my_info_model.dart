@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:testabd/core/utils/knowledge_level.dart';
 import 'package:testabd/data/local_source/entities/my_info_db.dart';
 import 'package:testabd/data/remote_source/account/model/my_info_response.dart';
 import 'package:testabd/domain/account/entities/country_model.dart';
@@ -38,7 +39,7 @@ class MyInfoModel extends Equatable {
   final bool? isPremium;
   final bool? isBadged;
   final DateTime? joinDate;
-  final String? level;
+  final KnowledgeLevel? level;
   final int? liveQuizScore;
   final bool? isEmailVerified;
   final int? coins;
@@ -168,7 +169,7 @@ class MyInfoModel extends Equatable {
       isPremium: response?.isPremium,
       isBadged: response?.isBadged,
       joinDate: DateTime.tryParse(response?.joinDate ?? ''),
-      level: response?.level,
+      level: KnowledgeLevel.tryParse(response?.level),
       liveQuizScore: response?.liveQuizScore,
       isEmailVerified: response?.isEmailVerified,
       coins: response?.coins,
@@ -244,7 +245,7 @@ class MyInfoModel extends Equatable {
       isPremium: dbModel?.isPremium,
       isBadged: dbModel?.isBadged,
       joinDate: dbModel?.joinDate,
-      level: dbModel?.level,
+      level: KnowledgeLevel.tryParse(dbModel?.level),
       liveQuizScore: dbModel?.liveQuizScore,
       isEmailVerified: dbModel?.isEmailVerified,
       coins: dbModel?.coins,
@@ -320,7 +321,7 @@ class MyInfoModel extends Equatable {
       isPremium: model?.isPremium,
       isBadged: model?.isBadged,
       joinDate: model?.joinDate,
-      level: model?.level,
+      level: model?.level?.name,
       liveQuizScore: model?.liveQuizScore,
       isEmailVerified: model?.isEmailVerified,
       coins: model?.coins,
