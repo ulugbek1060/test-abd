@@ -7,7 +7,7 @@ import 'package:testabd/data/remote_source/quiz/models/followed_questions_respon
 import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/my_question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
-import 'package:testabd/data/remote_source/quiz/models/topic_related_questions_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 
 import 'models/block_questions_response.dart';

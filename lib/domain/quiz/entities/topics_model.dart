@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/quiz/models/topic_related_questions_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
@@ -180,7 +180,7 @@ class TopicQuestion extends Equatable {
     this.category,
   });
 
-  static TopicQuestion fromResponse(TopicQuestionResponse response) {
+  static TopicQuestion fromResponse(TopicTestItemResponse response) {
     return TopicQuestion(
       id: response.id,
       test: response.test,

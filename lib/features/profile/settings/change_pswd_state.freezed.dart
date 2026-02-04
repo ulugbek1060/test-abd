@@ -128,7 +128,7 @@ class _$ChangePswdStateImpl implements _ChangePswdState {
   const _$ChangePswdStateImpl(
       {this.error,
       this.isLoading = false,
-      this.isSuccess = true,
+      this.isSuccess = false,
       this.isEditModel = false});
 
   @override

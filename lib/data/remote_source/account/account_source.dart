@@ -220,7 +220,7 @@ class AccountSourceImpl implements AccountSource {
   }
 
   @override
-  Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData,) async {
+  Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData) async {
     try {
       final response = await _dio.post(
         '/accounts/me/change-password/',
@@ -233,4 +233,5 @@ class AccountSourceImpl implements AccountSource {
       throw UnknownException(e.toString(), stackTrace: stackTrace);
     }
   }
+
 }
