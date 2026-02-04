@@ -14,10 +14,10 @@
   "en": "En",
   "ru": "Ru",
   "uz": "Uz",
+  "knowledge_level_none": "No experience",
   "knowledge_level_beginner": "Beginner",
   "knowledge_level_basic": "Basic",
   "knowledge_level_intermediate": "Intermediate",
   "knowledge_level_advanced": "Advanced",
-  "knowledge_level_expert": "Expert",
-  "knowledge_level_none": "None"
+  "knowledge_level_expert": "Expert"
 }

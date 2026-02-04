@@ -184,10 +184,16 @@ abstract class AppLocalizations {
   /// **'Uz'**
   String get uz;
 
+  /// No description provided for @knowledge_level_none.
+  ///
+  /// In uz, this message translates to:
+  /// **'Без опыта'**
+  String get knowledge_level_none;
+
   /// No description provided for @knowledge_level_beginner.
   ///
   /// In uz, this message translates to:
-  /// **'Начинающий'**
+  /// **'Новичок'**
   String get knowledge_level_beginner;
 
   /// No description provided for @knowledge_level_basic.
@@ -199,7 +205,7 @@ abstract class AppLocalizations {
   /// No description provided for @knowledge_level_intermediate.
   ///
   /// In uz, this message translates to:
-  /// **'Промежуточный'**
+  /// **'Средний'**
   String get knowledge_level_intermediate;
 
   /// No description provided for @knowledge_level_advanced.
@@ -213,12 +219,6 @@ abstract class AppLocalizations {
   /// In uz, this message translates to:
   /// **'Эксперт'**
   String get knowledge_level_expert;
-
-  /// No description provided for @knowledge_level_none.
-  ///
-  /// In uz, this message translates to:
-  /// **'Нет знания'**
-  String get knowledge_level_none;
 }
 
 class _AppLocalizationsDelegate

@@ -51,6 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get uz => 'Uz';
 
   @override
+  String get knowledge_level_none => 'No experience';
+
+  @override
   String get knowledge_level_beginner => 'Beginner';
 
   @override
@@ -64,7 +67,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get knowledge_level_expert => 'Expert';
-
-  @override
-  String get knowledge_level_none => 'None';
 }

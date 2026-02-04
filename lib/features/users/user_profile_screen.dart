@@ -175,6 +175,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                                                   context,
                                                 ) ??
                                                 "",
+                                            maxLines: 1,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall
