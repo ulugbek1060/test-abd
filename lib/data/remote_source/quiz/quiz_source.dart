@@ -22,7 +22,7 @@ abstract class QuizSource {
     List<int> selectedAnswers,
     int? duration,
   );
-  Future<TopicRelatedQuestionsResponse> getTopics(
+  Future<TopicQuestionsResponse> getTopics(
     int userId, {
     int? page,
     int? pageSize,
@@ -66,7 +66,10 @@ class QuizSourceImpl implements QuizSource {
     try {
       final response = await _dio.get(
         '/quiz/recommended/followed-questions/',
-        queryParameters: {'page': page, 'page_size': pageSize},
+        queryParameters: {
+          'page': page,
+          'page_size': pageSize
+        },
       );
       return FollowedQuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
@@ -100,7 +103,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<TopicRelatedQuestionsResponse> getTopics(
+  Future<TopicQuestionsResponse> getTopics(
     int userId, {
     int? page,
     int? pageSize,
@@ -114,7 +117,7 @@ class QuizSourceImpl implements QuizSource {
           if (page != null) 'page_size': pageSize,
         },
       );
-      return TopicRelatedQuestionsResponse.fromJson(response.data);
+      return TopicQuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
@@ -157,7 +160,10 @@ class QuizSourceImpl implements QuizSource {
     try {
       final response = await _dio.get(
         '/quiz/random/',
-        queryParameters: {'page': page, 'page_size': pageSize},
+        queryParameters: {
+          'page': page,
+          'page_size': pageSize
+        },
       );
       return RandomQuestionModel.fromJson(response.data);
     } on DioException catch (error) {
@@ -169,7 +175,6 @@ class QuizSourceImpl implements QuizSource {
 
   @override
   Future<dynamic> bookmarkQuestions(int questionId) async {
-    // {"question":512}
     try {
       final response = await _dio.post(
         '/quiz/question-bookmarks/',

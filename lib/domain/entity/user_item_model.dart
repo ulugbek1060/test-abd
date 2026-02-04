@@ -29,14 +29,14 @@ class UserItemModel extends Equatable {
     isFollowing,
   ];
 
-  static UserItemModel fromResponse1(TopicUserShortResponse? response) {
+  static UserItemModel fromResponse1(TopicUserResponse? response) {
     return UserItemModel(
       id: response?.id,
       username: response?.username,
-      profileImage: response?.profile_image,
-      isBadged: response?.is_badged,
-      isPremium: response?.is_premium,
-      isFollowing: response?.is_following,
+      profileImage: response?.profileImage,
+      isBadged: response?.isBadged,
+      isPremium: response?.isPremium,
+      isFollowing: response?.isFollowing,
     );
   }
 

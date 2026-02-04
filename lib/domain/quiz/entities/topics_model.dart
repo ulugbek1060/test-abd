@@ -20,7 +20,7 @@ class TopicsModel extends Equatable {
   @override
   List<Object?> get props => [count, next, previous, results];
 
-  static TopicsModel fromResponse(TopicRelatedQuestionsResponse response) {
+  static TopicsModel fromResponse(TopicQuestionsResponse response) {
     return TopicsModel(
       count: response.count,
       next: response.next,
@@ -36,7 +36,7 @@ class TopicItem extends Equatable {
   final UserItemModel? user;
   final String? title;
   final String? description;
-  final String? category;
+  final CategoryModel? category;
   final String? visibility;
   final String? accessMode;
   final String? participantRoles;
@@ -45,9 +45,9 @@ class TopicItem extends Equatable {
   final String? endTime;
   final int? minScoreToFinish;
   final int? participantCountToFinish;
-  final String? country;
-  final String? region;
-  final String? district;
+  final int? country;
+  final int? region;
+  final int? district;
   final bool? isRegionPremium;
   final DateTime? createdAt;
   final double? difficultyPercentage;
@@ -78,28 +78,37 @@ class TopicItem extends Equatable {
     this.questions = const [],
   });
 
-  static TopicItem fromResponse(TopicQuestionItemResponse response) {
+  static TopicItem fromResponse(TopicTestItemResponse response) {
     return TopicItem(
       id: response.id,
       user: UserItemModel.fromResponse1(response.user),
       title: response.title,
       description: response.description,
-      category: response.category,
+      category: CategoryModel(
+        id: response.category?.id,
+        totalTests: response.category?.totalTests,
+        totalQuestions: response.category?.totalQuestions,
+        title: response.category?.title,
+        slug: response.category?.slug,
+        description: response.category?.description,
+        emoji: response.category?.emoji,
+        image: response.category?.image,
+      ),
       visibility: response.visibility,
-      accessMode: response.access_mode,
-      participantRoles: response.participant_roles,
-      maxParticipants: response.max_participants,
-      startTime: response.start_time,
-      endTime: response.end_time,
-      minScoreToFinish: response.min_score_to_finish,
-      participantCountToFinish: response.participant_count_to_finish,
+      accessMode: response.accessMode,
+      participantRoles: response.participantRoles,
+      maxParticipants: response.maxParticipants,
+      startTime: response.startTime,
+      endTime: response.endTime,
+      minScoreToFinish: response.minScoreToFinish,
+      participantCountToFinish: response.participantCount,
       country: response.country,
       region: response.region,
       district: response.district,
-      isRegionPremium: response.is_region_premium,
-      createdAt: DateTime.parse(response.created_at ?? ''),
-      difficultyPercentage: response.difficulty_percentage,
-      totalQuestions: response.total_questions,
+      isRegionPremium: response.isRegionPremium,
+      createdAt: DateTime.parse(response.createdAt ?? ''),
+      difficultyPercentage: response.difficultyPercentage,
+      totalQuestions: response.totalQuestions,
       questions: response.questions
           .map((e) => TopicQuestion.fromResponse(e))
           .toList(),
@@ -180,48 +189,48 @@ class TopicQuestion extends Equatable {
     this.category,
   });
 
-  static TopicQuestion fromResponse(TopicTestItemResponse response) {
+  static TopicQuestion fromResponse(TopicQuestionResponse response) {
     return TopicQuestion(
       id: response.id,
       test: response.test,
-      testTitle: response.test_title,
-      questionText: response.question_text,
-      questionType: response.question_type,
-      orderIndex: response.order_index,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: response.questionType,
+      orderIndex: response.orderIndex,
       media: response.media,
       answers: response.answers
           .map(
             (e) => AnswerItemModel(
               id: e.id,
               letter: e.letter,
-              answerText: e.answer_text,
-              isCorrect: e.is_correct ?? false,
+              answerText: e.answerText,
+              isCorrect: e.isCorrect ?? false,
             ),
           )
           .toList(),
-      testDescription: response.test_description,
-      correctAnswerText: response.correct_answer_text,
-      answerLanguage: response.answer_language,
-      correctCount: response.correct_count,
-      wrongCount: response.wrong_count,
-      difficultyPercentage: response.difficulty_percentage,
-      userAttemptCount: response.user_attempt_count,
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage,
+      userAttemptCount: response.userAttemptCount,
       user: UserItemModel(
         id: response.user?.id,
         username: response.user?.username,
-        profileImage: response.user?.profile_image,
-        isBadged: response.user?.is_badged,
-        isPremium: response.user?.is_premium,
-        isFollowing: response.user?.is_following,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isPremium: response.user?.isPremium,
+        isFollowing: response.user?.isFollowing,
       ),
-      createdAt: response.created_at,
-      roundImage: response.round_image,
-      isBookmarked: response.is_bookmarked,
-      isFollowing: response.is_following,
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
+      isBookmarked: response.isBookmarked,
+      isFollowing: response.isFollowing,
       category: CategoryModel(
         id: response.category?.id,
-        totalTests: response.category?.total_tests,
-        totalQuestions: response.category?.total_questions,
+        totalTests: response.category?.totalTests,
+        totalQuestions: response.category?.totalQuestions,
         title: response.category?.title,
         slug: response.category?.slug,
         description: response.category?.description,
