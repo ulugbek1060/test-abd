@@ -6,6 +6,7 @@ import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/connections_enum.dart';
 import 'package:testabd/core/utils/formatters.dart';
+import 'package:testabd/core/utils/knowledge_level.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/question_difficulty.dart';
@@ -96,37 +97,97 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                           child: Row(
                             children: [
                               // Profile Picture
-                              Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.purple,
-                                    width: 3,
-                                  ),
-                                  gradient: const LinearGradient(
-                                    colors: [Colors.purple, Colors.blue],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                ),
-                                child: ClipOval(
-                                  child: CachedNetworkImage(
-                                    width: 46,
-                                    height: 46,
-                                    imageUrl:
-                                        state.profile?.user?.profileImage ?? '',
-                                    fit: BoxFit.cover,
-                                    placeholder: (_, __) => Image.asset(
-                                      AppImages.defaultAvatar,
-                                      fit: BoxFit.cover,
+                              SizedBox(
+                                width: 90,
+                                height: 90,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      top: 0,
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
+
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Colors.purple,
+                                            width: 3,
+                                          ),
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Colors.purple,
+                                              Colors.blue,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: CachedNetworkImage(
+                                            width: 46,
+                                            height: 46,
+                                            imageUrl:
+                                                state
+                                                    .profile
+                                                    ?.user
+                                                    ?.profileImage ??
+                                                "",
+                                            fit: BoxFit.cover,
+                                            placeholder: (_, __) => Image.asset(
+                                              AppImages.defaultAvatar,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            errorWidget: (_, __, ___) =>
+                                                Image.asset(
+                                                  AppImages.defaultAvatar,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    errorWidget: (_, __, ___) => Image.asset(
-                                      AppImages.defaultAvatar,
-                                      fit: BoxFit.cover,
+
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      left: 0,
+                                      child: Container(
+                                        width: 80,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Colors.purple,
+                                              Colors.blue,
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            state.profile?.user?.level?.getText(
+                                                  context,
+                                                ) ??
+                                                "",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onPrimary,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
 
@@ -1279,144 +1340,3 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
-
-// class BookCard extends StatelessWidget {
-//   final String name;
-//   final String author;
-//   final double rating; // 0.0 - 5.0
-//   final String coverImage;
-//   final VoidCallback? onTap;
-//
-//   const BookCard({
-//     super.key,
-//     required this.name,
-//     required this.author,
-//     required this.rating,
-//     required this.coverImage,
-//     this.onTap,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Container(
-//         height: 220,
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(20),
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.black.withOpacity(0.6),
-//               blurRadius: 20,
-//               offset: const Offset(0, 8),
-//             ),
-//           ],
-//         ),
-//         child: ClipRRect(
-//           borderRadius: BorderRadius.circular(20),
-//           child: Stack(
-//             fit: StackFit.expand,
-//             children: [
-//               /// Cover image (fills card)
-//               Image.network(
-//                 coverImage,
-//                 fit: BoxFit.cover,
-//                 errorBuilder: (_, __, ___) => Container(
-//                   color: Colors.white.withOpacity(0.05),
-//                   child: const Icon(Icons.book, color: Colors.white54, size: 40),
-//                 ),
-//               ),
-//
-//               /// Dark gradient overlay
-//               Container(
-//                 decoration: BoxDecoration(
-//                   gradient: LinearGradient(
-//                     begin: Alignment.topCenter,
-//                     end: Alignment.bottomCenter,
-//                     colors: [
-//                       Colors.black.withOpacity(0.05),
-//                       Colors.black.withOpacity(0.85),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//
-//               // Bottom content
-//               Positioned(
-//                 left: 16,
-//                 right: 16,
-//                 bottom: 14,
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       name,
-//                       maxLines: 2,
-//                       overflow: TextOverflow.ellipsis,
-//                       style: theme.textTheme.titleMedium?.copyWith(
-//                         color: Colors.white,
-//                         fontWeight: FontWeight.w600,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 4),
-//                     Text(
-//                       author,
-//                       maxLines: 1,
-//                       overflow: TextOverflow.ellipsis,
-//                       style: theme.textTheme.bodySmall?.copyWith(
-//                         color: Colors.white70,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 6),
-//                     Row(
-//                       children: [
-//                         _RatingStars(rating: rating),
-//                         const SizedBox(width: 6),
-//                         Text(
-//                           rating.toStringAsFixed(1),
-//                           style: theme.textTheme.labelMedium?.copyWith(
-//                             color: Colors.white70,
-//                             fontWeight: FontWeight.w600,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// // ---------------- SUPPORTING WIDGETS ----------------
-//
-// class _RatingStars extends StatelessWidget {
-//   final double rating;
-//
-//   const _RatingStars({required this.rating});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: List.generate(5, (index) {
-//         final filled = rating >= index + 1;
-//         final halfFilled = rating > index && rating < index + 1;
-//
-//         return Icon(
-//           filled
-//               ? Icons.star_rounded
-//               : halfFilled
-//               ? Icons.star_half_rounded
-//               : Icons.star_border_rounded,
-//           size: 18,
-//           color: const Color(0xFFFFC107),
-//         );
-//       }),
-//     );
-//   }
-// }

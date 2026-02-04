@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/core/utils/formatters.dart';
+import 'package:testabd/core/utils/knowledge_level.dart';
 import 'package:testabd/data/remote_source/account/model/user_profile_response.dart';
 
 class UserProfileModel extends Equatable {
@@ -31,7 +32,7 @@ class UserProfileModel extends Equatable {
         followersCount: response?.user?.followersCount,
         followingCount: response?.user?.followingCount,
         isFollowing: response?.user?.isFollowing,
-        level: response?.user?.level,
+        level: KnowledgeLevel.tryParse(response?.user?.level),
         joinDate: DateTime.tryParse(response?.user?.joinDate ?? ''),
         coins: response?.user?.coins,
       ),
@@ -58,7 +59,7 @@ class UserModel extends Equatable {
   final int? followersCount;
   final int? followingCount;
   final bool? isFollowing;
-  final String? level;
+  final KnowledgeLevel? level;
   final DateTime? joinDate;
   final int? coins;
   final bool isMe;
@@ -103,7 +104,7 @@ class UserModel extends Equatable {
     int? followersCount,
     int? followingCount,
     bool? isFollowing,
-    String? level,
+    KnowledgeLevel? level,
     DateTime? joinDate,
     int? coins,
     bool? isMe,
