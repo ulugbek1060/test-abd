@@ -19,6 +19,7 @@ mixin _$ChangePswdState {
   String? get error => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isSuccess => throw _privateConstructorUsedError;
+  bool get isEditModel => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChangePswdStateCopyWith<ChangePswdState> get copyWith =>
@@ -31,7 +32,7 @@ abstract class $ChangePswdStateCopyWith<$Res> {
           ChangePswdState value, $Res Function(ChangePswdState) then) =
       _$ChangePswdStateCopyWithImpl<$Res, ChangePswdState>;
   @useResult
-  $Res call({String? error, bool isLoading, bool isSuccess});
+  $Res call({String? error, bool isLoading, bool isSuccess, bool isEditModel});
 }
 
 /// @nodoc
@@ -50,6 +51,7 @@ class _$ChangePswdStateCopyWithImpl<$Res, $Val extends ChangePswdState>
     Object? error = freezed,
     Object? isLoading = null,
     Object? isSuccess = null,
+    Object? isEditModel = null,
   }) {
     return _then(_value.copyWith(
       error: freezed == error
@@ -64,6 +66,10 @@ class _$ChangePswdStateCopyWithImpl<$Res, $Val extends ChangePswdState>
           ? _value.isSuccess
           : isSuccess // ignore: cast_nullable_to_non_nullable
               as bool,
+      isEditModel: null == isEditModel
+          ? _value.isEditModel
+          : isEditModel // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -76,7 +82,7 @@ abstract class _$$ChangePswdStateImplCopyWith<$Res>
       __$$ChangePswdStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? error, bool isLoading, bool isSuccess});
+  $Res call({String? error, bool isLoading, bool isSuccess, bool isEditModel});
 }
 
 /// @nodoc
@@ -93,6 +99,7 @@ class __$$ChangePswdStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? isLoading = null,
     Object? isSuccess = null,
+    Object? isEditModel = null,
   }) {
     return _then(_$ChangePswdStateImpl(
       error: freezed == error
@@ -107,6 +114,10 @@ class __$$ChangePswdStateImplCopyWithImpl<$Res>
           ? _value.isSuccess
           : isSuccess // ignore: cast_nullable_to_non_nullable
               as bool,
+      isEditModel: null == isEditModel
+          ? _value.isEditModel
+          : isEditModel // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -115,7 +126,10 @@ class __$$ChangePswdStateImplCopyWithImpl<$Res>
 
 class _$ChangePswdStateImpl implements _ChangePswdState {
   const _$ChangePswdStateImpl(
-      {this.error, this.isLoading = false, this.isSuccess = true});
+      {this.error,
+      this.isLoading = false,
+      this.isSuccess = true,
+      this.isEditModel = false});
 
   @override
   final String? error;
@@ -125,10 +139,13 @@ class _$ChangePswdStateImpl implements _ChangePswdState {
   @override
   @JsonKey()
   final bool isSuccess;
+  @override
+  @JsonKey()
+  final bool isEditModel;
 
   @override
   String toString() {
-    return 'ChangePswdState(error: $error, isLoading: $isLoading, isSuccess: $isSuccess)';
+    return 'ChangePswdState(error: $error, isLoading: $isLoading, isSuccess: $isSuccess, isEditModel: $isEditModel)';
   }
 
   @override
@@ -140,11 +157,14 @@ class _$ChangePswdStateImpl implements _ChangePswdState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.isSuccess, isSuccess) ||
-                other.isSuccess == isSuccess));
+                other.isSuccess == isSuccess) &&
+            (identical(other.isEditModel, isEditModel) ||
+                other.isEditModel == isEditModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, error, isLoading, isSuccess);
+  int get hashCode =>
+      Object.hash(runtimeType, error, isLoading, isSuccess, isEditModel);
 
   @JsonKey(ignore: true)
   @override
@@ -158,7 +178,8 @@ abstract class _ChangePswdState implements ChangePswdState {
   const factory _ChangePswdState(
       {final String? error,
       final bool isLoading,
-      final bool isSuccess}) = _$ChangePswdStateImpl;
+      final bool isSuccess,
+      final bool isEditModel}) = _$ChangePswdStateImpl;
 
   @override
   String? get error;
@@ -166,6 +187,8 @@ abstract class _ChangePswdState implements ChangePswdState {
   bool get isLoading;
   @override
   bool get isSuccess;
+  @override
+  bool get isEditModel;
   @override
   @JsonKey(ignore: true)
   _$$ChangePswdStateImplCopyWith<_$ChangePswdStateImpl> get copyWith =>

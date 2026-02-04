@@ -7,6 +7,7 @@ class ChangePswdState with _$ChangePswdState {
   const factory ChangePswdState({
     String? error,
     @Default(false) bool isLoading,
-    @Default(true) bool isSuccess,
+    @Default(false) bool isSuccess,
+    @Default(false) bool isEditModel,
   }) = _ChangePswdState;
 }

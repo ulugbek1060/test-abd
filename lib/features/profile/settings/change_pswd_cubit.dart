@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/features/profile/settings/change_pswd_state.dart';
@@ -17,6 +18,31 @@ class ChangePswdCubit extends Cubit<ChangePswdState> {
     required String newPswd,
     required String confirmPswd,
   }) async {
+    if (oldPswd.isEmpty) {
+      _messageHandler.handleSnackBar(
+        UnknownException('Please fill in the old password'),
+      );
+      return;
+    }
+    if (newPswd.isEmpty) {
+      _messageHandler.handleSnackBar(
+        UnknownException('Please fill in the new password'),
+      );
+      return;
+    }
+    if (confirmPswd.isEmpty) {
+      _messageHandler.handleSnackBar(
+        UnknownException('Please fill in the confirm password'),
+      );
+      return;
+    }
+    if (confirmPswd != newPswd){
+      _messageHandler.handleSnackBar(
+        UnknownException('Please correct the password'),
+      );
+      return;
+    }
+
     if (state.isLoading) return;
 
     emit(state.copyWith(isLoading: true));
@@ -33,9 +59,13 @@ class ChangePswdCubit extends Cubit<ChangePswdState> {
         emit(state.copyWith(isLoading: false));
       },
       (value) {
-        emit(state.copyWith(isLoading: false));
-        // update data
+        emit(
+          state.copyWith(isLoading: false, isSuccess: true, isEditModel: false),
+        );
       },
     );
   }
+
+  void toggleEditMode() =>
+      emit(state.copyWith(isEditModel: !state.isEditModel));
 }
