@@ -220,15 +220,13 @@ class AccountSourceImpl implements AccountSource {
   }
 
   @override
-  Future<ChangePswdResponse> updatePassword(
-    ChangePswdRequest requestData,
-  ) async {
+  Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData,) async {
     try {
       final response = await _dio.post(
         '/accounts/me/change-password/',
         data: requestData.toJson(),
       );
-      return response.data;
+      return ChangePswdResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {

@@ -36,7 +36,7 @@ class ChangePswdCubit extends Cubit<ChangePswdState> {
       );
       return;
     }
-    if (confirmPswd != newPswd){
+    if (confirmPswd != newPswd) {
       _messageHandler.handleSnackBar(
         UnknownException('Please correct the password'),
       );
@@ -61,6 +61,9 @@ class ChangePswdCubit extends Cubit<ChangePswdState> {
       (value) {
         emit(
           state.copyWith(isLoading: false, isSuccess: true, isEditModel: false),
+        );
+        _messageHandler.handleDialog(
+          SuccessException('Your password has been successfully changed'),
         );
       },
     );
