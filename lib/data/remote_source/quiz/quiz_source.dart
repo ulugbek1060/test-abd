@@ -5,7 +5,7 @@ import 'package:testabd/data/remote_source/quiz/models/answer_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/category_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
-import 'package:testabd/data/remote_source/quiz/models/my_question_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
@@ -33,7 +33,7 @@ abstract class QuizSource {
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
   Future<List<CategoryResponse>> getCategories();
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
-  Future<List<MyQuestionResponse>> getMyBlocks();
+  Future<List<MyBlockResponse>> getMyBlocks();
 }
 
 /// =========================> Source implementation <=========================
@@ -201,11 +201,11 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<List<MyQuestionResponse>> getMyBlocks() async {
+  Future<List<MyBlockResponse>> getMyBlocks() async {
     try {
       final response = await _dio.get('/quiz/tests/my_tests/');
       return (response.data as List)
-          .map((e) => MyQuestionResponse.fromJson(e))
+          .map((e) => MyBlockResponse.fromJson(e))
           .toList();
     } on DioException catch (error) {
       throw error.handleDioException();

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'my_question_response.dart';
+part of 'my_block_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-MyQuestionResponse _$MyQuestionResponseFromJson(Map<String, dynamic> json) {
+MyBlockResponse _$MyBlockResponseFromJson(Map<String, dynamic> json) {
   return _MyQuestionResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$MyQuestionResponse {
+mixin _$MyBlockResponse {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'user')
@@ -80,15 +80,15 @@ mixin _$MyQuestionResponse {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $MyQuestionResponseCopyWith<MyQuestionResponse> get copyWith =>
+  $MyBlockResponseCopyWith<MyBlockResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MyQuestionResponseCopyWith<$Res> {
-  factory $MyQuestionResponseCopyWith(
-          MyQuestionResponse value, $Res Function(MyQuestionResponse) then) =
-      _$MyQuestionResponseCopyWithImpl<$Res, MyQuestionResponse>;
+abstract class $MyBlockResponseCopyWith<$Res> {
+  factory $MyBlockResponseCopyWith(
+          MyBlockResponse value, $Res Function(MyBlockResponse) then) =
+      _$MyBlockResponseCopyWithImpl<$Res, MyBlockResponse>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
@@ -128,9 +128,9 @@ abstract class $MyQuestionResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MyQuestionResponseCopyWithImpl<$Res, $Val extends MyQuestionResponse>
-    implements $MyQuestionResponseCopyWith<$Res> {
-  _$MyQuestionResponseCopyWithImpl(this._value, this._then);
+class _$MyBlockResponseCopyWithImpl<$Res, $Val extends MyBlockResponse>
+    implements $MyBlockResponseCopyWith<$Res> {
+  _$MyBlockResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -312,7 +312,7 @@ class _$MyQuestionResponseCopyWithImpl<$Res, $Val extends MyQuestionResponse>
 
 /// @nodoc
 abstract class _$$MyQuestionResponseImplCopyWith<$Res>
-    implements $MyQuestionResponseCopyWith<$Res> {
+    implements $MyBlockResponseCopyWith<$Res> {
   factory _$$MyQuestionResponseImplCopyWith(_$MyQuestionResponseImpl value,
           $Res Function(_$MyQuestionResponseImpl) then) =
       __$$MyQuestionResponseImplCopyWithImpl<$Res>;
@@ -359,7 +359,7 @@ abstract class _$$MyQuestionResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MyQuestionResponseImplCopyWithImpl<$Res>
-    extends _$MyQuestionResponseCopyWithImpl<$Res, _$MyQuestionResponseImpl>
+    extends _$MyBlockResponseCopyWithImpl<$Res, _$MyQuestionResponseImpl>
     implements _$$MyQuestionResponseImplCopyWith<$Res> {
   __$$MyQuestionResponseImplCopyWithImpl(_$MyQuestionResponseImpl _value,
       $Res Function(_$MyQuestionResponseImpl) _then)
@@ -642,7 +642,7 @@ class _$MyQuestionResponseImpl implements _MyQuestionResponse {
 
   @override
   String toString() {
-    return 'MyQuestionResponse(id: $id, user: $user, title: $title, description: $description, category: $category, visibility: $visibility, accessMode: $accessMode, participantRoles: $participantRoles, maxParticipants: $maxParticipants, startTime: $startTime, endTime: $endTime, minScoreToFinish: $minScoreToFinish, participantCountToFinish: $participantCountToFinish, country: $country, countryId: $countryId, region: $region, district: $district, districtId: $districtId, isRegionPremium: $isRegionPremium, createdAt: $createdAt, difficultyPercentage: $difficultyPercentage, totalQuestions: $totalQuestions, isBookmarked: $isBookmarked, participantCount: $participantCount, averageQuestionDifficulty: $averageQuestionDifficulty, averageCompletionTimeMinutes: $averageCompletionTimeMinutes, totalCorrectAttempts: $totalCorrectAttempts, totalWrongAttempts: $totalWrongAttempts)';
+    return 'MyBlockResponse(id: $id, user: $user, title: $title, description: $description, category: $category, visibility: $visibility, accessMode: $accessMode, participantRoles: $participantRoles, maxParticipants: $maxParticipants, startTime: $startTime, endTime: $endTime, minScoreToFinish: $minScoreToFinish, participantCountToFinish: $participantCountToFinish, country: $country, countryId: $countryId, region: $region, district: $district, districtId: $districtId, isRegionPremium: $isRegionPremium, createdAt: $createdAt, difficultyPercentage: $difficultyPercentage, totalQuestions: $totalQuestions, isBookmarked: $isBookmarked, participantCount: $participantCount, averageQuestionDifficulty: $averageQuestionDifficulty, averageCompletionTimeMinutes: $averageCompletionTimeMinutes, totalCorrectAttempts: $totalCorrectAttempts, totalWrongAttempts: $totalWrongAttempts)';
   }
 
   @override
@@ -755,7 +755,7 @@ class _$MyQuestionResponseImpl implements _MyQuestionResponse {
   }
 }
 
-abstract class _MyQuestionResponse implements MyQuestionResponse {
+abstract class _MyQuestionResponse implements MyBlockResponse {
   const factory _MyQuestionResponse(
       {@JsonKey(name: 'id') final int? id,
       @JsonKey(name: 'user') final QuestionUser? user,

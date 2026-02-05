@@ -24,31 +24,63 @@ class _View extends StatefulWidget {
 }
 
 class _ViewState extends State<_View> {
-  late final TextEditingController _questionController;
-  late final TextEditingController _answerController;
-  late final TextEditingController _explanationController;
-  late final TextEditingController _topicController;
+  late final TextEditingController _bockTitleController;
+  late final TextEditingController _blockDescriptionController;
 
   @override
   void initState() {
-    _questionController = TextEditingController();
-    _answerController = TextEditingController();
-    _explanationController = TextEditingController();
-    _topicController = TextEditingController();
+    _bockTitleController = TextEditingController();
+    _blockDescriptionController = TextEditingController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Question')),
+      appBar: AppBar(title: const Text('Create Block')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _InputField(
+              controller: _bockTitleController,
+              label: 'Question',
+              hint: 'Enter question',
+            ),
+
+            Text("Block name", style: const TextStyle(color: Colors.grey)),
+            const SizedBox(height: 8),
+
+
+            SizedBox(
+              height: 150,
+              width: double.infinity,
+              child: TextFormField(
+                controller: _blockDescriptionController,
+                expands: true,
+                maxLines: null,
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                keyboardType: TextInputType.multiline,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(color: Colors.grey),
+                  hintText: "Enter block description",
+                  filled: true,
+                  contentPadding: const EdgeInsets.all(12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+
             _DropdownField(
-              label: "Settlement",
-              hint: "Settlementni tanlang",
+              label: "Category",
+              hint: "Category tanlang",
               // enabled: state.isEditable,
               // value: settlementState.selected?.id,
               // isLoading: settlementState.isLoading,
@@ -59,27 +91,9 @@ class _ViewState extends State<_View> {
               ],
               onChanged: (value) {},
             ),
+            const SizedBox(height: 8),
 
-            _InputField(
-              controller: _questionController,
-              label: 'Question',
-              hint: 'Enter question',
-            ),
-            _InputField(
-              controller: _answerController,
-              label: 'Answer',
-              hint: 'Enter answer',
-            ),
-            _InputField(
-              controller: _topicController,
-              label: 'Answer',
-              hint: 'Enter answer',
-            ),
-            _InputField(
-              controller: _explanationController,
-              label: 'Answer',
-              hint: 'Enter answer',
-            ),
+
           ],
         ),
       ),

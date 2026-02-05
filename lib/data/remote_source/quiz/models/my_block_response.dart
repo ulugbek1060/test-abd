@@ -1,12 +1,12 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'my_question_response.freezed.dart';
-part 'my_question_response.g.dart';
+part 'my_block_response.freezed.dart';
+part 'my_block_response.g.dart';
 
 @freezed
-class MyQuestionResponse with _$MyQuestionResponse {
-  const factory MyQuestionResponse({
+class MyBlockResponse with _$MyBlockResponse {
+  const factory MyBlockResponse({
     @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'user') QuestionUser? user,
     @JsonKey(name: 'title') String? title,
@@ -38,8 +38,8 @@ class MyQuestionResponse with _$MyQuestionResponse {
     @JsonKey(name: 'total_wrong_attempts') int? totalWrongAttempts,
   }) = _MyQuestionResponse;
 
-  factory MyQuestionResponse.fromJson(Map<String, dynamic> json) =>
-      _$MyQuestionResponseFromJson(json);
+  factory MyBlockResponse.fromJson(Map<String, dynamic> json) =>
+      _$MyBlockResponseFromJson(json);
 }
 
 @freezed

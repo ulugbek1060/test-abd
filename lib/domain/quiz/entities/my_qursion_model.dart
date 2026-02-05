@@ -1,16 +1,17 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/quiz/models/my_question_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
+import 'package:testabd/domain/entity/access_enum.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
 
-class MyQuestionModel extends Equatable {
+class MyBlockModel extends Equatable {
   final int? id;
   final UserItemModel? user;
   final String? title;
   final String? description;
   final CategoryModel? category;
   final int? categoryId;
-  final String? visibility;
+  final AccessType? visibility;
   final String? accessMode;
   final String? participantRoles;
   final int? maxParticipants;
@@ -36,7 +37,7 @@ class MyQuestionModel extends Equatable {
   final int? totalCorrectAttempts;
   final int? totalWrongAttempts;
 
-  const MyQuestionModel({
+  const MyBlockModel({
     this.id,
     this.user,
     this.title,
@@ -70,28 +71,28 @@ class MyQuestionModel extends Equatable {
     this.totalWrongAttempts,
   });
 
-  static MyQuestionModel fromResponse(MyQuestionResponse response) {
-    return MyQuestionModel(
+  static MyBlockModel fromResponse(MyBlockResponse response) {
+    return MyBlockModel(
       id: response.id,
       user: UserItemModel(
         id: response.user?.id,
         username: response.user?.username,
         profileImage: response.user?.profileImage,
         isBadged: response.user?.isBadged,
-        // isFollowing: response.user?.isFollowing,
+        isFollowing: response.user?.isFollowing,
         isPremium: response.user?.isPremium,
       ),
       title: response.title,
       description: response.description,
       category: CategoryModel(
         id: response.category?.id,
-        // totalQuestions: response.category?.totalQuestions,
-        // totalTests: response.category?.totalTests,
-        title: '',
-        slug: '',
-        description: '',
+        totalQuestions: response.category?.totalQuestions,
+        totalTests: response.category?.totalTests,
+        title: response.category?.title,
+        slug: response.category?.slug,
+        description: response.category?.description,
       ),
-      visibility: response.visibility,
+      visibility: AccessType.fromString(response.visibility),
       accessMode: response.accessMode,
       participantRoles: response.participantRoles,
       maxParticipants: response.maxParticipants,

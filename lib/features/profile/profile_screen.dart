@@ -144,17 +144,18 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
 
                       BlocBuilder<ProfileCubit, ProfileState>(
                         buildWhen: (s1, s2) =>
-                            s1.myQuestionsState != s2.myQuestionsState,
-                        builder: (_, s) => MyQuestionsSection(
-                          key: _questionsKey,
-                          isEnabled: pageTye == PageType.questions,
-                          state: s.myQuestionsState,
+                            s1.myBlocksState != s2.myBlocksState,
+                        builder: (_, s) => MyBlockSection(
+                          key: _blockKey,
+                          isEnabled: pageTye == PageType.block,
+                          state: s.myBlocksState,
                         ),
                       ),
 
-                      QuestionsBlockSection(
-                        key: _blockKey,
-                        isEnabled: pageTye == PageType.block,
+                      MyQuestionsSection(
+                        key: _questionsKey,
+                        isEnabled: pageTye == PageType.questions,
+                        // state: s.myBlocksState,
                       ),
 
                       MyBooksSection(
@@ -543,27 +544,14 @@ class TabsSection extends StatelessWidget {
 }
 
 /// ---------------- Questions block section ----------------
-class QuestionsBlockSection extends StatelessWidget {
+class MyBlockSection extends StatelessWidget {
   final bool isEnabled;
+  final MyBlocksState state;
 
-  const QuestionsBlockSection({super.key, required this.isEnabled});
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
-    return SliverFillRemaining(child: Center(child: Text('Questions block')));
-  }
-}
-
-/// ---------------- My questions section ----------------
-class MyQuestionsSection extends StatelessWidget {
-  final bool isEnabled;
-  final MyQuestionsState state;
-
-  const MyQuestionsSection({
+  const MyBlockSection({
     super.key,
-    required this.state,
     required this.isEnabled,
+    required this.state,
   });
 
   @override
@@ -607,7 +595,7 @@ class MyQuestionsSection extends StatelessWidget {
           if (question.id == -1) {
             return GestureDetector(
               onTap: () {
-                context.push(AppRouter.createQuestions);
+                context.push(AppRouter.createBlock);
               },
               child: Container(
                 margin: EdgeInsets.all(4),
@@ -660,6 +648,19 @@ class MyQuestionsSection extends StatelessWidget {
         }, childCount: state.myQuestions.length),
       ),
     );
+  }
+}
+
+/// ---------------- My questions section ----------------
+class MyQuestionsSection extends StatelessWidget {
+  final bool isEnabled;
+
+  const MyQuestionsSection({super.key, required this.isEnabled});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
+    return SliverFillRemaining(child: Center(child: Text('Questions block')));
   }
 }
 

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:testabd/core/errors/app_exception.dart';
-import 'package:testabd/data/remote_source/quiz/models/my_question_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/quiz/entities/global_quiz_model.dart';
@@ -26,6 +26,6 @@ abstract class QuizRepository {
     int? pageSize,
   });
   Future<Either<AppException, QuestionsBookmarkModel>> getQuestionsBookmark();
-  Future<Either<AppException, List<MyQuestionModel>>> getMyBlocks();
+  Future<Either<AppException, List<MyBlockModel>>> getMyBlocks();
   Future<Either<AppException, List<CategoryModel>>> getCategories();
 }

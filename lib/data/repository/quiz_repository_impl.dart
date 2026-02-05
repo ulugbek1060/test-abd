@@ -101,10 +101,10 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, List<MyQuestionModel>>> getMyBlocks() async {
+  Future<Either<AppException, List<MyBlockModel>>> getMyBlocks() async {
     try {
       final result = await _quizSource.getMyBlocks();
-      final list = result.map(MyQuestionModel.fromResponse).toList();
+      final list = result.map(MyBlockModel.fromResponse).toList();
       return Right(list);
     } on AppException catch (e) {
       return Left(e);

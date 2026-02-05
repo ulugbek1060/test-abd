@@ -18,7 +18,7 @@ class ProfileState with _$ProfileState {
     // questions bookmark
     @Default(QuestionsBookmarkState()) QuestionsBookmarkState questionsBookmarkState,
     // my questions
-    @Default(MyQuestionsState()) MyQuestionsState myQuestionsState,
+    @Default(MyBlocksState()) MyBlocksState myBlocksState,
   }) = _ProfileState;
 }
 
@@ -41,10 +41,10 @@ class QuestionsBookmarkState with _$QuestionsBookmarkState {
 }
 
 @freezed
-class MyQuestionsState with _$MyQuestionsState {
-  const factory MyQuestionsState({
+class MyBlocksState with _$MyBlocksState {
+  const factory MyBlocksState({
     @Default(false) bool isLoading,
     String? error,
-    @Default([]) List<MyQuestionModel> myQuestions,
+    @Default([]) List<MyBlockModel> myQuestions,
   }) = _MyQuestionsState;
 }

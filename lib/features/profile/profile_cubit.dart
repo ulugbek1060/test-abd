@@ -142,12 +142,12 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> fetchMyBlocks() async {
-    final current = state.myQuestionsState;
+    final current = state.myBlocksState;
     if (current.isLoading) return;
 
     emit(
       state.copyWith(
-        myQuestionsState: current.copyWith(isLoading: true, error: null),
+        myBlocksState: current.copyWith(isLoading: true, error: null),
       ),
     );
 
@@ -157,7 +157,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       (error) {
         emit(
           state.copyWith(
-            myQuestionsState: current.copyWith(
+            myBlocksState: current.copyWith(
               isLoading: false,
               error: error.message,
             ),
@@ -167,11 +167,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
       (questions) {
         final list = List.of(questions);
-        final itemForAddButton = MyQuestionModel(id: -1);
+        final itemForAddButton = MyBlockModel(id: -1);
         list.insert(0, itemForAddButton);
         emit(
           state.copyWith(
-            myQuestionsState: current.copyWith(
+            myBlocksState: current.copyWith(
               isLoading: false,
               myQuestions: list,
               error: null,
