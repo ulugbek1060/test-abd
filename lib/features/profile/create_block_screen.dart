@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/features/profile/create_question_cubit.dart';
+import 'package:testabd/features/profile/create_block_cubit.dart';
 
-class CreateQuestionsScreen extends StatelessWidget {
-  const CreateQuestionsScreen({super.key});
+class CreateBlockScreen extends StatelessWidget {
+  const CreateBlockScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => locator<CreateQuestionCubit>(),
+      create: (_) => locator<CreateBlockCubit>(),
       child: const _View(),
     );
   }
@@ -57,9 +57,8 @@ class _ViewState extends State<_View> {
                 _DropdownItem(id: 2, name: "Settlement 2"),
                 _DropdownItem(id: 3, name: "Settlement 3"),
               ],
-              onChanged: (value){},
+              onChanged: (value) {},
             ),
-
 
             _InputField(
               controller: _questionController,

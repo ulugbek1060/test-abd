@@ -26,6 +26,6 @@ abstract class QuizRepository {
     int? pageSize,
   });
   Future<Either<AppException, QuestionsBookmarkModel>> getQuestionsBookmark();
-  Future<Either<AppException, List<MyQuestionModel>>> getMyQuestions();
+  Future<Either<AppException, List<MyQuestionModel>>> getMyBlocks();
   Future<Either<AppException, List<CategoryModel>>> getCategories();
 }

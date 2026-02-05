@@ -33,7 +33,7 @@ abstract class QuizSource {
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
   Future<List<CategoryResponse>> getCategories();
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
-  Future<List<MyQuestionResponse>> getMyQuestions();
+  Future<List<MyQuestionResponse>> getMyBlocks();
 }
 
 /// =========================> Source implementation <=========================
@@ -201,7 +201,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<List<MyQuestionResponse>> getMyQuestions() async {
+  Future<List<MyQuestionResponse>> getMyBlocks() async {
     try {
       final response = await _dio.get('/quiz/tests/my_tests/');
       return (response.data as List)

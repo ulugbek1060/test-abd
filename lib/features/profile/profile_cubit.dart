@@ -47,12 +47,12 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> load() async {
     fetchUserInfo();
-    fetchMyQuestions();
+    fetchMyBlocks();
   }
 
   Future<void> refresh() async {
     fetchUserInfo();
-    fetchMyQuestions();
+    fetchMyBlocks();
   }
 
   Future<void> fetchUserInfo() async {
@@ -141,7 +141,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> fetchMyQuestions() async {
+  Future<void> fetchMyBlocks() async {
     final current = state.myQuestionsState;
     if (current.isLoading) return;
 
@@ -151,7 +151,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       ),
     );
 
-    final result = await _quizRepository.getMyQuestions();
+    final result = await _quizRepository.getMyBlocks();
 
     result.fold(
       (error) {
