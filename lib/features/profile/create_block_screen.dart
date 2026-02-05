@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testabd/domain/entity/access_enum.dart';
 
 /// Mock enums & cubit (replace with your real ones)
-enum AccessType { public, unlisted, private }
-
 class CreateBlockCubit extends Cubit<void> {
   CreateBlockCubit() : super(null);
 }
@@ -21,7 +20,7 @@ class CreateBlockScreen extends StatelessWidget {
 }
 
 class _View extends StatefulWidget {
-  const _View({super.key});
+  const _View();
 
   @override
   State<_View> createState() => _ViewState();
@@ -191,38 +190,10 @@ class _ViewState extends State<_View> {
   }
 }
 
-/// ================= INPUT FIELD =================
-
-class _InputField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final String? hint;
-  final bool enabled;
-
-  const _InputField({
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.enabled = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: []),
-    );
-  }
-}
-
 /// ================= DROPDOWN =================
-
 class _DropdownItem {
   final int id;
   final String name;
-
   const _DropdownItem({required this.id, required this.name});
 }
 
@@ -292,7 +263,6 @@ class _DropdownField extends StatelessWidget {
 }
 
 /// ================= ACCESS TILE =================
-
 Widget _accessTile({
   required BuildContext context,
   required AccessType value,
