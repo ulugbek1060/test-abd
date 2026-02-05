@@ -152,10 +152,14 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                         ),
                       ),
 
-                      MyQuestionsSection(
-                        key: _questionsKey,
-                        isEnabled: pageTye == PageType.questions,
-                        // state: s.myBlocksState,
+                      BlocBuilder<ProfileCubit, ProfileState>(
+                        buildWhen: (s1, s2) =>
+                            s1.myBlocksState != s2.myBlocksState,
+                        builder: (_, s) => MyQuestionsSection(
+                          key: _questionsKey,
+                          isEnabled: pageTye == PageType.questions,
+                          state: s.myBlocksState,
+                        ),
                       ),
 
                       MyBooksSection(
@@ -654,13 +658,108 @@ class MyBlockSection extends StatelessWidget {
 /// ---------------- My questions section ----------------
 class MyQuestionsSection extends StatelessWidget {
   final bool isEnabled;
+  final MyBlocksState state;
 
-  const MyQuestionsSection({super.key, required this.isEnabled});
+  const MyQuestionsSection({
+    super.key,
+    required this.isEnabled,
+    required this.state,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
-    return SliverFillRemaining(child: Center(child: Text('Questions block')));
+
+    /// loading state
+    if (state.isLoading) {
+      return SliverPadding(
+        padding: const EdgeInsets.all(8),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12.0,
+            mainAxisSpacing: 12.0,
+            childAspectRatio: 1.0,
+          ),
+          delegate: SliverChildBuilderDelegate((
+            BuildContext context,
+            int index,
+          ) {
+            return Center(child: ProgressView());
+          }, childCount: 4),
+        ),
+      );
+    }
+
+    /// for active state
+    return SliverPadding(
+      padding: const EdgeInsets.all(8),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0,
+          childAspectRatio: 1.0,
+        ),
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+          final question = state.myQuestions[index];
+
+          if (question.id == -1) {
+            return GestureDetector(
+              onTap: () {
+                context.push(AppRouter.createQuestions);
+              },
+              child: Container(
+                margin: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.1),
+                      blurRadius: 12,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Add question',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          return QuestionCard(
+            title: question.title ?? '',
+            description: question.description ?? '',
+            createdAt: question.createdAt,
+            correctAnswers: 2,
+            wrongAnswers: 2,
+            difficulty: QuestionDifficulty.easy,
+            onTap: () => context.push(
+              AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+            ),
+          );
+        }, childCount: state.myQuestions.length),
+      ),
+    );
   }
 }
 
