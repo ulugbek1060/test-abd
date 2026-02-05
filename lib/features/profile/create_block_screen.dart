@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
@@ -50,6 +53,7 @@ class _ViewState extends State<_View> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Create Block')),
@@ -79,112 +83,140 @@ class _ViewState extends State<_View> {
         ),
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Block title',
-              style: Theme.of(
-                context,
-              ).textTheme.labelMedium?.copyWith(color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _blockTitleController,
-              enabled: true,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-              decoration: InputDecoration(
-                hintText: 'Enter block title',
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
+      body: Stack(
+        children: [
+          // Background Image
+          Image.network(
+            'https://picsum.photos/seed/${Random().nextInt(100)}/${size.width.toInt()}/${size.height.toInt()}',
+            fit: BoxFit.cover,
+            width: size.width,
+            height: size.height,
+          ),
+
+          // Blur Layer
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: Container(
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
               ),
             ),
-            const SizedBox(height: 20),
+          ),
 
-            /// Description
-            Text(
-              "Block description",
-              style: theme.textTheme.labelMedium?.copyWith(color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-
-            SizedBox(
-              height: 150,
-              child: TextFormField(
-                controller: _blockDescriptionController,
-                expands: true,
-                maxLines: null,
-                textAlignVertical: TextAlignVertical.top,
-                style: TextStyle(color: theme.colorScheme.onSurface),
-                decoration: InputDecoration(
-                  hintText: "Describe your block",
-                  filled: true,
-                  contentPadding: const EdgeInsets.all(12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+          SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Block title',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-              ),
-            ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _blockTitleController,
+                  enabled: true,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Enter block title',
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
 
-            const SizedBox(height: 20),
+                /// Description
+                Text(
+                  "Block description",
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 8),
 
-            /// Category
-            _DropdownField(
-              label: "Category",
-              hint: "Select category",
-              value: _selectedCategory,
-              items: const [
-                _DropdownItem(id: 1, name: "Category 1"),
-                _DropdownItem(id: 2, name: "Category 2"),
-                _DropdownItem(id: 3, name: "Category 3"),
+                SizedBox(
+                  height: 150,
+                  child: TextFormField(
+                    controller: _blockDescriptionController,
+                    expands: true,
+                    maxLines: null,
+                    textAlignVertical: TextAlignVertical.top,
+                    style: TextStyle(color: theme.colorScheme.onSurface),
+                    decoration: InputDecoration(
+                      hintText: "Describe your block",
+                      filled: true,
+                      contentPadding: const EdgeInsets.all(12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                /// Category
+                _DropdownField(
+                  label: "Category",
+                  hint: "Select category",
+                  value: _selectedCategory,
+                  items: const [
+                    _DropdownItem(id: 1, name: "Category 1"),
+                    _DropdownItem(id: 2, name: "Category 2"),
+                    _DropdownItem(id: 3, name: "Category 3"),
+                  ],
+                  onChanged: (v) => setState(() => _selectedCategory = v),
+                ),
+
+                const SizedBox(height: 8),
+
+                /// Access type
+                Text(
+                  "Access type",
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                _accessTile(
+                  context: context,
+                  value: AccessType.public,
+                  groupValue: _accessType,
+                  title: "Public",
+                  subtitle: "Anyone can find and take this block",
+                  onChanged: (v) => setState(() => _accessType = v!),
+                ),
+
+                _accessTile(
+                  context: context,
+                  value: AccessType.unlisted,
+                  groupValue: _accessType,
+                  title: "Unlisted",
+                  subtitle: "Only people with the link can access",
+                  onChanged: (v) => setState(() => _accessType = v!),
+                ),
+
+                _accessTile(
+                  context: context,
+                  value: AccessType.private,
+                  groupValue: _accessType,
+                  title: "Private",
+                  subtitle: "Only you can access this block",
+                  onChanged: (v) => setState(() => _accessType = v!),
+                ),
               ],
-              onChanged: (v) => setState(() => _selectedCategory = v),
             ),
-
-            const SizedBox(height: 8),
-
-            /// Access type
-            Text(
-              "Access type",
-              style: theme.textTheme.labelMedium?.copyWith(color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-
-            _accessTile(
-              context: context,
-              value: AccessType.public,
-              groupValue: _accessType,
-              title: "Public",
-              subtitle: "Anyone can find and take this block",
-              onChanged: (v) => setState(() => _accessType = v!),
-            ),
-
-            _accessTile(
-              context: context,
-              value: AccessType.unlisted,
-              groupValue: _accessType,
-              title: "Unlisted",
-              subtitle: "Only people with the link can access",
-              onChanged: (v) => setState(() => _accessType = v!),
-            ),
-
-            _accessTile(
-              context: context,
-              value: AccessType.private,
-              groupValue: _accessType,
-              title: "Private",
-              subtitle: "Only you can access this block",
-              onChanged: (v) => setState(() => _accessType = v!),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -194,6 +226,7 @@ class _ViewState extends State<_View> {
 class _DropdownItem {
   final int id;
   final String name;
+
   const _DropdownItem({required this.id, required this.name});
 }
 
@@ -225,9 +258,9 @@ class _DropdownField extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(
-              context,
-            ).textTheme.labelMedium?.copyWith(color: Colors.grey),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 8),
 
