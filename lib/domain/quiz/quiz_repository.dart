@@ -42,4 +42,6 @@ abstract class QuizRepository {
     required int categoryId,
     required AccessType accessType,
   });
+
+  Future<Either<AppException, QuestionModel>> createQuestion();
 }

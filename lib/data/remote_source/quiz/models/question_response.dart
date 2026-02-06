@@ -1,25 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'random_questions_response.freezed.dart';
-
-part 'random_questions_response.g.dart';
-
-@freezed
-class RandomQuestionsResponse with _$RandomQuestionsResponse {
-  const factory RandomQuestionsResponse({
-    @JsonKey(name: 'count') int? count,
-    @JsonKey(name: 'next') String? next,
-    @JsonKey(name: 'previous') String? previous,
-    @JsonKey(name: 'results') @Default([]) List<RandomQuestionModel> results,
-  }) = _RandomQuestionsResponse;
-
-  factory RandomQuestionsResponse.fromJson(Map<String, dynamic> json) =>
-      _$RandomQuestionsResponseFromJson(json);
-}
+part 'question_response.freezed.dart';
+part 'question_response.g.dart';
 
 @freezed
-class RandomQuestionModel with _$RandomQuestionModel {
-  const factory RandomQuestionModel({
+class QuestionResponse with _$QuestionResponse {
+  const factory QuestionResponse({
     @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'test') int? test,
     @JsonKey(name: 'test_title') String? testTitle,
@@ -27,7 +13,7 @@ class RandomQuestionModel with _$RandomQuestionModel {
     @JsonKey(name: 'question_type') String? questionType,
     @JsonKey(name: 'order_index') int? orderIndex,
     @JsonKey(name: 'media') String? media,
-    @JsonKey(name: 'answers') @Default([]) List<AnswerModel> answers,
+    @JsonKey(name: 'answers') List<QuestionAnswer>? answers,
     @JsonKey(name: 'test_description') String? testDescription,
     @JsonKey(name: 'correct_answer_text') String? correctAnswerText,
     @JsonKey(name: 'answer_language') String? answerLanguage,
@@ -35,49 +21,50 @@ class RandomQuestionModel with _$RandomQuestionModel {
     @JsonKey(name: 'wrong_count') int? wrongCount,
     @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
     @JsonKey(name: 'user_attempt_count') int? userAttemptCount,
-    @JsonKey(name: 'user') QuestionUserModel? user,
+    @JsonKey(name: 'user') QuestionUser? user,
     @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'round_image') String? roundImage,
     @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
     @JsonKey(name: 'is_following') bool? isFollowing,
-    @JsonKey(name: 'category') Category? category,
-  }) = _RandomQuestionModel;
+    @JsonKey(name: 'category') QuestionCategory? category,
+  }) = _QuestionResponse;
 
-  factory RandomQuestionModel.fromJson(Map<String, dynamic> json) =>
-      _$RandomQuestionModelFromJson(json);
+  factory QuestionResponse.fromJson(Map<String, dynamic> json) =>
+      _$QuestionResponseFromJson(json);
 }
 
-@freezed
-class AnswerModel with _$AnswerModel {
-  const factory AnswerModel({
-    @JsonKey(name: 'id') int? id,
-    @JsonKey(name: 'letter') String? letter,
-    @JsonKey(name: 'answer_text') String? answerText,
-    @JsonKey(name: 'is_correct') bool? isCorrect,
-  }) = _AnswerModel;
-
-  factory AnswerModel.fromJson(Map<String, dynamic> json) =>
-      _$AnswerModelFromJson(json);
-}
 
 @freezed
-class QuestionUserModel with _$QuestionUserModel {
-  const factory QuestionUserModel({
+class QuestionUser with _$QuestionUser {
+  const factory QuestionUser({
     @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'username') String? username,
     @JsonKey(name: 'profile_image') String? profileImage,
     @JsonKey(name: 'is_badged') bool? isBadged,
     @JsonKey(name: 'is_premium') bool? isPremium,
     @JsonKey(name: 'is_following') bool? isFollowing,
-  }) = _QuestionUserModel;
+  }) = _QuestionUser;
 
-  factory QuestionUserModel.fromJson(Map<String, dynamic> json) =>
-      _$QuestionUserModelFromJson(json);
+  factory QuestionUser.fromJson(Map<String, dynamic> json) =>
+      _$QuestionUserFromJson(json);
 }
 
 @freezed
-class Category with _$Category {
-  const factory Category({
+class QuestionAnswer with _$QuestionAnswer {
+  const factory QuestionAnswer({
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'letter') String? letter,
+    @JsonKey(name: 'answer_text') String? answerText,
+    @JsonKey(name: 'is_correct') bool? isCorrect,
+  }) = _QuestionAnswer;
+
+  factory QuestionAnswer.fromJson(Map<String, dynamic> json) =>
+      _$QuestionAnswerFromJson(json);
+}
+
+@freezed
+class QuestionCategory with _$QuestionCategory {
+  const factory QuestionCategory({
     @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'total_tests') int? totalTests,
     @JsonKey(name: 'total_questions') int? totalQuestions,
@@ -86,8 +73,8 @@ class Category with _$Category {
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'emoji') String? emoji,
     @JsonKey(name: 'image') String? image,
-  }) = _Category;
+  }) = _QuestionCategory;
 
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      _$CategoryFromJson(json);
+  factory QuestionCategory.fromJson(Map<String, dynamic> json) =>
+      _$QuestionCategoryFromJson(json);
 }

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
 import 'package:testabd/domain/entity/category_model.dart';
@@ -142,6 +143,26 @@ class QuizRepositoryImpl extends QuizRepository {
         accessType,
       );
       return Right(MyBlockModel.fromResponse(result));
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, QuestionModel>> createQuestion({
+    required int blockId,
+    required String questionText,
+    required String questionType,
+    required int categoryId,
+    required List<AnswerModel> answers,
+  }) async {
+    try {
+      final result = await _quizSource.createQuestion(
+
+      );
+      return Right(QuestionModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
