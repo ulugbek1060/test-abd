@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/core/utils/formatters.dart';
-import 'package:testabd/core/utils/knowledge_level.dart';
+import 'package:testabd/core/enums/knowledge_level_enum.dart';
 import 'package:testabd/data/remote_source/account/model/user_profile_response.dart';
 
 class UserProfileModel extends Equatable {

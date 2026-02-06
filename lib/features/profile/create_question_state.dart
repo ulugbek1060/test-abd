@@ -1,6 +1,8 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
+import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/domain/entity/category_model.dart';
+import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 
 part 'create_question_state.freezed.dart';
 
@@ -10,5 +12,9 @@ abstract class CreateQuestionState with _$CreateQuestionState {
     @Default(false) bool isLoading,
     String? error,
     @Default([]) List<CategoryModel> categories,
+    @Default([]) List<AnswerModel> answers,
+    MyBlockModel? selectedBlock,
+    CategoryModel? selectedCategory,
+    @Default(QuestionType.singleSelect) QuestionType questionType,
   }) = _CreateQuestionState;
 }

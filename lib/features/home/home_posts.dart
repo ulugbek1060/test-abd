@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
@@ -335,12 +336,13 @@ class SingleAnswerCard extends StatelessWidget {
     );
   }
 
-  Widget getLeading(BuildContext context, AnswerItemModel answer) => CircleAvatar(
-    backgroundColor: Colors.grey,
-    child: answer.isLoading
-        ? ProgressView(color: Colors.white)
-        : getIcon(context, answer),
-  );
+  Widget getLeading(BuildContext context, AnswerItemModel answer) =>
+      CircleAvatar(
+        backgroundColor: Colors.grey,
+        child: answer.isLoading
+            ? ProgressView(color: Colors.white)
+            : getIcon(context, answer),
+      );
 
   Color getBorderColor(AnswerItemModel answer) {
     final selected = myAnswersId.contains(answer.id);
@@ -501,7 +503,7 @@ class _AnswersList extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<HomeCubit>();
     switch (questionType) {
-      case QuestionType.multiple:
+      case QuestionType.multipleSelect:
         return MultipleAnswerCard(
           answers: answers,
           myAnswersId: myAnswersId,
@@ -513,7 +515,7 @@ class _AnswersList extends StatelessWidget {
               ? (_) {}
               : (answerIds) => cubit.submitAnswer(questionId!, answerIds),
         );
-      case QuestionType.single:
+      case QuestionType.singleSelect:
         return SingleAnswerCard(
           answers: answers,
           myAnswersId: myAnswersId,
@@ -570,10 +572,7 @@ class _HeaderUserImage extends StatelessWidget {
       width: size,
       height: size,
       padding: EdgeInsets.all(borderWidth),
-      decoration: BoxDecoration(
-        color: borderColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: borderColor, shape: BoxShape.circle),
       child: ClipOval(
         child: CachedNetworkImage(
           width: 36,

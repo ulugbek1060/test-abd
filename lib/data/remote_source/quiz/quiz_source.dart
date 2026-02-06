@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/remote_source/quiz/models/answer_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/category_response.dart';
@@ -56,7 +57,7 @@ abstract class QuizSource {
   Future<QuestionResponse> createQuestion(
     int blockId,
     String questionText,
-    String questionType,
+    QuestionType questionType,
     int categoryId,
     List<AnswerModel> answers,
   );
@@ -263,7 +264,7 @@ class QuizSourceImpl implements QuizSource {
   Future<QuestionResponse> createQuestion(
     int blockId,
     String questionText,
-    String questionType,
+    QuestionType questionType,
     int categoryId,
     List<AnswerModel> answers,
   ) async {
@@ -297,7 +298,7 @@ class QuizSourceImpl implements QuizSource {
         data: {
           "test": blockId,
           "question_text": questionText,
-          "question_type": questionType,
+          "question_type": QuestionType.fromEnum(questionType),
           "category_id": categoryId,
           "answers": answers.map((e) => e.toJson()).toList(),
         },

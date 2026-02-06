@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:testabd/core/utils/connections_enum.dart';
+import 'package:testabd/core/enums/connections_enum.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/features/auth/forgotpswd/forgot_pswd_screen.dart';
 import 'package:testabd/features/auth/login/login_screen.dart';

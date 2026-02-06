@@ -1,6 +1,5 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show Cubit;
 import 'package:injectable/injectable.dart';
-import 'package:meta/meta.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
@@ -13,8 +12,6 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
 
   CreateQuestionCubit(this._quizRepository, this._appMessageHandler)
     : super(CreateQuestionState());
-
-
 
   Future<void> fetchCategories() async {
     if (state.isLoading) return;
@@ -32,18 +29,36 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     );
   }
 
-  void createQuestion() async{
-    final result = await  _quizRepository.createQuestion();
+  void createQuestion(String title, String description) async {
+    final blockId = state.selectedBlock?.id;
+    final categoryId = state.selectedCategory?.id;
+
+    if (categoryId == null) {
+      _appMessageHandler.handleDialog(UnknownException("Category id is null"));
+      return;
+    }
+
+    if (blockId == null) {
+      _appMessageHandler.handleDialog(UnknownException("Block id is null"));
+      return;
+    }
+
+    final result = await _quizRepository.createQuestion(
+      blockId: blockId,
+      questionText: description,
+      questionType: state.questionType,
+      categoryId: categoryId,
+      answers: state.answers,
+    );
+
+    result.fold((e) {}, (value) {});
   }
 
-  void reset() {
-    emit(CreateQuestionState());
-  }
+  void reset() => emit(CreateQuestionState());
 
   void successMessage() {
     _appMessageHandler.handleDialog(
       SuccessException("Question created successfully"),
     );
   }
-
 }

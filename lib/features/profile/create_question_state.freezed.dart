@@ -19,6 +19,10 @@ mixin _$CreateQuestionState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   List<CategoryModel> get categories => throw _privateConstructorUsedError;
+  List<AnswerModel> get answers => throw _privateConstructorUsedError;
+  MyBlockModel? get selectedBlock => throw _privateConstructorUsedError;
+  CategoryModel? get selectedCategory => throw _privateConstructorUsedError;
+  QuestionType get questionType => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CreateQuestionStateCopyWith<CreateQuestionState> get copyWith =>
@@ -31,7 +35,14 @@ abstract class $CreateQuestionStateCopyWith<$Res> {
           CreateQuestionState value, $Res Function(CreateQuestionState) then) =
       _$CreateQuestionStateCopyWithImpl<$Res, CreateQuestionState>;
   @useResult
-  $Res call({bool isLoading, String? error, List<CategoryModel> categories});
+  $Res call(
+      {bool isLoading,
+      String? error,
+      List<CategoryModel> categories,
+      List<AnswerModel> answers,
+      MyBlockModel? selectedBlock,
+      CategoryModel? selectedCategory,
+      QuestionType questionType});
 }
 
 /// @nodoc
@@ -50,6 +61,10 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
     Object? isLoading = null,
     Object? error = freezed,
     Object? categories = null,
+    Object? answers = null,
+    Object? selectedBlock = freezed,
+    Object? selectedCategory = freezed,
+    Object? questionType = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -64,6 +79,22 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<CategoryModel>,
+      answers: null == answers
+          ? _value.answers
+          : answers // ignore: cast_nullable_to_non_nullable
+              as List<AnswerModel>,
+      selectedBlock: freezed == selectedBlock
+          ? _value.selectedBlock
+          : selectedBlock // ignore: cast_nullable_to_non_nullable
+              as MyBlockModel?,
+      selectedCategory: freezed == selectedCategory
+          ? _value.selectedCategory
+          : selectedCategory // ignore: cast_nullable_to_non_nullable
+              as CategoryModel?,
+      questionType: null == questionType
+          ? _value.questionType
+          : questionType // ignore: cast_nullable_to_non_nullable
+              as QuestionType,
     ) as $Val);
   }
 }
@@ -76,7 +107,14 @@ abstract class _$$CreateQuestionStateImplCopyWith<$Res>
       __$$CreateQuestionStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, String? error, List<CategoryModel> categories});
+  $Res call(
+      {bool isLoading,
+      String? error,
+      List<CategoryModel> categories,
+      List<AnswerModel> answers,
+      MyBlockModel? selectedBlock,
+      CategoryModel? selectedCategory,
+      QuestionType questionType});
 }
 
 /// @nodoc
@@ -93,6 +131,10 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? error = freezed,
     Object? categories = null,
+    Object? answers = null,
+    Object? selectedBlock = freezed,
+    Object? selectedCategory = freezed,
+    Object? questionType = null,
   }) {
     return _then(_$CreateQuestionStateImpl(
       isLoading: null == isLoading
@@ -107,6 +149,22 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<CategoryModel>,
+      answers: null == answers
+          ? _value._answers
+          : answers // ignore: cast_nullable_to_non_nullable
+              as List<AnswerModel>,
+      selectedBlock: freezed == selectedBlock
+          ? _value.selectedBlock
+          : selectedBlock // ignore: cast_nullable_to_non_nullable
+              as MyBlockModel?,
+      selectedCategory: freezed == selectedCategory
+          ? _value.selectedCategory
+          : selectedCategory // ignore: cast_nullable_to_non_nullable
+              as CategoryModel?,
+      questionType: null == questionType
+          ? _value.questionType
+          : questionType // ignore: cast_nullable_to_non_nullable
+              as QuestionType,
     ));
   }
 }
@@ -117,8 +175,13 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
   const _$CreateQuestionStateImpl(
       {this.isLoading = false,
       this.error,
-      final List<CategoryModel> categories = const []})
-      : _categories = categories;
+      final List<CategoryModel> categories = const [],
+      final List<AnswerModel> answers = const [],
+      this.selectedBlock,
+      this.selectedCategory,
+      this.questionType = QuestionType.singleSelect})
+      : _categories = categories,
+        _answers = answers;
 
   @override
   @JsonKey()
@@ -134,9 +197,26 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
     return EqualUnmodifiableListView(_categories);
   }
 
+  final List<AnswerModel> _answers;
+  @override
+  @JsonKey()
+  List<AnswerModel> get answers {
+    if (_answers is EqualUnmodifiableListView) return _answers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_answers);
+  }
+
+  @override
+  final MyBlockModel? selectedBlock;
+  @override
+  final CategoryModel? selectedCategory;
+  @override
+  @JsonKey()
+  final QuestionType questionType;
+
   @override
   String toString() {
-    return 'CreateQuestionState(isLoading: $isLoading, error: $error, categories: $categories)';
+    return 'CreateQuestionState(isLoading: $isLoading, error: $error, categories: $categories, answers: $answers, selectedBlock: $selectedBlock, selectedCategory: $selectedCategory, questionType: $questionType)';
   }
 
   @override
@@ -148,12 +228,26 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
             const DeepCollectionEquality()
-                .equals(other._categories, _categories));
+                .equals(other._categories, _categories) &&
+            const DeepCollectionEquality().equals(other._answers, _answers) &&
+            (identical(other.selectedBlock, selectedBlock) ||
+                other.selectedBlock == selectedBlock) &&
+            (identical(other.selectedCategory, selectedCategory) ||
+                other.selectedCategory == selectedCategory) &&
+            (identical(other.questionType, questionType) ||
+                other.questionType == questionType));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading, error,
-      const DeepCollectionEquality().hash(_categories));
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      error,
+      const DeepCollectionEquality().hash(_categories),
+      const DeepCollectionEquality().hash(_answers),
+      selectedBlock,
+      selectedCategory,
+      questionType);
 
   @JsonKey(ignore: true)
   @override
@@ -167,7 +261,11 @@ abstract class _CreateQuestionState implements CreateQuestionState {
   const factory _CreateQuestionState(
       {final bool isLoading,
       final String? error,
-      final List<CategoryModel> categories}) = _$CreateQuestionStateImpl;
+      final List<CategoryModel> categories,
+      final List<AnswerModel> answers,
+      final MyBlockModel? selectedBlock,
+      final CategoryModel? selectedCategory,
+      final QuestionType questionType}) = _$CreateQuestionStateImpl;
 
   @override
   bool get isLoading;
@@ -175,6 +273,14 @@ abstract class _CreateQuestionState implements CreateQuestionState {
   String? get error;
   @override
   List<CategoryModel> get categories;
+  @override
+  List<AnswerModel> get answers;
+  @override
+  MyBlockModel? get selectedBlock;
+  @override
+  CategoryModel? get selectedCategory;
+  @override
+  QuestionType get questionType;
   @override
   @JsonKey(ignore: true)
   _$$CreateQuestionStateImplCopyWith<_$CreateQuestionStateImpl> get copyWith =>

@@ -1,26 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
-
-enum QuestionType {
-  multiple,
-  single,
-  trueFalse;
-
-  static QuestionType fromString(String? type) {
-    if (type == 'multiple') {
-      return multiple;
-    } else if (type == 'single') {
-      return single;
-    } else if (type == 'true_false') {
-      return trueFalse;
-    } else {
-      return multiple;
-    }
-  }
-}
 
 class QuizItem extends Equatable {
   final int? id;

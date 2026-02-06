@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
-import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/global_quiz_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
@@ -43,5 +45,11 @@ abstract class QuizRepository {
     required AccessType accessType,
   });
 
-  Future<Either<AppException, QuestionModel>> createQuestion();
+  Future<Either<AppException, QuestionModel>> createQuestion({
+    required int blockId,
+    required String questionText,
+    required QuestionType questionType,
+    required int categoryId,
+    required List<AnswerModel> answers,
+  });
 }

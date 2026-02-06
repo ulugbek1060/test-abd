@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
