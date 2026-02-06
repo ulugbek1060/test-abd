@@ -43,6 +43,8 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       return;
     }
 
+    emit(state.copyWith(isLoading: true));
+
     final result = await _quizRepository.createQuestion(
       blockId: blockId,
       questionText: description,
@@ -51,7 +53,13 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       answers: state.answers,
     );
 
-    result.fold((e) {}, (value) {});
+    result.fold((e) {
+      emit(state.copyWith(error: e.message, isLoading: false));
+      _appMessageHandler.handleDialog(e);
+    }, (value) {
+      // emit(state.copyWith(isLoading: false, question: value));
+      successMessage();
+    });
   }
 
   void reset() => emit(CreateQuestionState());

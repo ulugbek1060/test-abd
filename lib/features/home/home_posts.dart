@@ -533,6 +533,17 @@ class _AnswersList extends StatelessWidget {
               ? (_) {}
               : (answerId) => cubit.submitAnswer(questionId!, [answerId ?? -1]),
         );
+
+      // TODO create text question card
+      case QuestionType.textQuestion:
+        return TrueFalseAnswerCard(
+          answers: answers,
+          myAnswersId: myAnswersId,
+          isCompleted: isCompleted,
+          onSubmitTap: isLoading
+              ? (_) {}
+              : (answerId) => cubit.submitAnswer(questionId!, [answerId ?? -1]),
+        );
       default:
         return SingleAnswerCard(
           answers: answers,
