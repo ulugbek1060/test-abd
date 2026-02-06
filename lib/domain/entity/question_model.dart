@@ -162,4 +162,43 @@ class QuestionModel extends Equatable {
       roundImage: result.roundImage,
     );
   }
+
+  static QuestionModel fromAny(dynamic data) {
+    return QuestionModel(
+      id: data.id,
+      test: data.test,
+      testTitle: data.testTitle,
+      questionText: data.questionText,
+      questionType: data.questionType,
+      orderIndex: data.orderIndex,
+      media: data.media,
+      answers: data.answers
+          ?.map(
+            (answer) => AnswerModel(
+              id: answer.id,
+              letter: answer.letter,
+              answerText: answer.answerText,
+              isCorrect: answer.isCorrect,
+            ),
+          )
+          .toList(),
+      testDescription: data.testDescription,
+      correctAnswerText: data.correctAnswerText,
+      answerLanguage: data.answerLanguage,
+      correctCount: data.correctCount,
+      wrongCount: data.wrongCount,
+      difficultyPercentage: data.difficultyPercentage?.toDouble(),
+      userAttemptCount: data.userAttemptCount,
+      user: UserItemModel(
+        id: data.user?.id,
+        username: data.user?.username,
+        profileImage: data.user?.profileImage,
+        isBadged: data.user?.isBadged,
+        isFollowing: data.user?.isFollowing,
+        isPremium: data.user?.isPremium,
+      ),
+      createdAt: data.createdAt,
+      roundImage: data.roundImage,
+    );
+  }
 }

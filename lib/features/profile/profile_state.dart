@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:testabd/domain/account/entities/my_info_model.dart';
 import 'package:testabd/domain/account/entities/user_connections_model.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
 
@@ -9,16 +10,13 @@ part 'profile_state.freezed.dart';
 @freezed
 class ProfileState with _$ProfileState {
   const factory ProfileState({
-    @Default(false) bool isLoading,
-    @Default(null) String? error,
-    // main data state
+    String? error,
     MyInfoModel? myInfoModel,
-    // user followers
+    @Default(false) bool isLoading,
     @Default(UserConnectionsState()) UserConnectionsState userConnectionsState,
-    // questions bookmark
     @Default(QuestionsBookmarkState()) QuestionsBookmarkState questionsBookmarkState,
-    // my questions
     @Default(MyBlocksState()) MyBlocksState myBlocksState,
+    @Default(MyQuestionsState()) MyQuestionsState myQuestionsState,
   }) = _ProfileState;
 }
 
@@ -46,5 +44,17 @@ class MyBlocksState with _$MyBlocksState {
     @Default(false) bool isLoading,
     String? error,
     @Default([]) List<MyBlockModel> myQuestions,
+  }) = _MyBlocksState;
+}
+
+@freezed
+class MyQuestionsState with _$MyQuestionsState {
+  const factory MyQuestionsState({
+    @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
+    String? previous,
+    String? next,
+    String? error,
+    @Default([]) List<QuestionModel> myQuestions,
   }) = _MyQuestionsState;
 }

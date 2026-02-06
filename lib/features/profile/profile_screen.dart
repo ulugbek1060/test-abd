@@ -9,6 +9,7 @@ import 'package:testabd/core/enums/connections_enum.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
+import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/question_difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
@@ -20,19 +21,21 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return _View();
-  }
+  Widget build(BuildContext context) => BlocProvider(
+    create: (_) => locator<ProfileCubit>(),
+    child: const _View(),
+  );
+
 }
 
 class _View extends StatefulWidget {
   const _View();
-
   @override
   State<_View> createState() => _ViewState();
 }
 
 class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
+
   late TabController _tabController;
   late var pageTye;
   late var _blockKey;
@@ -892,29 +895,6 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return true;
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  final String text;
-
-  const _ActionButton({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 36,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Theme.of(context).colorScheme.surface),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-      ),
-    );
   }
 }
 

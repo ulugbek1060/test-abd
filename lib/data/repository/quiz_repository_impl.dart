@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
@@ -170,6 +171,28 @@ class QuizRepositoryImpl extends QuizRepository {
         answers,
       );
       return Right(QuestionModel.fromResponse(result));
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, PagedData<String, QuestionModel>>>
+  getMyQuestions({required String page, required int pageSize}) async {
+    try {
+      final result = await _quizSource.getMyQuestions(
+        page: page,
+        pageSize: pageSize,
+      );
+      final data = PagedData(
+        count: result.count,
+        next: result.next,
+        previous: result.previous,
+        data: result.results.map((e) => QuestionModel.fromAny(e)).toList(),
+      );
+      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

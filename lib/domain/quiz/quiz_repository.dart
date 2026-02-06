@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
-import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
+import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
@@ -18,39 +18,35 @@ abstract class QuizRepository {
     required int page,
     required int pageSize,
   });
-
   Future<Either<AppException, CheckAnswerModel>> submitAnswer({
     required int questionId,
     required List<int> selectedAnswers,
     int? duration,
   });
-
   Future<Either<AppException, List<QuizItem>>> getUserQuestions(int userId);
-
   Future<Either<AppException, TopicsModel>> getTopics(
     int userId, {
     int? page,
     int? pageSize,
   });
-
   Future<Either<AppException, QuestionsBookmarkModel>> getQuestionsBookmark();
-
   Future<Either<AppException, List<MyBlockModel>>> getMyBlocks();
-
   Future<Either<AppException, List<CategoryModel>>> getCategories();
-
   Future<Either<AppException, MyBlockModel>> createBlock({
     required String title,
     required String description,
     required int categoryId,
     required AccessType accessType,
   });
-
   Future<Either<AppException, QuestionModel>> createQuestion({
     required int blockId,
     required String questionText,
     required QuestionType questionType,
     required int categoryId,
     required List<AnswerItemModel> answers,
+  });
+  Future<Either<AppException, PagedData<String, QuestionModel>>> getMyQuestions({
+    required String page,
+    required int pageSize,
   });
 }

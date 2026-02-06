@@ -22,6 +22,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   late final StreamSubscription _themeSubscription;
   late final StreamSubscription _myInfoSubscription;
 
+  static const int _pageSize = 20;
+
   ProfileCubit(
     this._accountRepository,
     this._quizRepository,
@@ -48,6 +50,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> load() async {
     fetchUserInfo();
     fetchMyBlocks();
+    fetchMyQuestions();
   }
 
   Future<void> refresh() async {
@@ -182,15 +185,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> fetchBlockQuizBookmark() async {
-    // TODO fetch block quiz bookmark
-  }
+  /// this paginated question list
+  Future<void> fetchMyQuestions() async {
 
-  Future<void> fetchCountries() async {
-    // TODO fetch countries
-  }
 
-  Future<void> fetchRecent() async {
-    // TODO fetch recent
+    final result = await _quizRepository.getMyQuestions(
+      pageSize: _pageSize,
+      page: "",
+    );
+    result.fold((e) {}, (value) {});
   }
 }

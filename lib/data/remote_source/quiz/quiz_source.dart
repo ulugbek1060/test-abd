@@ -8,6 +8,7 @@ import 'package:testabd/data/remote_source/quiz/models/followed_questions_respon
 import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
@@ -17,6 +18,25 @@ import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'models/block_questions_response.dart';
 
 abstract class QuizSource {
+  Future<List<UserQuestionResponse>> getUserQuestions(int userId);
+
+  Future<BlockQuestionsResponse> getBlockTests(int blockId);
+
+  Future<dynamic> bookmarkQuestions(int questionId);
+
+  Future<BookmarkQuestionsResponse> getQuestionsBookmark();
+
+  Future<List<CategoryResponse>> getCategories();
+
+  Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
+
+  Future<List<MyBlockResponse>> getMyBlocks();
+
+  Future<QuestionsResponse> getMyQuestions({
+    required String page,
+    required int pageSize,
+  });
+
   Future<FollowedQuestionsResponse> getFollowedQuestions(
     int page,
     int pageSize,
@@ -33,20 +53,6 @@ abstract class QuizSource {
     int? page,
     int? pageSize,
   });
-
-  Future<List<UserQuestionResponse>> getUserQuestions(int userId);
-
-  Future<BlockQuestionsResponse> getBlockTests(int blockId);
-
-  Future<dynamic> bookmarkQuestions(int questionId);
-
-  Future<BookmarkQuestionsResponse> getQuestionsBookmark();
-
-  Future<List<CategoryResponse>> getCategories();
-
-  Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
-
-  Future<List<MyBlockResponse>> getMyBlocks();
 
   Future<MyBlockResponse> createBlock(
     String title,
@@ -305,6 +311,30 @@ class QuizSourceImpl implements QuizSource {
         },
       );
       return QuestionResponse.fromJson(response.data);
+    } on DioException catch (error) {
+      throw error.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<QuestionsResponse> getMyQuestions({
+    required String page,
+    required int pageSize,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/quiz/qs/',
+        options: Options(
+          headers: {
+            "ordering": "-created_at",
+            "page_size": pageSize,
+            if (page.isNotEmpty) "page": page,
+          },
+        ),
+      );
+      return QuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

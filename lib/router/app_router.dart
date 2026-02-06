@@ -112,7 +112,6 @@ final appRouter = GoRouter(
           CupertinoPage(child: const NotificationsScreen()),
     ),
 
-
     GoRoute(
       path: AppRouter.userProfile,
       pageBuilder: (context, state) {
@@ -289,10 +288,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRouter.profile,
-              builder: (_, state) => BlocProvider(
-                create: (_) => locator<ProfileCubit>(),
-                child: ProfileScreen(),
-              ),
+              builder: (_, state) => ProfileScreen(),
             ),
           ],
         ),
