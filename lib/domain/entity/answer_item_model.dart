@@ -31,6 +31,14 @@ class AnswerItemModel extends Equatable {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "letter": letter,
+      "answer_text": answerText,
+      "is_correct": isCorrect,
+    };
+  }
+
   @override
   List<Object?> get props => [id, letter, answerText, isCorrect, isLoading];
 }

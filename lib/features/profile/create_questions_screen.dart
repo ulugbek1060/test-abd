@@ -5,19 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/domain/entity/access_enum.dart';
 import 'package:testabd/features/profile/create_question_cubit.dart';
+import 'package:testabd/features/profile/create_question_state.dart';
 
 class CreateQuestionsScreen extends StatelessWidget {
   const CreateQuestionsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => locator<CreateQuestionCubit>(),
-      child: const _View(),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider(
+    create: (_) => locator<CreateQuestionCubit>(),
+    child: const _View(),
+  );
 }
 
 class _View extends StatefulWidget {
@@ -28,23 +26,22 @@ class _View extends StatefulWidget {
 }
 
 class _ViewState extends State<_View> {
-  late final TextEditingController _blockTitleController;
-  late final TextEditingController _blockDescriptionController;
-
-  int? _selectedCategory;
-  AccessType _accessType = AccessType.public;
+  late final TextEditingController _questionTitle;
+  late final TextEditingController _questionDescription;
+  int randomSeed = 0;
 
   @override
   void initState() {
-    _blockTitleController = TextEditingController();
-    _blockDescriptionController = TextEditingController();
+    randomSeed = Random().nextInt(100);
+    _questionTitle = TextEditingController();
+    _questionDescription = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _blockTitleController.dispose();
-    _blockDescriptionController.dispose();
+    _questionTitle.dispose();
+    _questionDescription.dispose();
     super.dispose();
   }
 
@@ -53,185 +50,177 @@ class _ViewState extends State<_View> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Create Block')),
+    return BlocBuilder<CreateQuestionCubit, CreateQuestionState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(title: const Text('Create Block')),
 
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SizedBox(
-            height: 52,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                // submit logic
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                "Save changes",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ),
-      ),
-
-      body: Stack(
-        children: [
-          // Background Image
-          Image.network(
-            'https://picsum.photos/seed/${Random().nextInt(100)}/${size.width.toInt()}/${size.height.toInt()}',
-            fit: BoxFit.cover,
-            width: size.width,
-            height: size.height,
-          ),
-
-          // Blur Layer
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: Container(
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-              ),
-            ),
-          ),
-
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /// Category
-                _DropdownField(
-                  label: "Category",
-                  hint: "Select category",
-                  value: _selectedCategory,
-                  items: const [
-                    _DropdownItem(id: 1, name: "Category 1"),
-                    _DropdownItem(id: 2, name: "Category 2"),
-                    _DropdownItem(id: 3, name: "Category 3"),
-                  ],
-                  onChanged: (v) => setState(() => _selectedCategory = v),
-                ),
-
-                /// Category
-                _DropdownField(
-                  label: "Category",
-                  hint: "Select category",
-                  value: _selectedCategory,
-                  items: const [
-                    _DropdownItem(id: 1, name: "Category 1"),
-                    _DropdownItem(id: 2, name: "Category 2"),
-                    _DropdownItem(id: 3, name: "Category 3"),
-                  ],
-                  onChanged: (v) => setState(() => _selectedCategory = v),
-                ),
-
-                /// Category
-                _DropdownField(
-                  label: "Category",
-                  hint: "Select category",
-                  value: _selectedCategory,
-                  items: const [
-                    _DropdownItem(id: 1, name: "Category 1"),
-                    _DropdownItem(id: 2, name: "Category 2"),
-                    _DropdownItem(id: 3, name: "Category 3"),
-                  ],
-                  onChanged: (v) => setState(() => _selectedCategory = v),
-                ),
-
-                /// Description
-                Text(
-                  "Block description",
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                SizedBox(
-                  height: 150,
-                  child: TextFormField(
-                    controller: _blockDescriptionController,
-                    expands: true,
-                    maxLines: null,
-                    textAlignVertical: TextAlignVertical.top,
-                    style: TextStyle(color: theme.colorScheme.onSurface),
-                    decoration: InputDecoration(
-                      hintText: "Describe your block",
-                      filled: true,
-                      contentPadding: const EdgeInsets.all(12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                height: 52,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // submit logic
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 20),
-
-                /// Category
-                _DropdownField(
-                  label: "Category",
-                  hint: "Select category",
-                  value: _selectedCategory,
-                  items: const [
-                    _DropdownItem(id: 1, name: "Category 1"),
-                    _DropdownItem(id: 2, name: "Category 2"),
-                    _DropdownItem(id: 3, name: "Category 3"),
-                  ],
-                  onChanged: (v) => setState(() => _selectedCategory = v),
-                ),
-
-                const SizedBox(height: 8),
-
-                /// Access type
-                Text(
-                  "Access type",
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
+                  child: const Text(
+                    "Save changes",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
-                const SizedBox(height: 8),
-
-                _accessTile(
-                  context: context,
-                  value: AccessType.public,
-                  groupValue: _accessType,
-                  title: "Public",
-                  subtitle: "Anyone can find and take this block",
-                  onChanged: (v) => setState(() => _accessType = v!),
-                ),
-
-                _accessTile(
-                  context: context,
-                  value: AccessType.unlisted,
-                  groupValue: _accessType,
-                  title: "Unlisted",
-                  subtitle: "Only people with the link can access",
-                  onChanged: (v) => setState(() => _accessType = v!),
-                ),
-
-                _accessTile(
-                  context: context,
-                  value: AccessType.private,
-                  groupValue: _accessType,
-                  title: "Private",
-                  subtitle: "Only you can access this block",
-                  onChanged: (v) => setState(() => _accessType = v!),
-                ),
-              ],
+              ),
             ),
           ),
-        ],
-      ),
+
+          body: state.isLoading
+              ? ProgressView()
+              : Stack(
+                  children: [
+                    // Background Image
+                    Image.network(
+                      'https://picsum.photos/seed/$randomSeed/${size.width.toInt()}/${size.height.toInt()}',
+                      fit: BoxFit.cover,
+                      width: size.width,
+                      height: size.height,
+                    ),
+
+                    // Blur Layer
+                    Positioned.fill(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surface.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+
+                    SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /// Category
+                          _DropdownField(
+                            label: "Category",
+                            hint: "Select category",
+                            value: state.selectedCategory?.id,
+                            items: state.categories
+                                .map(
+                                  (e) => _DropdownItem(
+                                    id: e.id ?? 0,
+                                    name: e.title ?? '',
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: context
+                                .read<CreateQuestionCubit>()
+                                .selectCategory,
+                          ),
+
+                          /// Category
+                          _DropdownField(
+                            label: "Blocks",
+                            hint: "Select block",
+                            value: state.selectedBlock?.id,
+                            items: state.blocks
+                                .map(
+                                  (e) => _DropdownItem(
+                                    id: e.id ?? 0,
+                                    name: e.title ?? "",
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: context
+                                .read<CreateQuestionCubit>()
+                                .selectBlock,
+                          ),
+
+                          /// Category
+                          _DropdownField(
+                            label: "Category",
+                            hint: "Select category",
+                            value: 0,
+                            items: const [
+                              _DropdownItem(id: 0, name: "Category 1"),
+                              _DropdownItem(id: 1, name: "Category 2"),
+                              _DropdownItem(id: 2, name: "Category 3"),
+                            ],
+                            onChanged: (v) {},
+                          ),
+
+                          /// Description
+                          Text(
+                            "Block description",
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          SizedBox(
+                            height: 150,
+                            child: TextFormField(
+                              controller: _questionDescription,
+                              expands: true,
+                              maxLines: null,
+                              textAlignVertical: TextAlignVertical.top,
+                              style: TextStyle(
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: "Describe your block",
+                                filled: true,
+                                contentPadding: const EdgeInsets.all(12),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          /// Access type
+                          Text(
+                            "Access type",
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          // TODO add answer
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<CreateQuestionCubit>().addAnswer();
+                            },
+                            child: Text("Add answer"),
+                          ),
+
+                          // TODO answer buttons a, b, c, d
+                          ...answerList(state),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      },
     );
+  }
+
+  List<Widget> answerList(CreateQuestionState state) {
+    return state.answers.map((e) => Text(e.letter ?? 'answer')).toList();
   }
 }
 
@@ -306,35 +295,4 @@ class _DropdownField extends StatelessWidget {
       ),
     );
   }
-}
-
-/// ================= ACCESS TILE =================
-Widget _accessTile({
-  required BuildContext context,
-  required AccessType value,
-  required AccessType groupValue,
-  required String title,
-  required String subtitle,
-  required ValueChanged<AccessType?> onChanged,
-}) {
-  return Card(
-    elevation: 0,
-    margin: const EdgeInsets.only(bottom: 8),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    color: Theme.of(context).colorScheme.surface,
-    child: RadioListTile<AccessType>(
-      value: value,
-      groupValue: groupValue,
-      onChanged: onChanged,
-      activeColor: Theme.of(context).colorScheme.primary,
-      title: Text(
-        title,
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-      ),
-    ),
-  );
 }

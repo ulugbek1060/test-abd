@@ -5,6 +5,7 @@ import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
@@ -158,7 +159,7 @@ class QuizRepositoryImpl extends QuizRepository {
     required String questionText,
     required QuestionType questionType,
     required int categoryId,
-    required List<AnswerModel> answers,
+    required List<AnswerItemModel> answers,
   }) async {
     try {
       final result = await _quizSource.createQuestion(

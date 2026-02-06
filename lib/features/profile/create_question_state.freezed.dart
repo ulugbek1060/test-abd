@@ -18,8 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$CreateQuestionState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  List<MyBlockModel> get blocks => throw _privateConstructorUsedError;
   List<CategoryModel> get categories => throw _privateConstructorUsedError;
-  List<AnswerModel> get answers => throw _privateConstructorUsedError;
+  List<AnswerItemModel> get answers => throw _privateConstructorUsedError;
   MyBlockModel? get selectedBlock => throw _privateConstructorUsedError;
   CategoryModel? get selectedCategory => throw _privateConstructorUsedError;
   QuestionType get questionType => throw _privateConstructorUsedError;
@@ -38,8 +39,9 @@ abstract class $CreateQuestionStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       String? error,
+      List<MyBlockModel> blocks,
       List<CategoryModel> categories,
-      List<AnswerModel> answers,
+      List<AnswerItemModel> answers,
       MyBlockModel? selectedBlock,
       CategoryModel? selectedCategory,
       QuestionType questionType});
@@ -60,6 +62,7 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
   $Res call({
     Object? isLoading = null,
     Object? error = freezed,
+    Object? blocks = null,
     Object? categories = null,
     Object? answers = null,
     Object? selectedBlock = freezed,
@@ -75,6 +78,10 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      blocks: null == blocks
+          ? _value.blocks
+          : blocks // ignore: cast_nullable_to_non_nullable
+              as List<MyBlockModel>,
       categories: null == categories
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -82,7 +89,7 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
       answers: null == answers
           ? _value.answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<AnswerModel>,
+              as List<AnswerItemModel>,
       selectedBlock: freezed == selectedBlock
           ? _value.selectedBlock
           : selectedBlock // ignore: cast_nullable_to_non_nullable
@@ -110,8 +117,9 @@ abstract class _$$CreateQuestionStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       String? error,
+      List<MyBlockModel> blocks,
       List<CategoryModel> categories,
-      List<AnswerModel> answers,
+      List<AnswerItemModel> answers,
       MyBlockModel? selectedBlock,
       CategoryModel? selectedCategory,
       QuestionType questionType});
@@ -130,6 +138,7 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? error = freezed,
+    Object? blocks = null,
     Object? categories = null,
     Object? answers = null,
     Object? selectedBlock = freezed,
@@ -145,6 +154,10 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      blocks: null == blocks
+          ? _value._blocks
+          : blocks // ignore: cast_nullable_to_non_nullable
+              as List<MyBlockModel>,
       categories: null == categories
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -152,7 +165,7 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
       answers: null == answers
           ? _value._answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<AnswerModel>,
+              as List<AnswerItemModel>,
       selectedBlock: freezed == selectedBlock
           ? _value.selectedBlock
           : selectedBlock // ignore: cast_nullable_to_non_nullable
@@ -175,12 +188,14 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
   const _$CreateQuestionStateImpl(
       {this.isLoading = false,
       this.error,
+      final List<MyBlockModel> blocks = const [],
       final List<CategoryModel> categories = const [],
-      final List<AnswerModel> answers = const [],
+      final List<AnswerItemModel> answers = const [],
       this.selectedBlock,
       this.selectedCategory,
       this.questionType = QuestionType.singleSelect})
-      : _categories = categories,
+      : _blocks = blocks,
+        _categories = categories,
         _answers = answers;
 
   @override
@@ -188,6 +203,15 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
   final bool isLoading;
   @override
   final String? error;
+  final List<MyBlockModel> _blocks;
+  @override
+  @JsonKey()
+  List<MyBlockModel> get blocks {
+    if (_blocks is EqualUnmodifiableListView) return _blocks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_blocks);
+  }
+
   final List<CategoryModel> _categories;
   @override
   @JsonKey()
@@ -197,10 +221,10 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
     return EqualUnmodifiableListView(_categories);
   }
 
-  final List<AnswerModel> _answers;
+  final List<AnswerItemModel> _answers;
   @override
   @JsonKey()
-  List<AnswerModel> get answers {
+  List<AnswerItemModel> get answers {
     if (_answers is EqualUnmodifiableListView) return _answers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_answers);
@@ -216,7 +240,7 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
 
   @override
   String toString() {
-    return 'CreateQuestionState(isLoading: $isLoading, error: $error, categories: $categories, answers: $answers, selectedBlock: $selectedBlock, selectedCategory: $selectedCategory, questionType: $questionType)';
+    return 'CreateQuestionState(isLoading: $isLoading, error: $error, blocks: $blocks, categories: $categories, answers: $answers, selectedBlock: $selectedBlock, selectedCategory: $selectedCategory, questionType: $questionType)';
   }
 
   @override
@@ -227,6 +251,7 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
+            const DeepCollectionEquality().equals(other._blocks, _blocks) &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
             const DeepCollectionEquality().equals(other._answers, _answers) &&
@@ -243,6 +268,7 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
       runtimeType,
       isLoading,
       error,
+      const DeepCollectionEquality().hash(_blocks),
       const DeepCollectionEquality().hash(_categories),
       const DeepCollectionEquality().hash(_answers),
       selectedBlock,
@@ -261,8 +287,9 @@ abstract class _CreateQuestionState implements CreateQuestionState {
   const factory _CreateQuestionState(
       {final bool isLoading,
       final String? error,
+      final List<MyBlockModel> blocks,
       final List<CategoryModel> categories,
-      final List<AnswerModel> answers,
+      final List<AnswerItemModel> answers,
       final MyBlockModel? selectedBlock,
       final CategoryModel? selectedCategory,
       final QuestionType questionType}) = _$CreateQuestionStateImpl;
@@ -272,9 +299,11 @@ abstract class _CreateQuestionState implements CreateQuestionState {
   @override
   String? get error;
   @override
+  List<MyBlockModel> get blocks;
+  @override
   List<CategoryModel> get categories;
   @override
-  List<AnswerModel> get answers;
+  List<AnswerItemModel> get answers;
   @override
   MyBlockModel? get selectedBlock;
   @override

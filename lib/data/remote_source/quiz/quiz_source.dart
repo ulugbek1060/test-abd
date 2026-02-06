@@ -12,6 +12,7 @@ import 'package:testabd/data/remote_source/quiz/models/random_questions_response
 import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/domain/entity/answer_item_model.dart';
 
 import 'models/block_questions_response.dart';
 
@@ -59,7 +60,7 @@ abstract class QuizSource {
     String questionText,
     QuestionType questionType,
     int categoryId,
-    List<AnswerModel> answers,
+    List<AnswerItemModel> answers,
   );
 }
 
@@ -266,7 +267,7 @@ class QuizSourceImpl implements QuizSource {
     String questionText,
     QuestionType questionType,
     int categoryId,
-    List<AnswerModel> answers,
+    List<AnswerItemModel> answers,
   ) async {
     // {
     // "test" : 143,
