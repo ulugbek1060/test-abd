@@ -3,12 +3,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testabd/core/widgets/loading_widget.dart';
+import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/entity/access_enum.dart';
-
-/// Mock enums & cubit (replace with your real ones)
-class CreateBlockCubit extends Cubit<void> {
-  CreateBlockCubit() : super(null);
-}
+import 'package:testabd/features/profile/create_block_cubit.dart';
+import 'package:testabd/features/profile/create_block_state.dart';
 
 class CreateBlockScreen extends StatelessWidget {
   const CreateBlockScreen({super.key});
@@ -16,7 +15,7 @@ class CreateBlockScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CreateBlockCubit(),
+      create: (_) => locator<CreateBlockCubit>()..fetchCategories(),
       child: const _View(),
     );
   }
@@ -32,12 +31,11 @@ class _View extends StatefulWidget {
 class _ViewState extends State<_View> {
   late final TextEditingController _blockTitleController;
   late final TextEditingController _blockDescriptionController;
-
-  int? _selectedCategory;
-  AccessType _accessType = AccessType.public;
+  int randomSeed = 0;
 
   @override
   void initState() {
+    randomSeed = Random().nextInt(100);
     _blockTitleController = TextEditingController();
     _blockDescriptionController = TextEditingController();
     super.initState();
@@ -66,7 +64,10 @@ class _ViewState extends State<_View> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // submit logic
+                context.read<CreateBlockCubit>().submit(
+                  title: _blockTitleController.text,
+                  description: _blockDescriptionController.text,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -83,140 +84,177 @@ class _ViewState extends State<_View> {
         ),
       ),
 
-      body: Stack(
-        children: [
-          // Background Image
-          Image.network(
-            'https://picsum.photos/seed/${Random().nextInt(100)}/${size.width.toInt()}/${size.height.toInt()}',
-            fit: BoxFit.cover,
-            width: size.width,
-            height: size.height,
-          ),
-
-          // Blur Layer
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: Container(
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-              ),
-            ),
-          ),
-
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Block title',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _blockTitleController,
-                  enabled: true,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Enter block title',
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+      body: BlocConsumer<CreateBlockCubit, CreateBlockState>(
+        listener: (_, state) {
+          if (state.block != null) {
+            _blockTitleController.clear();
+            _blockDescriptionController.clear();
+            randomSeed = Random().nextInt(100);
+            context.read<CreateBlockCubit>().reset();
+            context.read<CreateBlockCubit>().successMessage();
+            // TODO: Navigator.pop(context);
+          }
+        },
+        builder: (context, state) {
+          return state.isLoading
+              ? ProgressView()
+              : Stack(
+                  children: [
+                    // Background Image
+                    Image.network(
+                      'https://picsum.photos/seed/$randomSeed/${size.width.toInt()}/${size.height.toInt()}',
+                      fit: BoxFit.cover,
+                      width: size.width,
+                      height: size.height,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20),
 
-                /// Description
-                Text(
-                  "Block description",
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                SizedBox(
-                  height: 150,
-                  child: TextFormField(
-                    controller: _blockDescriptionController,
-                    expands: true,
-                    maxLines: null,
-                    textAlignVertical: TextAlignVertical.top,
-                    style: TextStyle(color: theme.colorScheme.onSurface),
-                    decoration: InputDecoration(
-                      hintText: "Describe your block",
-                      filled: true,
-                      contentPadding: const EdgeInsets.all(12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                    // Blur Layer
+                    Positioned.fill(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surface.withOpacity(0.5),
+                        ),
                       ),
                     ),
-                  ),
-                ),
 
-                const SizedBox(height: 20),
+                    RefreshIndicator(
+                      onRefresh: context.read<CreateBlockCubit>().refresh,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Block title',
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
+                                  ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _blockTitleController,
+                              enabled: true,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'Enter block title',
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
 
-                /// Category
-                _DropdownField(
-                  label: "Category",
-                  hint: "Select category",
-                  value: _selectedCategory,
-                  items: const [
-                    _DropdownItem(id: 1, name: "Category 1"),
-                    _DropdownItem(id: 2, name: "Category 2"),
-                    _DropdownItem(id: 3, name: "Category 3"),
+                            /// Description
+                            Text(
+                              "Block description",
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            SizedBox(
+                              height: 150,
+                              child: TextFormField(
+                                controller: _blockDescriptionController,
+                                expands: true,
+                                maxLines: null,
+                                textAlignVertical: TextAlignVertical.top,
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: "Describe your block",
+                                  filled: true,
+                                  contentPadding: const EdgeInsets.all(12),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            /// Category
+                            _DropdownField(
+                              label: "Category",
+                              hint: "Select category",
+                              value: state.selectedCategory?.id,
+                              items: state.categories
+                                  .map(
+                                    (e) => _DropdownItem(
+                                      id: e.id ?? 0,
+                                      name: e.title ?? "",
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (v) => context
+                                  .read<CreateBlockCubit>()
+                                  .selectCategory(v),
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            /// Access type
+                            Text(
+                              "Access type",
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            _accessTile(
+                              context: context,
+                              value: AccessType.public,
+                              groupValue: state.selectedAccessType,
+                              title: "Public",
+                              subtitle: "Anyone can find and take this block",
+                              onChanged: (v) => context
+                                  .read<CreateBlockCubit>()
+                                  .selectAccessType(v),
+                            ),
+
+                            _accessTile(
+                              context: context,
+                              value: AccessType.unlisted,
+                              groupValue: state.selectedAccessType,
+                              title: "Unlisted",
+                              subtitle: "Only people with the link can access",
+                              onChanged: (v) => context
+                                  .read<CreateBlockCubit>()
+                                  .selectAccessType(v),
+                            ),
+
+                            _accessTile(
+                              context: context,
+                              value: AccessType.private,
+                              groupValue: state.selectedAccessType,
+                              title: "Private",
+                              subtitle: "Only you can access this block",
+                              onChanged: (v) => context
+                                  .read<CreateBlockCubit>()
+                                  .selectAccessType(v),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
-                  onChanged: (v) => setState(() => _selectedCategory = v),
-                ),
-
-                const SizedBox(height: 8),
-
-                /// Access type
-                Text(
-                  "Access type",
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                _accessTile(
-                  context: context,
-                  value: AccessType.public,
-                  groupValue: _accessType,
-                  title: "Public",
-                  subtitle: "Anyone can find and take this block",
-                  onChanged: (v) => setState(() => _accessType = v!),
-                ),
-
-                _accessTile(
-                  context: context,
-                  value: AccessType.unlisted,
-                  groupValue: _accessType,
-                  title: "Unlisted",
-                  subtitle: "Only people with the link can access",
-                  onChanged: (v) => setState(() => _accessType = v!),
-                ),
-
-                _accessTile(
-                  context: context,
-                  value: AccessType.private,
-                  groupValue: _accessType,
-                  title: "Private",
-                  subtitle: "Only you can access this block",
-                  onChanged: (v) => setState(() => _accessType = v!),
-                ),
-              ],
-            ),
-          ),
-        ],
+                );
+        },
       ),
     );
   }

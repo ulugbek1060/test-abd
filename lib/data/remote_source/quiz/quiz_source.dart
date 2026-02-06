@@ -9,6 +9,7 @@ import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
+import 'package:testabd/domain/entity/access_enum.dart';
 
 import 'models/block_questions_response.dart';
 
@@ -17,23 +18,39 @@ abstract class QuizSource {
     int page,
     int pageSize,
   );
+
   Future<AnswerResponse> submitAnswer(
     int questionId,
     List<int> selectedAnswers,
     int? duration,
   );
+
   Future<TopicQuestionsResponse> getTopics(
     int userId, {
     int? page,
     int? pageSize,
   });
+
   Future<List<UserQuestionResponse>> getUserQuestions(int userId);
+
   Future<BlockQuestionsResponse> getBlockTests(int blockId);
+
   Future<dynamic> bookmarkQuestions(int questionId);
+
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
+
   Future<List<CategoryResponse>> getCategories();
+
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
+
   Future<List<MyBlockResponse>> getMyBlocks();
+
+  Future<MyBlockResponse> createBlock(
+    String title,
+    String description,
+    int categoryId,
+    AccessType accessType,
+  );
 }
 
 /// =========================> Source implementation <=========================
@@ -66,10 +83,7 @@ class QuizSourceImpl implements QuizSource {
     try {
       final response = await _dio.get(
         '/quiz/recommended/followed-questions/',
-        queryParameters: {
-          'page': page,
-          'page_size': pageSize
-        },
+        queryParameters: {'page': page, 'page_size': pageSize},
       );
       return FollowedQuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
@@ -160,10 +174,7 @@ class QuizSourceImpl implements QuizSource {
     try {
       final response = await _dio.get(
         '/quiz/random/',
-        queryParameters: {
-          'page': page,
-          'page_size': pageSize
-        },
+        queryParameters: {'page': page, 'page_size': pageSize},
       );
       return RandomQuestionModel.fromJson(response.data);
     } on DioException catch (error) {
@@ -207,6 +218,31 @@ class QuizSourceImpl implements QuizSource {
       return (response.data as List)
           .map((e) => MyBlockResponse.fromJson(e))
           .toList();
+    } on DioException catch (error) {
+      throw error.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<MyBlockResponse> createBlock(
+    String title,
+    String description,
+    int categoryId,
+    AccessType accessType,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/quiz/tests/',
+        data: {
+          "title": title,
+          "description": description,
+          "visibility": accessType.name,
+          "category_id": categoryId,
+        },
+      );
+      return MyBlockResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

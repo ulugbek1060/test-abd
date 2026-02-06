@@ -1,6 +1,18 @@
-part of 'create_block_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/domain/entity/category_model.dart';
+import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 
-@immutable
-sealed class CreateBlockState {}
+part 'create_block_state.freezed.dart';
 
-final class CreateBlockInitial extends CreateBlockState {}
+@freezed
+class CreateBlockState with _$CreateBlockState {
+  const factory CreateBlockState({
+    String? error,
+    @Default(false) bool isLoading,
+    MyBlockModel? block,
+    @Default([]) List<CategoryModel> categories,
+    CategoryModel? selectedCategory,
+    @Default(AccessType.public) AccessType selectedAccessType,
+  }) = _CreateBlockState;
+}
