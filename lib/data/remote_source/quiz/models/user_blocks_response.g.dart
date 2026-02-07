@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'topic_questions_response.dart';
+part of 'user_blocks_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TopicQuestionsResponseImpl _$$TopicQuestionsResponseImplFromJson(
+_$UserBlocksResponseImpl _$$UserBlocksResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$TopicQuestionsResponseImpl(
+    _$UserBlocksResponseImpl(
       count: (json['count'] as num?)?.toInt(),
       next: json['next'] as String?,
       previous: json['previous'] as String?,
       results: (json['results'] as List<dynamic>?)
-              ?.map((e) =>
-                  TopicTestItemResponse.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => Block.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
 
-Map<String, dynamic> _$$TopicQuestionsResponseImplToJson(
-        _$TopicQuestionsResponseImpl instance) =>
+Map<String, dynamic> _$$UserBlocksResponseImplToJson(
+        _$UserBlocksResponseImpl instance) =>
     <String, dynamic>{
       'count': instance.count,
       'next': instance.next,
@@ -28,19 +27,16 @@ Map<String, dynamic> _$$TopicQuestionsResponseImplToJson(
       'results': instance.results,
     };
 
-_$TopicTestItemResponseImpl _$$TopicTestItemResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TopicTestItemResponseImpl(
+_$BlockImpl _$$BlockImplFromJson(Map<String, dynamic> json) => _$BlockImpl(
       id: (json['id'] as num?)?.toInt(),
       user: json['user'] == null
           ? null
-          : TopicUserResponse.fromJson(json['user'] as Map<String, dynamic>),
+          : User.fromJson(json['user'] as Map<String, dynamic>),
       title: json['title'] as String?,
       description: json['description'] as String?,
       category: json['category'] == null
           ? null
-          : TopicCategoryResponse.fromJson(
-              json['category'] as Map<String, dynamic>),
+          : Category.fromJson(json['category'] as Map<String, dynamic>),
       visibility: json['visibility'] as String?,
       accessMode: json['access_mode'] as String?,
       participantRoles: json['participant_roles'] as String?,
@@ -58,8 +54,7 @@ _$TopicTestItemResponseImpl _$$TopicTestItemResponseImplFromJson(
       difficultyPercentage: (json['difficulty_percentage'] as num?)?.toDouble(),
       totalQuestions: (json['total_questions'] as num?)?.toInt(),
       questions: (json['questions'] as List<dynamic>?)
-              ?.map((e) =>
-                  TopicQuestionResponse.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       isBookmarked: json['is_bookmarked'] as bool?,
@@ -72,8 +67,7 @@ _$TopicTestItemResponseImpl _$$TopicTestItemResponseImplFromJson(
       totalWrongAttempts: (json['total_wrong_attempts'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$TopicTestItemResponseImplToJson(
-        _$TopicTestItemResponseImpl instance) =>
+Map<String, dynamic> _$$BlockImplToJson(_$BlockImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'user': instance.user,
@@ -104,9 +98,7 @@ Map<String, dynamic> _$$TopicTestItemResponseImplToJson(
       'total_wrong_attempts': instance.totalWrongAttempts,
     };
 
-_$TopicUserResponseImpl _$$TopicUserResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TopicUserResponseImpl(
+_$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       id: (json['id'] as num?)?.toInt(),
       username: json['username'] as String?,
       profileImage: json['profile_image'] as String?,
@@ -115,8 +107,7 @@ _$TopicUserResponseImpl _$$TopicUserResponseImplFromJson(
       isFollowing: json['is_following'] as bool?,
     );
 
-Map<String, dynamic> _$$TopicUserResponseImplToJson(
-        _$TopicUserResponseImpl instance) =>
+Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
@@ -126,9 +117,8 @@ Map<String, dynamic> _$$TopicUserResponseImplToJson(
       'is_following': instance.isFollowing,
     };
 
-_$TopicCategoryResponseImpl _$$TopicCategoryResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TopicCategoryResponseImpl(
+_$CategoryImpl _$$CategoryImplFromJson(Map<String, dynamic> json) =>
+    _$CategoryImpl(
       id: (json['id'] as num?)?.toInt(),
       totalTests: (json['total_tests'] as num?)?.toInt(),
       totalQuestions: (json['total_questions'] as num?)?.toInt(),
@@ -139,8 +129,7 @@ _$TopicCategoryResponseImpl _$$TopicCategoryResponseImplFromJson(
       image: json['image'] as String?,
     );
 
-Map<String, dynamic> _$$TopicCategoryResponseImplToJson(
-        _$TopicCategoryResponseImpl instance) =>
+Map<String, dynamic> _$$CategoryImplToJson(_$CategoryImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'total_tests': instance.totalTests,
@@ -152,9 +141,8 @@ Map<String, dynamic> _$$TopicCategoryResponseImplToJson(
       'image': instance.image,
     };
 
-_$TopicQuestionResponseImpl _$$TopicQuestionResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TopicQuestionResponseImpl(
+_$QuestionImpl _$$QuestionImplFromJson(Map<String, dynamic> json) =>
+    _$QuestionImpl(
       id: (json['id'] as num?)?.toInt(),
       test: (json['test'] as num?)?.toInt(),
       testTitle: json['test_title'] as String?,
@@ -163,8 +151,7 @@ _$TopicQuestionResponseImpl _$$TopicQuestionResponseImplFromJson(
       orderIndex: (json['order_index'] as num?)?.toInt(),
       media: json['media'] as String?,
       answers: (json['answers'] as List<dynamic>?)
-              ?.map((e) =>
-                  TopicAnswerResponse.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => Answer.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       testDescription: json['test_description'] as String?,
@@ -176,19 +163,19 @@ _$TopicQuestionResponseImpl _$$TopicQuestionResponseImplFromJson(
       userAttemptCount: (json['user_attempt_count'] as num?)?.toInt(),
       user: json['user'] == null
           ? null
-          : TopicUserResponse.fromJson(json['user'] as Map<String, dynamic>),
-      createdAt: json['created_at'] as String?,
+          : User.fromJson(json['user'] as Map<String, dynamic>),
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
       roundImage: json['round_image'] as String?,
       isBookmarked: json['is_bookmarked'] as bool?,
       isFollowing: json['is_following'] as bool?,
       category: json['category'] == null
           ? null
-          : TopicCategoryResponse.fromJson(
-              json['category'] as Map<String, dynamic>),
+          : Category.fromJson(json['category'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$TopicQuestionResponseImplToJson(
-        _$TopicQuestionResponseImpl instance) =>
+Map<String, dynamic> _$$QuestionImplToJson(_$QuestionImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'test': instance.test,
@@ -206,24 +193,21 @@ Map<String, dynamic> _$$TopicQuestionResponseImplToJson(
       'difficulty_percentage': instance.difficultyPercentage,
       'user_attempt_count': instance.userAttemptCount,
       'user': instance.user,
-      'created_at': instance.createdAt,
+      'created_at': instance.createdAt?.toIso8601String(),
       'round_image': instance.roundImage,
       'is_bookmarked': instance.isBookmarked,
       'is_following': instance.isFollowing,
       'category': instance.category,
     };
 
-_$TopicAnswerResponseImpl _$$TopicAnswerResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TopicAnswerResponseImpl(
+_$AnswerImpl _$$AnswerImplFromJson(Map<String, dynamic> json) => _$AnswerImpl(
       id: (json['id'] as num?)?.toInt(),
       letter: json['letter'] as String?,
       answerText: json['answer_text'] as String?,
       isCorrect: json['is_correct'] as bool?,
     );
 
-Map<String, dynamic> _$$TopicAnswerResponseImplToJson(
-        _$TopicAnswerResponseImpl instance) =>
+Map<String, dynamic> _$$AnswerImplToJson(_$AnswerImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'letter': instance.letter,

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'topic_questions_response.dart';
+part of 'user_blocks_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,13 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-TopicQuestionsResponse _$TopicQuestionsResponseFromJson(
-    Map<String, dynamic> json) {
-  return _TopicQuestionsResponse.fromJson(json);
+UserBlocksResponse _$UserBlocksResponseFromJson(Map<String, dynamic> json) {
+  return _UserBlocksResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TopicQuestionsResponse {
+mixin _$UserBlocksResponse {
   @JsonKey(name: 'count')
   int? get count => throw _privateConstructorUsedError;
   @JsonKey(name: 'next')
@@ -28,32 +27,31 @@ mixin _$TopicQuestionsResponse {
   @JsonKey(name: 'previous')
   String? get previous => throw _privateConstructorUsedError;
   @JsonKey(name: 'results')
-  List<TopicTestItemResponse> get results => throw _privateConstructorUsedError;
+  List<Block> get results => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TopicQuestionsResponseCopyWith<TopicQuestionsResponse> get copyWith =>
+  $UserBlocksResponseCopyWith<UserBlocksResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TopicQuestionsResponseCopyWith<$Res> {
-  factory $TopicQuestionsResponseCopyWith(TopicQuestionsResponse value,
-          $Res Function(TopicQuestionsResponse) then) =
-      _$TopicQuestionsResponseCopyWithImpl<$Res, TopicQuestionsResponse>;
+abstract class $UserBlocksResponseCopyWith<$Res> {
+  factory $UserBlocksResponseCopyWith(
+          UserBlocksResponse value, $Res Function(UserBlocksResponse) then) =
+      _$UserBlocksResponseCopyWithImpl<$Res, UserBlocksResponse>;
   @useResult
   $Res call(
       {@JsonKey(name: 'count') int? count,
       @JsonKey(name: 'next') String? next,
       @JsonKey(name: 'previous') String? previous,
-      @JsonKey(name: 'results') List<TopicTestItemResponse> results});
+      @JsonKey(name: 'results') List<Block> results});
 }
 
 /// @nodoc
-class _$TopicQuestionsResponseCopyWithImpl<$Res,
-        $Val extends TopicQuestionsResponse>
-    implements $TopicQuestionsResponseCopyWith<$Res> {
-  _$TopicQuestionsResponseCopyWithImpl(this._value, this._then);
+class _$UserBlocksResponseCopyWithImpl<$Res, $Val extends UserBlocksResponse>
+    implements $UserBlocksResponseCopyWith<$Res> {
+  _$UserBlocksResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -84,35 +82,32 @@ class _$TopicQuestionsResponseCopyWithImpl<$Res,
       results: null == results
           ? _value.results
           : results // ignore: cast_nullable_to_non_nullable
-              as List<TopicTestItemResponse>,
+              as List<Block>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$TopicQuestionsResponseImplCopyWith<$Res>
-    implements $TopicQuestionsResponseCopyWith<$Res> {
-  factory _$$TopicQuestionsResponseImplCopyWith(
-          _$TopicQuestionsResponseImpl value,
-          $Res Function(_$TopicQuestionsResponseImpl) then) =
-      __$$TopicQuestionsResponseImplCopyWithImpl<$Res>;
+abstract class _$$UserBlocksResponseImplCopyWith<$Res>
+    implements $UserBlocksResponseCopyWith<$Res> {
+  factory _$$UserBlocksResponseImplCopyWith(_$UserBlocksResponseImpl value,
+          $Res Function(_$UserBlocksResponseImpl) then) =
+      __$$UserBlocksResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'count') int? count,
       @JsonKey(name: 'next') String? next,
       @JsonKey(name: 'previous') String? previous,
-      @JsonKey(name: 'results') List<TopicTestItemResponse> results});
+      @JsonKey(name: 'results') List<Block> results});
 }
 
 /// @nodoc
-class __$$TopicQuestionsResponseImplCopyWithImpl<$Res>
-    extends _$TopicQuestionsResponseCopyWithImpl<$Res,
-        _$TopicQuestionsResponseImpl>
-    implements _$$TopicQuestionsResponseImplCopyWith<$Res> {
-  __$$TopicQuestionsResponseImplCopyWithImpl(
-      _$TopicQuestionsResponseImpl _value,
-      $Res Function(_$TopicQuestionsResponseImpl) _then)
+class __$$UserBlocksResponseImplCopyWithImpl<$Res>
+    extends _$UserBlocksResponseCopyWithImpl<$Res, _$UserBlocksResponseImpl>
+    implements _$$UserBlocksResponseImplCopyWith<$Res> {
+  __$$UserBlocksResponseImplCopyWithImpl(_$UserBlocksResponseImpl _value,
+      $Res Function(_$UserBlocksResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -123,7 +118,7 @@ class __$$TopicQuestionsResponseImplCopyWithImpl<$Res>
     Object? previous = freezed,
     Object? results = null,
   }) {
-    return _then(_$TopicQuestionsResponseImpl(
+    return _then(_$UserBlocksResponseImpl(
       count: freezed == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
@@ -139,24 +134,23 @@ class __$$TopicQuestionsResponseImplCopyWithImpl<$Res>
       results: null == results
           ? _value._results
           : results // ignore: cast_nullable_to_non_nullable
-              as List<TopicTestItemResponse>,
+              as List<Block>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicQuestionsResponseImpl implements _TopicQuestionsResponse {
-  const _$TopicQuestionsResponseImpl(
+class _$UserBlocksResponseImpl implements _UserBlocksResponse {
+  const _$UserBlocksResponseImpl(
       {@JsonKey(name: 'count') this.count,
       @JsonKey(name: 'next') this.next,
       @JsonKey(name: 'previous') this.previous,
-      @JsonKey(name: 'results')
-      final List<TopicTestItemResponse> results = const []})
+      @JsonKey(name: 'results') final List<Block> results = const []})
       : _results = results;
 
-  factory _$TopicQuestionsResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicQuestionsResponseImplFromJson(json);
+  factory _$UserBlocksResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserBlocksResponseImplFromJson(json);
 
   @override
   @JsonKey(name: 'count')
@@ -167,10 +161,10 @@ class _$TopicQuestionsResponseImpl implements _TopicQuestionsResponse {
   @override
   @JsonKey(name: 'previous')
   final String? previous;
-  final List<TopicTestItemResponse> _results;
+  final List<Block> _results;
   @override
   @JsonKey(name: 'results')
-  List<TopicTestItemResponse> get results {
+  List<Block> get results {
     if (_results is EqualUnmodifiableListView) return _results;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_results);
@@ -178,14 +172,14 @@ class _$TopicQuestionsResponseImpl implements _TopicQuestionsResponse {
 
   @override
   String toString() {
-    return 'TopicQuestionsResponse(count: $count, next: $next, previous: $previous, results: $results)';
+    return 'UserBlocksResponse(count: $count, next: $next, previous: $previous, results: $results)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicQuestionsResponseImpl &&
+            other is _$UserBlocksResponseImpl &&
             (identical(other.count, count) || other.count == count) &&
             (identical(other.next, next) || other.next == next) &&
             (identical(other.previous, previous) ||
@@ -201,29 +195,28 @@ class _$TopicQuestionsResponseImpl implements _TopicQuestionsResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicQuestionsResponseImplCopyWith<_$TopicQuestionsResponseImpl>
-      get copyWith => __$$TopicQuestionsResponseImplCopyWithImpl<
-          _$TopicQuestionsResponseImpl>(this, _$identity);
+  _$$UserBlocksResponseImplCopyWith<_$UserBlocksResponseImpl> get copyWith =>
+      __$$UserBlocksResponseImplCopyWithImpl<_$UserBlocksResponseImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicQuestionsResponseImplToJson(
+    return _$$UserBlocksResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _TopicQuestionsResponse implements TopicQuestionsResponse {
-  const factory _TopicQuestionsResponse(
+abstract class _UserBlocksResponse implements UserBlocksResponse {
+  const factory _UserBlocksResponse(
           {@JsonKey(name: 'count') final int? count,
           @JsonKey(name: 'next') final String? next,
           @JsonKey(name: 'previous') final String? previous,
-          @JsonKey(name: 'results')
-          final List<TopicTestItemResponse> results}) =
-      _$TopicQuestionsResponseImpl;
+          @JsonKey(name: 'results') final List<Block> results}) =
+      _$UserBlocksResponseImpl;
 
-  factory _TopicQuestionsResponse.fromJson(Map<String, dynamic> json) =
-      _$TopicQuestionsResponseImpl.fromJson;
+  factory _UserBlocksResponse.fromJson(Map<String, dynamic> json) =
+      _$UserBlocksResponseImpl.fromJson;
 
   @override
   @JsonKey(name: 'count')
@@ -236,30 +229,29 @@ abstract class _TopicQuestionsResponse implements TopicQuestionsResponse {
   String? get previous;
   @override
   @JsonKey(name: 'results')
-  List<TopicTestItemResponse> get results;
+  List<Block> get results;
   @override
   @JsonKey(ignore: true)
-  _$$TopicQuestionsResponseImplCopyWith<_$TopicQuestionsResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$UserBlocksResponseImplCopyWith<_$UserBlocksResponseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-TopicTestItemResponse _$TopicTestItemResponseFromJson(
-    Map<String, dynamic> json) {
-  return _TopicTestItemResponse.fromJson(json);
+Block _$BlockFromJson(Map<String, dynamic> json) {
+  return _Block.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TopicTestItemResponse {
+mixin _$Block {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'user')
-  TopicUserResponse? get user => throw _privateConstructorUsedError;
+  User? get user => throw _privateConstructorUsedError;
   @JsonKey(name: 'title')
   String? get title => throw _privateConstructorUsedError;
   @JsonKey(name: 'description')
   String? get description => throw _privateConstructorUsedError;
   @JsonKey(name: 'category')
-  TopicCategoryResponse? get category => throw _privateConstructorUsedError;
+  Category? get category => throw _privateConstructorUsedError;
   @JsonKey(name: 'visibility')
   String? get visibility => throw _privateConstructorUsedError;
   @JsonKey(name: 'access_mode')
@@ -291,8 +283,7 @@ mixin _$TopicTestItemResponse {
   @JsonKey(name: 'total_questions')
   int? get totalQuestions => throw _privateConstructorUsedError;
   @JsonKey(name: 'questions')
-  List<TopicQuestionResponse> get questions =>
-      throw _privateConstructorUsedError;
+  List<Question> get questions => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_bookmarked')
   bool? get isBookmarked => throw _privateConstructorUsedError;
   @JsonKey(name: 'participant_count')
@@ -309,22 +300,20 @@ mixin _$TopicTestItemResponse {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TopicTestItemResponseCopyWith<TopicTestItemResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+  $BlockCopyWith<Block> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TopicTestItemResponseCopyWith<$Res> {
-  factory $TopicTestItemResponseCopyWith(TopicTestItemResponse value,
-          $Res Function(TopicTestItemResponse) then) =
-      _$TopicTestItemResponseCopyWithImpl<$Res, TopicTestItemResponse>;
+abstract class $BlockCopyWith<$Res> {
+  factory $BlockCopyWith(Block value, $Res Function(Block) then) =
+      _$BlockCopyWithImpl<$Res, Block>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
-      @JsonKey(name: 'user') TopicUserResponse? user,
+      @JsonKey(name: 'user') User? user,
       @JsonKey(name: 'title') String? title,
       @JsonKey(name: 'description') String? description,
-      @JsonKey(name: 'category') TopicCategoryResponse? category,
+      @JsonKey(name: 'category') Category? category,
       @JsonKey(name: 'visibility') String? visibility,
       @JsonKey(name: 'access_mode') String? accessMode,
       @JsonKey(name: 'participant_roles') String? participantRoles,
@@ -341,7 +330,7 @@ abstract class $TopicTestItemResponseCopyWith<$Res> {
       @JsonKey(name: 'created_at') String? createdAt,
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
       @JsonKey(name: 'total_questions') int? totalQuestions,
-      @JsonKey(name: 'questions') List<TopicQuestionResponse> questions,
+      @JsonKey(name: 'questions') List<Question> questions,
       @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
       @JsonKey(name: 'participant_count') int? participantCount,
       @JsonKey(name: 'average_question_difficulty')
@@ -351,15 +340,14 @@ abstract class $TopicTestItemResponseCopyWith<$Res> {
       @JsonKey(name: 'total_correct_attempts') int? totalCorrectAttempts,
       @JsonKey(name: 'total_wrong_attempts') int? totalWrongAttempts});
 
-  $TopicUserResponseCopyWith<$Res>? get user;
-  $TopicCategoryResponseCopyWith<$Res>? get category;
+  $UserCopyWith<$Res>? get user;
+  $CategoryCopyWith<$Res>? get category;
 }
 
 /// @nodoc
-class _$TopicTestItemResponseCopyWithImpl<$Res,
-        $Val extends TopicTestItemResponse>
-    implements $TopicTestItemResponseCopyWith<$Res> {
-  _$TopicTestItemResponseCopyWithImpl(this._value, this._then);
+class _$BlockCopyWithImpl<$Res, $Val extends Block>
+    implements $BlockCopyWith<$Res> {
+  _$BlockCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -405,7 +393,7 @@ class _$TopicTestItemResponseCopyWithImpl<$Res,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as TopicUserResponse?,
+              as User?,
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -417,7 +405,7 @@ class _$TopicTestItemResponseCopyWithImpl<$Res,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as TopicCategoryResponse?,
+              as Category?,
       visibility: freezed == visibility
           ? _value.visibility
           : visibility // ignore: cast_nullable_to_non_nullable
@@ -481,7 +469,7 @@ class _$TopicTestItemResponseCopyWithImpl<$Res,
       questions: null == questions
           ? _value.questions
           : questions // ignore: cast_nullable_to_non_nullable
-              as List<TopicQuestionResponse>,
+              as List<Question>,
       isBookmarked: freezed == isBookmarked
           ? _value.isBookmarked
           : isBookmarked // ignore: cast_nullable_to_non_nullable
@@ -511,44 +499,42 @@ class _$TopicTestItemResponseCopyWithImpl<$Res,
 
   @override
   @pragma('vm:prefer-inline')
-  $TopicUserResponseCopyWith<$Res>? get user {
+  $UserCopyWith<$Res>? get user {
     if (_value.user == null) {
       return null;
     }
 
-    return $TopicUserResponseCopyWith<$Res>(_value.user!, (value) {
+    return $UserCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $TopicCategoryResponseCopyWith<$Res>? get category {
+  $CategoryCopyWith<$Res>? get category {
     if (_value.category == null) {
       return null;
     }
 
-    return $TopicCategoryResponseCopyWith<$Res>(_value.category!, (value) {
+    return $CategoryCopyWith<$Res>(_value.category!, (value) {
       return _then(_value.copyWith(category: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$TopicTestItemResponseImplCopyWith<$Res>
-    implements $TopicTestItemResponseCopyWith<$Res> {
-  factory _$$TopicTestItemResponseImplCopyWith(
-          _$TopicTestItemResponseImpl value,
-          $Res Function(_$TopicTestItemResponseImpl) then) =
-      __$$TopicTestItemResponseImplCopyWithImpl<$Res>;
+abstract class _$$BlockImplCopyWith<$Res> implements $BlockCopyWith<$Res> {
+  factory _$$BlockImplCopyWith(
+          _$BlockImpl value, $Res Function(_$BlockImpl) then) =
+      __$$BlockImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
-      @JsonKey(name: 'user') TopicUserResponse? user,
+      @JsonKey(name: 'user') User? user,
       @JsonKey(name: 'title') String? title,
       @JsonKey(name: 'description') String? description,
-      @JsonKey(name: 'category') TopicCategoryResponse? category,
+      @JsonKey(name: 'category') Category? category,
       @JsonKey(name: 'visibility') String? visibility,
       @JsonKey(name: 'access_mode') String? accessMode,
       @JsonKey(name: 'participant_roles') String? participantRoles,
@@ -565,7 +551,7 @@ abstract class _$$TopicTestItemResponseImplCopyWith<$Res>
       @JsonKey(name: 'created_at') String? createdAt,
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
       @JsonKey(name: 'total_questions') int? totalQuestions,
-      @JsonKey(name: 'questions') List<TopicQuestionResponse> questions,
+      @JsonKey(name: 'questions') List<Question> questions,
       @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
       @JsonKey(name: 'participant_count') int? participantCount,
       @JsonKey(name: 'average_question_difficulty')
@@ -576,18 +562,17 @@ abstract class _$$TopicTestItemResponseImplCopyWith<$Res>
       @JsonKey(name: 'total_wrong_attempts') int? totalWrongAttempts});
 
   @override
-  $TopicUserResponseCopyWith<$Res>? get user;
+  $UserCopyWith<$Res>? get user;
   @override
-  $TopicCategoryResponseCopyWith<$Res>? get category;
+  $CategoryCopyWith<$Res>? get category;
 }
 
 /// @nodoc
-class __$$TopicTestItemResponseImplCopyWithImpl<$Res>
-    extends _$TopicTestItemResponseCopyWithImpl<$Res,
-        _$TopicTestItemResponseImpl>
-    implements _$$TopicTestItemResponseImplCopyWith<$Res> {
-  __$$TopicTestItemResponseImplCopyWithImpl(_$TopicTestItemResponseImpl _value,
-      $Res Function(_$TopicTestItemResponseImpl) _then)
+class __$$BlockImplCopyWithImpl<$Res>
+    extends _$BlockCopyWithImpl<$Res, _$BlockImpl>
+    implements _$$BlockImplCopyWith<$Res> {
+  __$$BlockImplCopyWithImpl(
+      _$BlockImpl _value, $Res Function(_$BlockImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -621,7 +606,7 @@ class __$$TopicTestItemResponseImplCopyWithImpl<$Res>
     Object? totalCorrectAttempts = freezed,
     Object? totalWrongAttempts = freezed,
   }) {
-    return _then(_$TopicTestItemResponseImpl(
+    return _then(_$BlockImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -629,7 +614,7 @@ class __$$TopicTestItemResponseImplCopyWithImpl<$Res>
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as TopicUserResponse?,
+              as User?,
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -641,7 +626,7 @@ class __$$TopicTestItemResponseImplCopyWithImpl<$Res>
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as TopicCategoryResponse?,
+              as Category?,
       visibility: freezed == visibility
           ? _value.visibility
           : visibility // ignore: cast_nullable_to_non_nullable
@@ -705,7 +690,7 @@ class __$$TopicTestItemResponseImplCopyWithImpl<$Res>
       questions: null == questions
           ? _value._questions
           : questions // ignore: cast_nullable_to_non_nullable
-              as List<TopicQuestionResponse>,
+              as List<Question>,
       isBookmarked: freezed == isBookmarked
           ? _value.isBookmarked
           : isBookmarked // ignore: cast_nullable_to_non_nullable
@@ -736,8 +721,8 @@ class __$$TopicTestItemResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
-  const _$TopicTestItemResponseImpl(
+class _$BlockImpl implements _Block {
+  const _$BlockImpl(
       {@JsonKey(name: 'id') this.id,
       @JsonKey(name: 'user') this.user,
       @JsonKey(name: 'title') this.title,
@@ -759,8 +744,7 @@ class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
       @JsonKey(name: 'created_at') this.createdAt,
       @JsonKey(name: 'difficulty_percentage') this.difficultyPercentage,
       @JsonKey(name: 'total_questions') this.totalQuestions,
-      @JsonKey(name: 'questions')
-      final List<TopicQuestionResponse> questions = const [],
+      @JsonKey(name: 'questions') final List<Question> questions = const [],
       @JsonKey(name: 'is_bookmarked') this.isBookmarked,
       @JsonKey(name: 'participant_count') this.participantCount,
       @JsonKey(name: 'average_question_difficulty')
@@ -771,15 +755,15 @@ class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
       @JsonKey(name: 'total_wrong_attempts') this.totalWrongAttempts})
       : _questions = questions;
 
-  factory _$TopicTestItemResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicTestItemResponseImplFromJson(json);
+  factory _$BlockImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BlockImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
   final int? id;
   @override
   @JsonKey(name: 'user')
-  final TopicUserResponse? user;
+  final User? user;
   @override
   @JsonKey(name: 'title')
   final String? title;
@@ -788,7 +772,7 @@ class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
   final String? description;
   @override
   @JsonKey(name: 'category')
-  final TopicCategoryResponse? category;
+  final Category? category;
   @override
   @JsonKey(name: 'visibility')
   final String? visibility;
@@ -834,10 +818,10 @@ class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
   @override
   @JsonKey(name: 'total_questions')
   final int? totalQuestions;
-  final List<TopicQuestionResponse> _questions;
+  final List<Question> _questions;
   @override
   @JsonKey(name: 'questions')
-  List<TopicQuestionResponse> get questions {
+  List<Question> get questions {
     if (_questions is EqualUnmodifiableListView) return _questions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_questions);
@@ -864,14 +848,14 @@ class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
 
   @override
   String toString() {
-    return 'TopicTestItemResponse(id: $id, user: $user, title: $title, description: $description, category: $category, visibility: $visibility, accessMode: $accessMode, participantRoles: $participantRoles, maxParticipants: $maxParticipants, startTime: $startTime, endTime: $endTime, minScoreToFinish: $minScoreToFinish, participantCountToFinish: $participantCountToFinish, country: $country, region: $region, district: $district, isRegionPremium: $isRegionPremium, createdAt: $createdAt, difficultyPercentage: $difficultyPercentage, totalQuestions: $totalQuestions, questions: $questions, isBookmarked: $isBookmarked, participantCount: $participantCount, averageQuestionDifficulty: $averageQuestionDifficulty, averageCompletionTimeMinutes: $averageCompletionTimeMinutes, totalCorrectAttempts: $totalCorrectAttempts, totalWrongAttempts: $totalWrongAttempts)';
+    return 'Block(id: $id, user: $user, title: $title, description: $description, category: $category, visibility: $visibility, accessMode: $accessMode, participantRoles: $participantRoles, maxParticipants: $maxParticipants, startTime: $startTime, endTime: $endTime, minScoreToFinish: $minScoreToFinish, participantCountToFinish: $participantCountToFinish, country: $country, region: $region, district: $district, isRegionPremium: $isRegionPremium, createdAt: $createdAt, difficultyPercentage: $difficultyPercentage, totalQuestions: $totalQuestions, questions: $questions, isBookmarked: $isBookmarked, participantCount: $participantCount, averageQuestionDifficulty: $averageQuestionDifficulty, averageCompletionTimeMinutes: $averageCompletionTimeMinutes, totalCorrectAttempts: $totalCorrectAttempts, totalWrongAttempts: $totalWrongAttempts)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicTestItemResponseImpl &&
+            other is _$BlockImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.user, user) || other.user == user) &&
             (identical(other.title, title) || other.title == title) &&
@@ -962,25 +946,24 @@ class _$TopicTestItemResponseImpl implements _TopicTestItemResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicTestItemResponseImplCopyWith<_$TopicTestItemResponseImpl>
-      get copyWith => __$$TopicTestItemResponseImplCopyWithImpl<
-          _$TopicTestItemResponseImpl>(this, _$identity);
+  _$$BlockImplCopyWith<_$BlockImpl> get copyWith =>
+      __$$BlockImplCopyWithImpl<_$BlockImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicTestItemResponseImplToJson(
+    return _$$BlockImplToJson(
       this,
     );
   }
 }
 
-abstract class _TopicTestItemResponse implements TopicTestItemResponse {
-  const factory _TopicTestItemResponse(
+abstract class _Block implements Block {
+  const factory _Block(
       {@JsonKey(name: 'id') final int? id,
-      @JsonKey(name: 'user') final TopicUserResponse? user,
+      @JsonKey(name: 'user') final User? user,
       @JsonKey(name: 'title') final String? title,
       @JsonKey(name: 'description') final String? description,
-      @JsonKey(name: 'category') final TopicCategoryResponse? category,
+      @JsonKey(name: 'category') final Category? category,
       @JsonKey(name: 'visibility') final String? visibility,
       @JsonKey(name: 'access_mode') final String? accessMode,
       @JsonKey(name: 'participant_roles') final String? participantRoles,
@@ -998,7 +981,7 @@ abstract class _TopicTestItemResponse implements TopicTestItemResponse {
       @JsonKey(name: 'difficulty_percentage')
       final double? difficultyPercentage,
       @JsonKey(name: 'total_questions') final int? totalQuestions,
-      @JsonKey(name: 'questions') final List<TopicQuestionResponse> questions,
+      @JsonKey(name: 'questions') final List<Question> questions,
       @JsonKey(name: 'is_bookmarked') final bool? isBookmarked,
       @JsonKey(name: 'participant_count') final int? participantCount,
       @JsonKey(name: 'average_question_difficulty')
@@ -1007,17 +990,16 @@ abstract class _TopicTestItemResponse implements TopicTestItemResponse {
       final double? averageCompletionTimeMinutes,
       @JsonKey(name: 'total_correct_attempts') final int? totalCorrectAttempts,
       @JsonKey(name: 'total_wrong_attempts')
-      final int? totalWrongAttempts}) = _$TopicTestItemResponseImpl;
+      final int? totalWrongAttempts}) = _$BlockImpl;
 
-  factory _TopicTestItemResponse.fromJson(Map<String, dynamic> json) =
-      _$TopicTestItemResponseImpl.fromJson;
+  factory _Block.fromJson(Map<String, dynamic> json) = _$BlockImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
   int? get id;
   @override
   @JsonKey(name: 'user')
-  TopicUserResponse? get user;
+  User? get user;
   @override
   @JsonKey(name: 'title')
   String? get title;
@@ -1026,7 +1008,7 @@ abstract class _TopicTestItemResponse implements TopicTestItemResponse {
   String? get description;
   @override
   @JsonKey(name: 'category')
-  TopicCategoryResponse? get category;
+  Category? get category;
   @override
   @JsonKey(name: 'visibility')
   String? get visibility;
@@ -1074,7 +1056,7 @@ abstract class _TopicTestItemResponse implements TopicTestItemResponse {
   int? get totalQuestions;
   @override
   @JsonKey(name: 'questions')
-  List<TopicQuestionResponse> get questions;
+  List<Question> get questions;
   @override
   @JsonKey(name: 'is_bookmarked')
   bool? get isBookmarked;
@@ -1095,16 +1077,16 @@ abstract class _TopicTestItemResponse implements TopicTestItemResponse {
   int? get totalWrongAttempts;
   @override
   @JsonKey(ignore: true)
-  _$$TopicTestItemResponseImplCopyWith<_$TopicTestItemResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$BlockImplCopyWith<_$BlockImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-TopicUserResponse _$TopicUserResponseFromJson(Map<String, dynamic> json) {
-  return _TopicUserResponse.fromJson(json);
+User _$UserFromJson(Map<String, dynamic> json) {
+  return _User.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TopicUserResponse {
+mixin _$User {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'username')
@@ -1120,15 +1102,13 @@ mixin _$TopicUserResponse {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TopicUserResponseCopyWith<TopicUserResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+  $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TopicUserResponseCopyWith<$Res> {
-  factory $TopicUserResponseCopyWith(
-          TopicUserResponse value, $Res Function(TopicUserResponse) then) =
-      _$TopicUserResponseCopyWithImpl<$Res, TopicUserResponse>;
+abstract class $UserCopyWith<$Res> {
+  factory $UserCopyWith(User value, $Res Function(User) then) =
+      _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
@@ -1140,9 +1120,9 @@ abstract class $TopicUserResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TopicUserResponseCopyWithImpl<$Res, $Val extends TopicUserResponse>
-    implements $TopicUserResponseCopyWith<$Res> {
-  _$TopicUserResponseCopyWithImpl(this._value, this._then);
+class _$UserCopyWithImpl<$Res, $Val extends User>
+    implements $UserCopyWith<$Res> {
+  _$UserCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1189,11 +1169,10 @@ class _$TopicUserResponseCopyWithImpl<$Res, $Val extends TopicUserResponse>
 }
 
 /// @nodoc
-abstract class _$$TopicUserResponseImplCopyWith<$Res>
-    implements $TopicUserResponseCopyWith<$Res> {
-  factory _$$TopicUserResponseImplCopyWith(_$TopicUserResponseImpl value,
-          $Res Function(_$TopicUserResponseImpl) then) =
-      __$$TopicUserResponseImplCopyWithImpl<$Res>;
+abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
+  factory _$$UserImplCopyWith(
+          _$UserImpl value, $Res Function(_$UserImpl) then) =
+      __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1206,11 +1185,10 @@ abstract class _$$TopicUserResponseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TopicUserResponseImplCopyWithImpl<$Res>
-    extends _$TopicUserResponseCopyWithImpl<$Res, _$TopicUserResponseImpl>
-    implements _$$TopicUserResponseImplCopyWith<$Res> {
-  __$$TopicUserResponseImplCopyWithImpl(_$TopicUserResponseImpl _value,
-      $Res Function(_$TopicUserResponseImpl) _then)
+class __$$UserImplCopyWithImpl<$Res>
+    extends _$UserCopyWithImpl<$Res, _$UserImpl>
+    implements _$$UserImplCopyWith<$Res> {
+  __$$UserImplCopyWithImpl(_$UserImpl _value, $Res Function(_$UserImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1223,7 +1201,7 @@ class __$$TopicUserResponseImplCopyWithImpl<$Res>
     Object? isPremium = freezed,
     Object? isFollowing = freezed,
   }) {
-    return _then(_$TopicUserResponseImpl(
+    return _then(_$UserImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1254,8 +1232,8 @@ class __$$TopicUserResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicUserResponseImpl implements _TopicUserResponse {
-  const _$TopicUserResponseImpl(
+class _$UserImpl implements _User {
+  const _$UserImpl(
       {@JsonKey(name: 'id') this.id,
       @JsonKey(name: 'username') this.username,
       @JsonKey(name: 'profile_image') this.profileImage,
@@ -1263,8 +1241,8 @@ class _$TopicUserResponseImpl implements _TopicUserResponse {
       @JsonKey(name: 'is_premium') this.isPremium,
       @JsonKey(name: 'is_following') this.isFollowing});
 
-  factory _$TopicUserResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicUserResponseImplFromJson(json);
+  factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -1287,14 +1265,14 @@ class _$TopicUserResponseImpl implements _TopicUserResponse {
 
   @override
   String toString() {
-    return 'TopicUserResponse(id: $id, username: $username, profileImage: $profileImage, isBadged: $isBadged, isPremium: $isPremium, isFollowing: $isFollowing)';
+    return 'User(id: $id, username: $username, profileImage: $profileImage, isBadged: $isBadged, isPremium: $isPremium, isFollowing: $isFollowing)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicUserResponseImpl &&
+            other is _$UserImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.username, username) ||
                 other.username == username) &&
@@ -1316,30 +1294,27 @@ class _$TopicUserResponseImpl implements _TopicUserResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicUserResponseImplCopyWith<_$TopicUserResponseImpl> get copyWith =>
-      __$$TopicUserResponseImplCopyWithImpl<_$TopicUserResponseImpl>(
-          this, _$identity);
+  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
+      __$$UserImplCopyWithImpl<_$UserImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicUserResponseImplToJson(
+    return _$$UserImplToJson(
       this,
     );
   }
 }
 
-abstract class _TopicUserResponse implements TopicUserResponse {
-  const factory _TopicUserResponse(
-          {@JsonKey(name: 'id') final int? id,
-          @JsonKey(name: 'username') final String? username,
-          @JsonKey(name: 'profile_image') final String? profileImage,
-          @JsonKey(name: 'is_badged') final bool? isBadged,
-          @JsonKey(name: 'is_premium') final bool? isPremium,
-          @JsonKey(name: 'is_following') final bool? isFollowing}) =
-      _$TopicUserResponseImpl;
+abstract class _User implements User {
+  const factory _User(
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'username') final String? username,
+      @JsonKey(name: 'profile_image') final String? profileImage,
+      @JsonKey(name: 'is_badged') final bool? isBadged,
+      @JsonKey(name: 'is_premium') final bool? isPremium,
+      @JsonKey(name: 'is_following') final bool? isFollowing}) = _$UserImpl;
 
-  factory _TopicUserResponse.fromJson(Map<String, dynamic> json) =
-      _$TopicUserResponseImpl.fromJson;
+  factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -1361,17 +1336,16 @@ abstract class _TopicUserResponse implements TopicUserResponse {
   bool? get isFollowing;
   @override
   @JsonKey(ignore: true)
-  _$$TopicUserResponseImplCopyWith<_$TopicUserResponseImpl> get copyWith =>
+  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-TopicCategoryResponse _$TopicCategoryResponseFromJson(
-    Map<String, dynamic> json) {
-  return _TopicCategoryResponse.fromJson(json);
+Category _$CategoryFromJson(Map<String, dynamic> json) {
+  return _Category.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TopicCategoryResponse {
+mixin _$Category {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_tests')
@@ -1391,15 +1365,14 @@ mixin _$TopicCategoryResponse {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TopicCategoryResponseCopyWith<TopicCategoryResponse> get copyWith =>
+  $CategoryCopyWith<Category> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TopicCategoryResponseCopyWith<$Res> {
-  factory $TopicCategoryResponseCopyWith(TopicCategoryResponse value,
-          $Res Function(TopicCategoryResponse) then) =
-      _$TopicCategoryResponseCopyWithImpl<$Res, TopicCategoryResponse>;
+abstract class $CategoryCopyWith<$Res> {
+  factory $CategoryCopyWith(Category value, $Res Function(Category) then) =
+      _$CategoryCopyWithImpl<$Res, Category>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
@@ -1413,10 +1386,9 @@ abstract class $TopicCategoryResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TopicCategoryResponseCopyWithImpl<$Res,
-        $Val extends TopicCategoryResponse>
-    implements $TopicCategoryResponseCopyWith<$Res> {
-  _$TopicCategoryResponseCopyWithImpl(this._value, this._then);
+class _$CategoryCopyWithImpl<$Res, $Val extends Category>
+    implements $CategoryCopyWith<$Res> {
+  _$CategoryCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1473,12 +1445,11 @@ class _$TopicCategoryResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$TopicCategoryResponseImplCopyWith<$Res>
-    implements $TopicCategoryResponseCopyWith<$Res> {
-  factory _$$TopicCategoryResponseImplCopyWith(
-          _$TopicCategoryResponseImpl value,
-          $Res Function(_$TopicCategoryResponseImpl) then) =
-      __$$TopicCategoryResponseImplCopyWithImpl<$Res>;
+abstract class _$$CategoryImplCopyWith<$Res>
+    implements $CategoryCopyWith<$Res> {
+  factory _$$CategoryImplCopyWith(
+          _$CategoryImpl value, $Res Function(_$CategoryImpl) then) =
+      __$$CategoryImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1493,12 +1464,11 @@ abstract class _$$TopicCategoryResponseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TopicCategoryResponseImplCopyWithImpl<$Res>
-    extends _$TopicCategoryResponseCopyWithImpl<$Res,
-        _$TopicCategoryResponseImpl>
-    implements _$$TopicCategoryResponseImplCopyWith<$Res> {
-  __$$TopicCategoryResponseImplCopyWithImpl(_$TopicCategoryResponseImpl _value,
-      $Res Function(_$TopicCategoryResponseImpl) _then)
+class __$$CategoryImplCopyWithImpl<$Res>
+    extends _$CategoryCopyWithImpl<$Res, _$CategoryImpl>
+    implements _$$CategoryImplCopyWith<$Res> {
+  __$$CategoryImplCopyWithImpl(
+      _$CategoryImpl _value, $Res Function(_$CategoryImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1513,7 +1483,7 @@ class __$$TopicCategoryResponseImplCopyWithImpl<$Res>
     Object? emoji = freezed,
     Object? image = freezed,
   }) {
-    return _then(_$TopicCategoryResponseImpl(
+    return _then(_$CategoryImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1552,8 +1522,8 @@ class __$$TopicCategoryResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicCategoryResponseImpl implements _TopicCategoryResponse {
-  const _$TopicCategoryResponseImpl(
+class _$CategoryImpl implements _Category {
+  const _$CategoryImpl(
       {@JsonKey(name: 'id') this.id,
       @JsonKey(name: 'total_tests') this.totalTests,
       @JsonKey(name: 'total_questions') this.totalQuestions,
@@ -1563,8 +1533,8 @@ class _$TopicCategoryResponseImpl implements _TopicCategoryResponse {
       @JsonKey(name: 'emoji') this.emoji,
       @JsonKey(name: 'image') this.image});
 
-  factory _$TopicCategoryResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicCategoryResponseImplFromJson(json);
+  factory _$CategoryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CategoryImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -1593,14 +1563,14 @@ class _$TopicCategoryResponseImpl implements _TopicCategoryResponse {
 
   @override
   String toString() {
-    return 'TopicCategoryResponse(id: $id, totalTests: $totalTests, totalQuestions: $totalQuestions, title: $title, slug: $slug, description: $description, emoji: $emoji, image: $image)';
+    return 'Category(id: $id, totalTests: $totalTests, totalQuestions: $totalQuestions, title: $title, slug: $slug, description: $description, emoji: $emoji, image: $image)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicCategoryResponseImpl &&
+            other is _$CategoryImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.totalTests, totalTests) ||
                 other.totalTests == totalTests) &&
@@ -1622,32 +1592,30 @@ class _$TopicCategoryResponseImpl implements _TopicCategoryResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicCategoryResponseImplCopyWith<_$TopicCategoryResponseImpl>
-      get copyWith => __$$TopicCategoryResponseImplCopyWithImpl<
-          _$TopicCategoryResponseImpl>(this, _$identity);
+  _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
+      __$$CategoryImplCopyWithImpl<_$CategoryImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicCategoryResponseImplToJson(
+    return _$$CategoryImplToJson(
       this,
     );
   }
 }
 
-abstract class _TopicCategoryResponse implements TopicCategoryResponse {
-  const factory _TopicCategoryResponse(
-          {@JsonKey(name: 'id') final int? id,
-          @JsonKey(name: 'total_tests') final int? totalTests,
-          @JsonKey(name: 'total_questions') final int? totalQuestions,
-          @JsonKey(name: 'title') final String? title,
-          @JsonKey(name: 'slug') final String? slug,
-          @JsonKey(name: 'description') final String? description,
-          @JsonKey(name: 'emoji') final String? emoji,
-          @JsonKey(name: 'image') final String? image}) =
-      _$TopicCategoryResponseImpl;
+abstract class _Category implements Category {
+  const factory _Category(
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'total_tests') final int? totalTests,
+      @JsonKey(name: 'total_questions') final int? totalQuestions,
+      @JsonKey(name: 'title') final String? title,
+      @JsonKey(name: 'slug') final String? slug,
+      @JsonKey(name: 'description') final String? description,
+      @JsonKey(name: 'emoji') final String? emoji,
+      @JsonKey(name: 'image') final String? image}) = _$CategoryImpl;
 
-  factory _TopicCategoryResponse.fromJson(Map<String, dynamic> json) =
-      _$TopicCategoryResponseImpl.fromJson;
+  factory _Category.fromJson(Map<String, dynamic> json) =
+      _$CategoryImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -1675,17 +1643,16 @@ abstract class _TopicCategoryResponse implements TopicCategoryResponse {
   String? get image;
   @override
   @JsonKey(ignore: true)
-  _$$TopicCategoryResponseImplCopyWith<_$TopicCategoryResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-TopicQuestionResponse _$TopicQuestionResponseFromJson(
-    Map<String, dynamic> json) {
-  return _TopicQuestionResponse.fromJson(json);
+Question _$QuestionFromJson(Map<String, dynamic> json) {
+  return _Question.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TopicQuestionResponse {
+mixin _$Question {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'test')
@@ -1701,7 +1668,7 @@ mixin _$TopicQuestionResponse {
   @JsonKey(name: 'media')
   String? get media => throw _privateConstructorUsedError;
   @JsonKey(name: 'answers')
-  List<TopicAnswerResponse> get answers => throw _privateConstructorUsedError;
+  List<Answer> get answers => throw _privateConstructorUsedError;
   @JsonKey(name: 'test_description')
   String? get testDescription => throw _privateConstructorUsedError;
   @JsonKey(name: 'correct_answer_text')
@@ -1717,9 +1684,9 @@ mixin _$TopicQuestionResponse {
   @JsonKey(name: 'user_attempt_count')
   int? get userAttemptCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'user')
-  TopicUserResponse? get user => throw _privateConstructorUsedError;
+  User? get user => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  String? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'round_image')
   String? get roundImage => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_bookmarked')
@@ -1727,19 +1694,18 @@ mixin _$TopicQuestionResponse {
   @JsonKey(name: 'is_following')
   bool? get isFollowing => throw _privateConstructorUsedError;
   @JsonKey(name: 'category')
-  TopicCategoryResponse? get category => throw _privateConstructorUsedError;
+  Category? get category => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TopicQuestionResponseCopyWith<TopicQuestionResponse> get copyWith =>
+  $QuestionCopyWith<Question> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TopicQuestionResponseCopyWith<$Res> {
-  factory $TopicQuestionResponseCopyWith(TopicQuestionResponse value,
-          $Res Function(TopicQuestionResponse) then) =
-      _$TopicQuestionResponseCopyWithImpl<$Res, TopicQuestionResponse>;
+abstract class $QuestionCopyWith<$Res> {
+  factory $QuestionCopyWith(Question value, $Res Function(Question) then) =
+      _$QuestionCopyWithImpl<$Res, Question>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
@@ -1749,7 +1715,7 @@ abstract class $TopicQuestionResponseCopyWith<$Res> {
       @JsonKey(name: 'question_type') String? questionType,
       @JsonKey(name: 'order_index') int? orderIndex,
       @JsonKey(name: 'media') String? media,
-      @JsonKey(name: 'answers') List<TopicAnswerResponse> answers,
+      @JsonKey(name: 'answers') List<Answer> answers,
       @JsonKey(name: 'test_description') String? testDescription,
       @JsonKey(name: 'correct_answer_text') String? correctAnswerText,
       @JsonKey(name: 'answer_language') String? answerLanguage,
@@ -1757,22 +1723,21 @@ abstract class $TopicQuestionResponseCopyWith<$Res> {
       @JsonKey(name: 'wrong_count') int? wrongCount,
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
       @JsonKey(name: 'user_attempt_count') int? userAttemptCount,
-      @JsonKey(name: 'user') TopicUserResponse? user,
-      @JsonKey(name: 'created_at') String? createdAt,
+      @JsonKey(name: 'user') User? user,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'round_image') String? roundImage,
       @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
       @JsonKey(name: 'is_following') bool? isFollowing,
-      @JsonKey(name: 'category') TopicCategoryResponse? category});
+      @JsonKey(name: 'category') Category? category});
 
-  $TopicUserResponseCopyWith<$Res>? get user;
-  $TopicCategoryResponseCopyWith<$Res>? get category;
+  $UserCopyWith<$Res>? get user;
+  $CategoryCopyWith<$Res>? get category;
 }
 
 /// @nodoc
-class _$TopicQuestionResponseCopyWithImpl<$Res,
-        $Val extends TopicQuestionResponse>
-    implements $TopicQuestionResponseCopyWith<$Res> {
-  _$TopicQuestionResponseCopyWithImpl(this._value, this._then);
+class _$QuestionCopyWithImpl<$Res, $Val extends Question>
+    implements $QuestionCopyWith<$Res> {
+  _$QuestionCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1836,7 +1801,7 @@ class _$TopicQuestionResponseCopyWithImpl<$Res,
       answers: null == answers
           ? _value.answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<TopicAnswerResponse>,
+              as List<Answer>,
       testDescription: freezed == testDescription
           ? _value.testDescription
           : testDescription // ignore: cast_nullable_to_non_nullable
@@ -1868,11 +1833,11 @@ class _$TopicQuestionResponseCopyWithImpl<$Res,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as TopicUserResponse?,
+              as User?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       roundImage: freezed == roundImage
           ? _value.roundImage
           : roundImage // ignore: cast_nullable_to_non_nullable
@@ -1888,42 +1853,41 @@ class _$TopicQuestionResponseCopyWithImpl<$Res,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as TopicCategoryResponse?,
+              as Category?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $TopicUserResponseCopyWith<$Res>? get user {
+  $UserCopyWith<$Res>? get user {
     if (_value.user == null) {
       return null;
     }
 
-    return $TopicUserResponseCopyWith<$Res>(_value.user!, (value) {
+    return $UserCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $TopicCategoryResponseCopyWith<$Res>? get category {
+  $CategoryCopyWith<$Res>? get category {
     if (_value.category == null) {
       return null;
     }
 
-    return $TopicCategoryResponseCopyWith<$Res>(_value.category!, (value) {
+    return $CategoryCopyWith<$Res>(_value.category!, (value) {
       return _then(_value.copyWith(category: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$TopicQuestionResponseImplCopyWith<$Res>
-    implements $TopicQuestionResponseCopyWith<$Res> {
-  factory _$$TopicQuestionResponseImplCopyWith(
-          _$TopicQuestionResponseImpl value,
-          $Res Function(_$TopicQuestionResponseImpl) then) =
-      __$$TopicQuestionResponseImplCopyWithImpl<$Res>;
+abstract class _$$QuestionImplCopyWith<$Res>
+    implements $QuestionCopyWith<$Res> {
+  factory _$$QuestionImplCopyWith(
+          _$QuestionImpl value, $Res Function(_$QuestionImpl) then) =
+      __$$QuestionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1934,7 +1898,7 @@ abstract class _$$TopicQuestionResponseImplCopyWith<$Res>
       @JsonKey(name: 'question_type') String? questionType,
       @JsonKey(name: 'order_index') int? orderIndex,
       @JsonKey(name: 'media') String? media,
-      @JsonKey(name: 'answers') List<TopicAnswerResponse> answers,
+      @JsonKey(name: 'answers') List<Answer> answers,
       @JsonKey(name: 'test_description') String? testDescription,
       @JsonKey(name: 'correct_answer_text') String? correctAnswerText,
       @JsonKey(name: 'answer_language') String? answerLanguage,
@@ -1942,26 +1906,25 @@ abstract class _$$TopicQuestionResponseImplCopyWith<$Res>
       @JsonKey(name: 'wrong_count') int? wrongCount,
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
       @JsonKey(name: 'user_attempt_count') int? userAttemptCount,
-      @JsonKey(name: 'user') TopicUserResponse? user,
-      @JsonKey(name: 'created_at') String? createdAt,
+      @JsonKey(name: 'user') User? user,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'round_image') String? roundImage,
       @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
       @JsonKey(name: 'is_following') bool? isFollowing,
-      @JsonKey(name: 'category') TopicCategoryResponse? category});
+      @JsonKey(name: 'category') Category? category});
 
   @override
-  $TopicUserResponseCopyWith<$Res>? get user;
+  $UserCopyWith<$Res>? get user;
   @override
-  $TopicCategoryResponseCopyWith<$Res>? get category;
+  $CategoryCopyWith<$Res>? get category;
 }
 
 /// @nodoc
-class __$$TopicQuestionResponseImplCopyWithImpl<$Res>
-    extends _$TopicQuestionResponseCopyWithImpl<$Res,
-        _$TopicQuestionResponseImpl>
-    implements _$$TopicQuestionResponseImplCopyWith<$Res> {
-  __$$TopicQuestionResponseImplCopyWithImpl(_$TopicQuestionResponseImpl _value,
-      $Res Function(_$TopicQuestionResponseImpl) _then)
+class __$$QuestionImplCopyWithImpl<$Res>
+    extends _$QuestionCopyWithImpl<$Res, _$QuestionImpl>
+    implements _$$QuestionImplCopyWith<$Res> {
+  __$$QuestionImplCopyWithImpl(
+      _$QuestionImpl _value, $Res Function(_$QuestionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1989,7 +1952,7 @@ class __$$TopicQuestionResponseImplCopyWithImpl<$Res>
     Object? isFollowing = freezed,
     Object? category = freezed,
   }) {
-    return _then(_$TopicQuestionResponseImpl(
+    return _then(_$QuestionImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -2021,7 +1984,7 @@ class __$$TopicQuestionResponseImplCopyWithImpl<$Res>
       answers: null == answers
           ? _value._answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<TopicAnswerResponse>,
+              as List<Answer>,
       testDescription: freezed == testDescription
           ? _value.testDescription
           : testDescription // ignore: cast_nullable_to_non_nullable
@@ -2053,11 +2016,11 @@ class __$$TopicQuestionResponseImplCopyWithImpl<$Res>
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as TopicUserResponse?,
+              as User?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       roundImage: freezed == roundImage
           ? _value.roundImage
           : roundImage // ignore: cast_nullable_to_non_nullable
@@ -2073,15 +2036,15 @@ class __$$TopicQuestionResponseImplCopyWithImpl<$Res>
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as TopicCategoryResponse?,
+              as Category?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
-  const _$TopicQuestionResponseImpl(
+class _$QuestionImpl implements _Question {
+  const _$QuestionImpl(
       {@JsonKey(name: 'id') this.id,
       @JsonKey(name: 'test') this.test,
       @JsonKey(name: 'test_title') this.testTitle,
@@ -2089,8 +2052,7 @@ class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
       @JsonKey(name: 'question_type') this.questionType,
       @JsonKey(name: 'order_index') this.orderIndex,
       @JsonKey(name: 'media') this.media,
-      @JsonKey(name: 'answers')
-      final List<TopicAnswerResponse> answers = const [],
+      @JsonKey(name: 'answers') final List<Answer> answers = const [],
       @JsonKey(name: 'test_description') this.testDescription,
       @JsonKey(name: 'correct_answer_text') this.correctAnswerText,
       @JsonKey(name: 'answer_language') this.answerLanguage,
@@ -2106,8 +2068,8 @@ class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
       @JsonKey(name: 'category') this.category})
       : _answers = answers;
 
-  factory _$TopicQuestionResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicQuestionResponseImplFromJson(json);
+  factory _$QuestionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$QuestionImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -2130,10 +2092,10 @@ class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
   @override
   @JsonKey(name: 'media')
   final String? media;
-  final List<TopicAnswerResponse> _answers;
+  final List<Answer> _answers;
   @override
   @JsonKey(name: 'answers')
-  List<TopicAnswerResponse> get answers {
+  List<Answer> get answers {
     if (_answers is EqualUnmodifiableListView) return _answers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_answers);
@@ -2162,10 +2124,10 @@ class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
   final int? userAttemptCount;
   @override
   @JsonKey(name: 'user')
-  final TopicUserResponse? user;
+  final User? user;
   @override
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
   @override
   @JsonKey(name: 'round_image')
   final String? roundImage;
@@ -2177,18 +2139,18 @@ class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
   final bool? isFollowing;
   @override
   @JsonKey(name: 'category')
-  final TopicCategoryResponse? category;
+  final Category? category;
 
   @override
   String toString() {
-    return 'TopicQuestionResponse(id: $id, test: $test, testTitle: $testTitle, questionText: $questionText, questionType: $questionType, orderIndex: $orderIndex, media: $media, answers: $answers, testDescription: $testDescription, correctAnswerText: $correctAnswerText, answerLanguage: $answerLanguage, correctCount: $correctCount, wrongCount: $wrongCount, difficultyPercentage: $difficultyPercentage, userAttemptCount: $userAttemptCount, user: $user, createdAt: $createdAt, roundImage: $roundImage, isBookmarked: $isBookmarked, isFollowing: $isFollowing, category: $category)';
+    return 'Question(id: $id, test: $test, testTitle: $testTitle, questionText: $questionText, questionType: $questionType, orderIndex: $orderIndex, media: $media, answers: $answers, testDescription: $testDescription, correctAnswerText: $correctAnswerText, answerLanguage: $answerLanguage, correctCount: $correctCount, wrongCount: $wrongCount, difficultyPercentage: $difficultyPercentage, userAttemptCount: $userAttemptCount, user: $user, createdAt: $createdAt, roundImage: $roundImage, isBookmarked: $isBookmarked, isFollowing: $isFollowing, category: $category)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicQuestionResponseImpl &&
+            other is _$QuestionImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.test, test) || other.test == test) &&
             (identical(other.testTitle, testTitle) ||
@@ -2258,46 +2220,44 @@ class _$TopicQuestionResponseImpl implements _TopicQuestionResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicQuestionResponseImplCopyWith<_$TopicQuestionResponseImpl>
-      get copyWith => __$$TopicQuestionResponseImplCopyWithImpl<
-          _$TopicQuestionResponseImpl>(this, _$identity);
+  _$$QuestionImplCopyWith<_$QuestionImpl> get copyWith =>
+      __$$QuestionImplCopyWithImpl<_$QuestionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicQuestionResponseImplToJson(
+    return _$$QuestionImplToJson(
       this,
     );
   }
 }
 
-abstract class _TopicQuestionResponse implements TopicQuestionResponse {
-  const factory _TopicQuestionResponse(
-          {@JsonKey(name: 'id') final int? id,
-          @JsonKey(name: 'test') final int? test,
-          @JsonKey(name: 'test_title') final String? testTitle,
-          @JsonKey(name: 'question_text') final String? questionText,
-          @JsonKey(name: 'question_type') final String? questionType,
-          @JsonKey(name: 'order_index') final int? orderIndex,
-          @JsonKey(name: 'media') final String? media,
-          @JsonKey(name: 'answers') final List<TopicAnswerResponse> answers,
-          @JsonKey(name: 'test_description') final String? testDescription,
-          @JsonKey(name: 'correct_answer_text') final String? correctAnswerText,
-          @JsonKey(name: 'answer_language') final String? answerLanguage,
-          @JsonKey(name: 'correct_count') final int? correctCount,
-          @JsonKey(name: 'wrong_count') final int? wrongCount,
-          @JsonKey(name: 'difficulty_percentage')
-          final double? difficultyPercentage,
-          @JsonKey(name: 'user_attempt_count') final int? userAttemptCount,
-          @JsonKey(name: 'user') final TopicUserResponse? user,
-          @JsonKey(name: 'created_at') final String? createdAt,
-          @JsonKey(name: 'round_image') final String? roundImage,
-          @JsonKey(name: 'is_bookmarked') final bool? isBookmarked,
-          @JsonKey(name: 'is_following') final bool? isFollowing,
-          @JsonKey(name: 'category') final TopicCategoryResponse? category}) =
-      _$TopicQuestionResponseImpl;
+abstract class _Question implements Question {
+  const factory _Question(
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'test') final int? test,
+      @JsonKey(name: 'test_title') final String? testTitle,
+      @JsonKey(name: 'question_text') final String? questionText,
+      @JsonKey(name: 'question_type') final String? questionType,
+      @JsonKey(name: 'order_index') final int? orderIndex,
+      @JsonKey(name: 'media') final String? media,
+      @JsonKey(name: 'answers') final List<Answer> answers,
+      @JsonKey(name: 'test_description') final String? testDescription,
+      @JsonKey(name: 'correct_answer_text') final String? correctAnswerText,
+      @JsonKey(name: 'answer_language') final String? answerLanguage,
+      @JsonKey(name: 'correct_count') final int? correctCount,
+      @JsonKey(name: 'wrong_count') final int? wrongCount,
+      @JsonKey(name: 'difficulty_percentage')
+      final double? difficultyPercentage,
+      @JsonKey(name: 'user_attempt_count') final int? userAttemptCount,
+      @JsonKey(name: 'user') final User? user,
+      @JsonKey(name: 'created_at') final DateTime? createdAt,
+      @JsonKey(name: 'round_image') final String? roundImage,
+      @JsonKey(name: 'is_bookmarked') final bool? isBookmarked,
+      @JsonKey(name: 'is_following') final bool? isFollowing,
+      @JsonKey(name: 'category') final Category? category}) = _$QuestionImpl;
 
-  factory _TopicQuestionResponse.fromJson(Map<String, dynamic> json) =
-      _$TopicQuestionResponseImpl.fromJson;
+  factory _Question.fromJson(Map<String, dynamic> json) =
+      _$QuestionImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -2322,7 +2282,7 @@ abstract class _TopicQuestionResponse implements TopicQuestionResponse {
   String? get media;
   @override
   @JsonKey(name: 'answers')
-  List<TopicAnswerResponse> get answers;
+  List<Answer> get answers;
   @override
   @JsonKey(name: 'test_description')
   String? get testDescription;
@@ -2346,10 +2306,10 @@ abstract class _TopicQuestionResponse implements TopicQuestionResponse {
   int? get userAttemptCount;
   @override
   @JsonKey(name: 'user')
-  TopicUserResponse? get user;
+  User? get user;
   @override
   @JsonKey(name: 'created_at')
-  String? get createdAt;
+  DateTime? get createdAt;
   @override
   @JsonKey(name: 'round_image')
   String? get roundImage;
@@ -2361,19 +2321,19 @@ abstract class _TopicQuestionResponse implements TopicQuestionResponse {
   bool? get isFollowing;
   @override
   @JsonKey(name: 'category')
-  TopicCategoryResponse? get category;
+  Category? get category;
   @override
   @JsonKey(ignore: true)
-  _$$TopicQuestionResponseImplCopyWith<_$TopicQuestionResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$QuestionImplCopyWith<_$QuestionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-TopicAnswerResponse _$TopicAnswerResponseFromJson(Map<String, dynamic> json) {
-  return _TopicAnswerResponse.fromJson(json);
+Answer _$AnswerFromJson(Map<String, dynamic> json) {
+  return _Answer.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TopicAnswerResponse {
+mixin _$Answer {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'letter')
@@ -2385,15 +2345,13 @@ mixin _$TopicAnswerResponse {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TopicAnswerResponseCopyWith<TopicAnswerResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+  $AnswerCopyWith<Answer> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TopicAnswerResponseCopyWith<$Res> {
-  factory $TopicAnswerResponseCopyWith(
-          TopicAnswerResponse value, $Res Function(TopicAnswerResponse) then) =
-      _$TopicAnswerResponseCopyWithImpl<$Res, TopicAnswerResponse>;
+abstract class $AnswerCopyWith<$Res> {
+  factory $AnswerCopyWith(Answer value, $Res Function(Answer) then) =
+      _$AnswerCopyWithImpl<$Res, Answer>;
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
@@ -2403,9 +2361,9 @@ abstract class $TopicAnswerResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TopicAnswerResponseCopyWithImpl<$Res, $Val extends TopicAnswerResponse>
-    implements $TopicAnswerResponseCopyWith<$Res> {
-  _$TopicAnswerResponseCopyWithImpl(this._value, this._then);
+class _$AnswerCopyWithImpl<$Res, $Val extends Answer>
+    implements $AnswerCopyWith<$Res> {
+  _$AnswerCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -2442,11 +2400,10 @@ class _$TopicAnswerResponseCopyWithImpl<$Res, $Val extends TopicAnswerResponse>
 }
 
 /// @nodoc
-abstract class _$$TopicAnswerResponseImplCopyWith<$Res>
-    implements $TopicAnswerResponseCopyWith<$Res> {
-  factory _$$TopicAnswerResponseImplCopyWith(_$TopicAnswerResponseImpl value,
-          $Res Function(_$TopicAnswerResponseImpl) then) =
-      __$$TopicAnswerResponseImplCopyWithImpl<$Res>;
+abstract class _$$AnswerImplCopyWith<$Res> implements $AnswerCopyWith<$Res> {
+  factory _$$AnswerImplCopyWith(
+          _$AnswerImpl value, $Res Function(_$AnswerImpl) then) =
+      __$$AnswerImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -2457,11 +2414,11 @@ abstract class _$$TopicAnswerResponseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TopicAnswerResponseImplCopyWithImpl<$Res>
-    extends _$TopicAnswerResponseCopyWithImpl<$Res, _$TopicAnswerResponseImpl>
-    implements _$$TopicAnswerResponseImplCopyWith<$Res> {
-  __$$TopicAnswerResponseImplCopyWithImpl(_$TopicAnswerResponseImpl _value,
-      $Res Function(_$TopicAnswerResponseImpl) _then)
+class __$$AnswerImplCopyWithImpl<$Res>
+    extends _$AnswerCopyWithImpl<$Res, _$AnswerImpl>
+    implements _$$AnswerImplCopyWith<$Res> {
+  __$$AnswerImplCopyWithImpl(
+      _$AnswerImpl _value, $Res Function(_$AnswerImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2472,7 +2429,7 @@ class __$$TopicAnswerResponseImplCopyWithImpl<$Res>
     Object? answerText = freezed,
     Object? isCorrect = freezed,
   }) {
-    return _then(_$TopicAnswerResponseImpl(
+    return _then(_$AnswerImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -2495,15 +2452,15 @@ class __$$TopicAnswerResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TopicAnswerResponseImpl implements _TopicAnswerResponse {
-  const _$TopicAnswerResponseImpl(
+class _$AnswerImpl implements _Answer {
+  const _$AnswerImpl(
       {@JsonKey(name: 'id') this.id,
       @JsonKey(name: 'letter') this.letter,
       @JsonKey(name: 'answer_text') this.answerText,
       @JsonKey(name: 'is_correct') this.isCorrect});
 
-  factory _$TopicAnswerResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TopicAnswerResponseImplFromJson(json);
+  factory _$AnswerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AnswerImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -2520,14 +2477,14 @@ class _$TopicAnswerResponseImpl implements _TopicAnswerResponse {
 
   @override
   String toString() {
-    return 'TopicAnswerResponse(id: $id, letter: $letter, answerText: $answerText, isCorrect: $isCorrect)';
+    return 'Answer(id: $id, letter: $letter, answerText: $answerText, isCorrect: $isCorrect)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TopicAnswerResponseImpl &&
+            other is _$AnswerImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.letter, letter) || other.letter == letter) &&
             (identical(other.answerText, answerText) ||
@@ -2544,28 +2501,25 @@ class _$TopicAnswerResponseImpl implements _TopicAnswerResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TopicAnswerResponseImplCopyWith<_$TopicAnswerResponseImpl> get copyWith =>
-      __$$TopicAnswerResponseImplCopyWithImpl<_$TopicAnswerResponseImpl>(
-          this, _$identity);
+  _$$AnswerImplCopyWith<_$AnswerImpl> get copyWith =>
+      __$$AnswerImplCopyWithImpl<_$AnswerImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TopicAnswerResponseImplToJson(
+    return _$$AnswerImplToJson(
       this,
     );
   }
 }
 
-abstract class _TopicAnswerResponse implements TopicAnswerResponse {
-  const factory _TopicAnswerResponse(
-          {@JsonKey(name: 'id') final int? id,
-          @JsonKey(name: 'letter') final String? letter,
-          @JsonKey(name: 'answer_text') final String? answerText,
-          @JsonKey(name: 'is_correct') final bool? isCorrect}) =
-      _$TopicAnswerResponseImpl;
+abstract class _Answer implements Answer {
+  const factory _Answer(
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'letter') final String? letter,
+      @JsonKey(name: 'answer_text') final String? answerText,
+      @JsonKey(name: 'is_correct') final bool? isCorrect}) = _$AnswerImpl;
 
-  factory _TopicAnswerResponse.fromJson(Map<String, dynamic> json) =
-      _$TopicAnswerResponseImpl.fromJson;
+  factory _Answer.fromJson(Map<String, dynamic> json) = _$AnswerImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -2581,6 +2535,6 @@ abstract class _TopicAnswerResponse implements TopicAnswerResponse {
   bool? get isCorrect;
   @override
   @JsonKey(ignore: true)
-  _$$TopicAnswerResponseImplCopyWith<_$TopicAnswerResponseImpl> get copyWith =>
+  _$$AnswerImplCopyWith<_$AnswerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/features/profile/create_block_cubit.dart';
 import 'package:testabd/features/profile/create_block_state.dart';
 

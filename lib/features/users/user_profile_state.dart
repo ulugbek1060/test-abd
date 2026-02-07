@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:testabd/domain/account/entities/user_profile_model.dart';
+import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
-import 'package:testabd/domain/quiz/entities/topics_model.dart';
 
 part 'user_profile_state.freezed.dart';
 
@@ -26,13 +26,12 @@ class UserProfileState with _$UserProfileState {
   }) = _UserProfileState;
 }
 
-
 @freezed
 class BlocksState with _$BlocksState {
   const factory BlocksState({
     @Default(false) bool isLoading,
     @Default(false) bool isLoadingMore,
-    @Default([]) List<TopicItem> topics,
+    @Default([]) List<BlockModel> topics,
     @Default(1) int nextPage,
     @Default(0) int previousPage,
     String? error,
@@ -50,8 +49,10 @@ class QuestionsState with _$QuestionsState {
 
 @freezed
 class BooksState with _$BooksState {
-  const factory BooksState({@Default(false) bool isLoading, String? error}) =
-      _BooksState;
+  const factory BooksState({
+    @Default(false) bool isLoading,
+    String? error
+  }) = _BooksState;
 }
 
 @freezed
@@ -59,4 +60,3 @@ class FollowState with _$FollowState {
   const factory FollowState({@Default(false) bool isLoading, String? error}) =
       _FollowState;
 }
-

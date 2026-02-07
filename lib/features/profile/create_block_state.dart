@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 

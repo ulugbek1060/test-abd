@@ -329,7 +329,7 @@ abstract class _UserProfileState implements UserProfileState {
 mixin _$BlocksState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadingMore => throw _privateConstructorUsedError;
-  List<TopicItem> get topics => throw _privateConstructorUsedError;
+  List<BlockModel> get topics => throw _privateConstructorUsedError;
   int get nextPage => throw _privateConstructorUsedError;
   int get previousPage => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -348,7 +348,7 @@ abstract class $BlocksStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
-      List<TopicItem> topics,
+      List<BlockModel> topics,
       int nextPage,
       int previousPage,
       String? error});
@@ -386,7 +386,7 @@ class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
       topics: null == topics
           ? _value.topics
           : topics // ignore: cast_nullable_to_non_nullable
-              as List<TopicItem>,
+              as List<BlockModel>,
       nextPage: null == nextPage
           ? _value.nextPage
           : nextPage // ignore: cast_nullable_to_non_nullable
@@ -414,7 +414,7 @@ abstract class _$$BlocksStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
-      List<TopicItem> topics,
+      List<BlockModel> topics,
       int nextPage,
       int previousPage,
       String? error});
@@ -450,7 +450,7 @@ class __$$BlocksStateImplCopyWithImpl<$Res>
       topics: null == topics
           ? _value._topics
           : topics // ignore: cast_nullable_to_non_nullable
-              as List<TopicItem>,
+              as List<BlockModel>,
       nextPage: null == nextPage
           ? _value.nextPage
           : nextPage // ignore: cast_nullable_to_non_nullable
@@ -473,7 +473,7 @@ class _$BlocksStateImpl implements _BlocksState {
   const _$BlocksStateImpl(
       {this.isLoading = false,
       this.isLoadingMore = false,
-      final List<TopicItem> topics = const [],
+      final List<BlockModel> topics = const [],
       this.nextPage = 1,
       this.previousPage = 0,
       this.error})
@@ -485,10 +485,10 @@ class _$BlocksStateImpl implements _BlocksState {
   @override
   @JsonKey()
   final bool isLoadingMore;
-  final List<TopicItem> _topics;
+  final List<BlockModel> _topics;
   @override
   @JsonKey()
-  List<TopicItem> get topics {
+  List<BlockModel> get topics {
     if (_topics is EqualUnmodifiableListView) return _topics;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_topics);
@@ -546,7 +546,7 @@ abstract class _BlocksState implements BlocksState {
   const factory _BlocksState(
       {final bool isLoading,
       final bool isLoadingMore,
-      final List<TopicItem> topics,
+      final List<BlockModel> topics,
       final int nextPage,
       final int previousPage,
       final String? error}) = _$BlocksStateImpl;
@@ -556,7 +556,7 @@ abstract class _BlocksState implements BlocksState {
   @override
   bool get isLoadingMore;
   @override
-  List<TopicItem> get topics;
+  List<BlockModel> get topics;
   @override
   int get nextPage;
   @override

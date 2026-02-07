@@ -10,9 +10,9 @@ import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
-import 'package:testabd/data/remote_source/quiz/models/topic_questions_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
-import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 
 import 'models/block_questions_response.dart';
@@ -48,7 +48,7 @@ abstract class QuizSource {
     int? duration,
   );
 
-  Future<TopicQuestionsResponse> getTopics(
+  Future<UserBlocksResponse> getBlocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
@@ -134,7 +134,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<TopicQuestionsResponse> getTopics(
+  Future<UserBlocksResponse> getBlocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
@@ -148,7 +148,7 @@ class QuizSourceImpl implements QuizSource {
           if (page != null) 'page_size': pageSize,
         },
       );
-      return TopicQuestionsResponse.fromJson(response.data);
+      return UserBlocksResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

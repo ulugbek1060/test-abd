@@ -4,6 +4,8 @@ import 'package:testabd/data/remote_source/quiz/models/followed_questions_respon
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart'
+    as userBlock;
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
@@ -269,6 +271,46 @@ class QuestionModel extends Equatable {
     );
   }
 
+  static QuestionModel fromUserBlockResponse(userBlock.Question response) {
+    return QuestionModel(
+      id: response.id,
+      test: response.test,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: QuestionType.fromString(response.questionType),
+      orderIndex: response.orderIndex,
+      media: response.media,
+      answers:
+          response.answers
+              .map(
+                (answer) => AnswerItemModel(
+                  id: answer.id,
+                  letter: answer.letter,
+                  answerText: answer.answerText,
+                  isCorrect: answer.isCorrect ?? false,
+                ),
+              )
+              .toList(),
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage?.toDouble(),
+      userAttemptCount: response.userAttemptCount,
+      user: UserItemModel(
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
+      ),
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
+    );
+  }
+
   static QuestionModel fromAny(dynamic data) {
     return QuestionModel(
       id: data.id,
@@ -276,6 +318,7 @@ class QuestionModel extends Equatable {
       testTitle: data.testTitle,
       questionText: data.questionText,
       questionType: data.questionType,
+      // TODO: fix this
       orderIndex: data.orderIndex,
       media: data.media,
       answers: data.answers

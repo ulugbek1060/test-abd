@@ -1,49 +1,38 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
-import 'package:testabd/core/enums/access_enum.dart';
+import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart';
 import 'package:testabd/domain/entity/category_model.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
 
-class MyBlockModel extends Equatable {
+class BlockModel extends Equatable {
   final int? id;
   final UserItemModel? user;
   final String? title;
   final String? description;
   final CategoryModel? category;
-  final int? categoryId;
-  final AccessType? visibility;
+  final String? visibility;
   final String? accessMode;
   final String? participantRoles;
   final int? maxParticipants;
-  final DateTime? startTime;
-  final DateTime? endTime;
+  final String? startTime;
+  final String? endTime;
   final int? minScoreToFinish;
   final int? participantCountToFinish;
   final int? country;
-  final int? countryId;
   final int? region;
-  final int? regionId;
   final int? district;
-  final int? districtId;
   final bool? isRegionPremium;
   final DateTime? createdAt;
-  final int? difficultyPercentage;
+  final double? difficultyPercentage;
   final int? totalQuestions;
-  final String? questions;
-  final bool? isBookmarked;
-  final int? participantCount;
-  final int? averageQuestionDifficulty;
-  final int? averageCompletionTimeMinutes;
-  final int? totalCorrectAttempts;
-  final int? totalWrongAttempts;
+  final List<QuestionModel> questions;
 
-  const MyBlockModel({
+  const BlockModel({
     this.id,
     this.user,
     this.title,
     this.description,
     this.category,
-    this.categoryId,
     this.visibility,
     this.accessMode,
     this.participantRoles,
@@ -53,70 +42,49 @@ class MyBlockModel extends Equatable {
     this.minScoreToFinish,
     this.participantCountToFinish,
     this.country,
-    this.countryId,
     this.region,
-    this.regionId,
     this.district,
-    this.districtId,
     this.isRegionPremium,
     this.createdAt,
     this.difficultyPercentage,
     this.totalQuestions,
-    this.questions,
-    this.isBookmarked,
-    this.participantCount,
-    this.averageQuestionDifficulty,
-    this.averageCompletionTimeMinutes,
-    this.totalCorrectAttempts,
-    this.totalWrongAttempts,
+    this.questions = const [],
   });
 
-  static MyBlockModel fromResponse(MyBlockResponse response) {
-    return MyBlockModel(
+  static BlockModel fromResponse(Block response) {
+    return BlockModel(
       id: response.id,
-      user: UserItemModel(
-        id: response.user?.id,
-        username: response.user?.username,
-        profileImage: response.user?.profileImage,
-        isBadged: response.user?.isBadged,
-        isFollowing: response.user?.isFollowing,
-        isPremium: response.user?.isPremium,
-      ),
+      user: UserItemModel.fromResponse1(response.user),
       title: response.title,
       description: response.description,
       category: CategoryModel(
         id: response.category?.id,
-        totalQuestions: response.category?.totalQuestions,
         totalTests: response.category?.totalTests,
+        totalQuestions: response.category?.totalQuestions,
         title: response.category?.title,
         slug: response.category?.slug,
         description: response.category?.description,
+        emoji: response.category?.emoji,
+        image: response.category?.image,
       ),
-      visibility: AccessType.fromString(response.visibility),
+      visibility: response.visibility,
       accessMode: response.accessMode,
       participantRoles: response.participantRoles,
       maxParticipants: response.maxParticipants,
       startTime: response.startTime,
       endTime: response.endTime,
       minScoreToFinish: response.minScoreToFinish,
-      participantCountToFinish: response.participantCountToFinish,
+      participantCountToFinish: response.participantCount,
       country: response.country,
-      countryId: response.countryId,
       region: response.region,
-      // regionId: response.regionId,
       district: response.district,
-      districtId: response.districtId,
       isRegionPremium: response.isRegionPremium,
-      createdAt: response.createdAt,
+      createdAt: DateTime.parse(response.createdAt ?? ''),
       difficultyPercentage: response.difficultyPercentage,
       totalQuestions: response.totalQuestions,
-      // questions: response.questions,
-      isBookmarked: response.isBookmarked,
-      participantCount: response.participantCount,
-      averageQuestionDifficulty: response.averageQuestionDifficulty,
-      averageCompletionTimeMinutes: response.averageCompletionTimeMinutes,
-      totalCorrectAttempts: response.totalCorrectAttempts,
-      totalWrongAttempts: response.totalWrongAttempts,
+      questions: response.questions
+          .map((e) => QuestionModel.fromUserBlockResponse(e))
+          .toList(),
     );
   }
 
@@ -127,7 +95,6 @@ class MyBlockModel extends Equatable {
     title,
     description,
     category,
-    categoryId,
     visibility,
     accessMode,
     participantRoles,
@@ -137,21 +104,12 @@ class MyBlockModel extends Equatable {
     minScoreToFinish,
     participantCountToFinish,
     country,
-    countryId,
     region,
-    regionId,
     district,
-    districtId,
     isRegionPremium,
     createdAt,
     difficultyPercentage,
     totalQuestions,
     questions,
-    isBookmarked,
-    participantCount,
-    averageQuestionDifficulty,
-    averageCompletionTimeMinutes,
-    totalCorrectAttempts,
-    totalWrongAttempts,
   ];
 }

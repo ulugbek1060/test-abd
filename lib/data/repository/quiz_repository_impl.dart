@@ -4,14 +4,14 @@ import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
-import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
+import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
-import 'package:testabd/domain/quiz/entities/topics_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 
 @LazySingleton(as: QuizRepository)
@@ -60,18 +60,23 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, TopicsModel>> getTopics(
+  Future<Either<AppException, PagedData<String, BlockModel>>> getBocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
   }) async {
     try {
-      final result = await _quizSource.getTopics(
+      final result = await _quizSource.getBlocksByUserId(
         userId,
         page: page,
         pageSize: pageSize,
       );
-      return Right(TopicsModel.fromResponse(result));
+      final data = PagedData(
+        next: result.next,
+        previous: result.previous,
+        data: result.results.map(BlockModel.fromResponse).toList(),
+      );
+      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

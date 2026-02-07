@@ -99,7 +99,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         ),
       ),
     );
-    final result = await _quizRepository.getTopics(
+    final result = await _quizRepository.getBocksByUserId(
       userId,
       pageSize: _pageSize,
       page: currentPage,
@@ -114,7 +114,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       },
       (value) {
         final newTopicState = state.topicsState.copyWith(
-          topics: [...state.topicsState.topics, ...value.results],
+          topics: [...state.topicsState.topics, ...value.data],
           nextPage: currentPage + 1,
           previousPage: currentPage > 1 ? currentPage - 1 : 0,
           isLoading: false,

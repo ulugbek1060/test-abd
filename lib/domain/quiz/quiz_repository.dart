@@ -2,14 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
-import 'package:testabd/domain/entity/access_enum.dart';
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
+import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
-import 'package:testabd/domain/quiz/entities/topics_model.dart';
 
 abstract class QuizRepository {
   Future<Either<AppException, PagedData<String, QuestionModel>>>
@@ -20,7 +20,7 @@ abstract class QuizRepository {
     int? duration,
   });
   Future<Either<AppException, List<QuestionModel>>> getUserQuestions(int userId);
-  Future<Either<AppException, TopicsModel>> getTopics(
+  Future<Either<AppException, PagedData<String, BlockModel>>> getBocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
