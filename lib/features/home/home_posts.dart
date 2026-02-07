@@ -71,119 +71,146 @@ class QuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: CachedNetworkImage(
-            imageUrl: quiz.roundImage ?? '',
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      /// card container height
+      height: MediaQuery.of(context).size.height * 0.7,
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(0),
+        backgroundBlendMode: BlendMode.darken,
+        image: DecorationImage(
+          image: NetworkImage(quiz.roundImage ?? ''),
+          fit: BoxFit.cover,
         ),
-        SizedBox(
-          /// card container height
-          height: MediaQuery.of(context).size.height * 0.7,
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                /// header of the card
-                InkWell(
-                  onTap: () => context.push(
-                    AppRouter.userProfileWithUsername(
-                      quiz.user?.username ?? '',
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      // circle image
-                      _HeaderUserImage(
-                        imageUrl: quiz.user?.profileImage,
-                        username: quiz.user?.username ?? '',
-                        size: 40,
-                      ),
-
-                      SizedBox(width: 6),
-
-                      // username and date
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            capitalize(quiz.user?.username),
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(color: Colors.white),
-                          ),
-                          Text(
-                            formatDate(quiz.createdAt),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            /// header of the card
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: InkWell(
+                onTap: () => context.push(
+                  AppRouter.userProfileWithUsername(quiz.user?.username ?? ''),
                 ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    // circle image
+                    _HeaderUserImage(
+                      imageUrl: quiz.user?.profileImage,
+                      username: quiz.user?.username ?? '',
+                      size: 40,
+                    ),
 
-                /// Quiz sections question and answers
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      /// quiz
-                      Flexible(
-                        child: Text(
-                          quiz.questionText ?? '',
+                    SizedBox(width: 6),
+
+                    // username and date
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          capitalize(quiz.user?.username),
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(color: Colors.white),
                         ),
+                        Text(
+                          formatDate(quiz.createdAt),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
+
+                    Spacer(),
+
+                    if (!(quiz.user?.isFollowing ?? false))
+                      SizedBox(
+                        height: 32,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: quiz.user?.isFollowing ?? false
+                                ? Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withAlpha(150)
+                                : Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: quiz.user?.isFollowing ?? false
+                              ? null
+                              : () {},
+                          child: quiz.isLoading
+                              ? const ProgressView()
+                              : Text(
+                                  quiz.user?.isFollowing ?? false
+                                      ? 'Unfollow'
+                                      : 'Follow',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                        ),
                       ),
-
-                      /// space
-                      SizedBox(height: 16),
-
-                      /// answers
-                      _AnswersList(
-                        questionId: quiz.id,
-                        answers: quiz.answers,
-                        questionType: quiz.questionType,
-                        myAnswersId: quiz.myAnswersId,
-                        isCompleted: quiz.isCompleted,
-                        isLoading: quiz.isLoading,
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-
-                /// divider
-                Divider(color: AppDarkColors.textSecondary),
-
-                /// question information
-                _BottomQuestionInformation(
-                  correctCount: quiz.correctCount?.toString() ?? '',
-                  wrongCount: quiz.wrongCount?.toString() ?? '',
-                  title: quiz.testTitle ?? '',
-                  description: quiz.testDescription ?? '',
-                  onShare: () {},
-                  onSave: () {},
-                ),
-              ],
+              ),
             ),
-          ),
+
+            /// Quiz sections question and answers
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    /// quiz
+                    Flexible(
+                      child: Text(
+                        quiz.questionText ?? '',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(color: Colors.white),
+                      ),
+                    ),
+
+                    /// space
+                    SizedBox(height: 16),
+
+                    /// answers
+                    _AnswersList(
+                      questionId: quiz.id,
+                      answers: quiz.answers,
+                      questionType: quiz.questionType,
+                      myAnswersId: quiz.myAnswersId,
+                      isCompleted: quiz.isCompleted,
+                      isLoading: quiz.isLoading,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            /// question information
+            _BottomQuestionInformation(
+              correctCount: quiz.correctCount?.toString() ?? '',
+              wrongCount: quiz.wrongCount?.toString() ?? '',
+              title: quiz.testTitle ?? '',
+              description: quiz.testDescription ?? '',
+              onShare: () {},
+              onSave: () {},
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -657,68 +684,78 @@ class _BottomQuestionInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            // difficulty percentage
-            if (correctCount.isNotEmpty)
-              Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green),
-                  const SizedBox(width: 4),
-                  Text(
-                    correctCount,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.white),
-                  ),
-                ],
+    return Container(
+      padding: const EdgeInsets.only(top: 4, bottom: 20, left: 12, right: 12),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              // difficulty percentage
+              if (correctCount.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green),
+                    const SizedBox(width: 4),
+                    Text(
+                      correctCount,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(width: 8),
+
+              if (wrongCount.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(Icons.cancel, color: Colors.red),
+                    const SizedBox(width: 4),
+                    Text(
+                      wrongCount,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+
+              Spacer(),
+
+              // share buttons
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.share,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
-            const SizedBox(width: 8),
 
-            if (wrongCount.isNotEmpty)
-              Row(
-                children: [
-                  Icon(Icons.cancel, color: Colors.red),
-                  const SizedBox(width: 4),
-                  Text(
-                    wrongCount,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.white),
-                  ),
-                ],
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.bookmark_border_rounded,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
-
-            Spacer(),
-
-            // share buttons
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.share, color: Colors.white),
+            ],
+          ),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.bookmark_border_rounded, color: Colors.white),
+          ),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-          ],
-        ),
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: Colors.white),
-        ),
-        Text(
-          description,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: Colors.white),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

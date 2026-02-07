@@ -8,6 +8,7 @@ import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/core/utils/app_mode_service.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/auth/auth_repository.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/profile_state.dart';
@@ -48,8 +49,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> load() async {
+    emit(ProfileState());
     fetchUserInfo();
-    fetchMyBlocks();
+    fetchBlocks();
     fetchQuestionsByPage();
   }
 
@@ -141,7 +143,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> fetchMyBlocks() async {
+  Future<void> fetchBlocks() async {
     final current = state.blocksState;
     if (current.isLoading) return;
 
@@ -189,24 +191,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (currentState.isLoadingMore) return;
     if (currentState.isLastPage) return;
 
-    logger.d('currentState.isLoading: ${currentState.isLoading}');
-    logger.d('currentState.isLoadingMore: ${currentState.isLoadingMore}');
-    logger.d('currentState.isLastPage: ${currentState.isLastPage}');
-
-    if (currentState.questions.isEmpty){
+    if (currentState.questions.isEmpty) {
       emit(
-        state.copyWith(
-          questionsState: currentState.copyWith(
-            isLoading: true,
-          ),
-        ),
+        state.copyWith(questionsState: currentState.copyWith(isLoading: true)),
       );
     } else {
       emit(
         state.copyWith(
-          questionsState: currentState.copyWith(
-            isLoadingMore: true,
-          ),
+          questionsState: currentState.copyWith(isLoadingMore: true),
         ),
       );
     }
@@ -231,6 +223,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
       (value) {
         final list = List.of(state.questionsState.questions);
+        if (list.isEmpty) list.insert(0, QuestionModel(id: -1));
         list.addAll(value.data);
         emit(
           state.copyWith(
