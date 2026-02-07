@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
+import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
@@ -148,17 +150,58 @@ class QuestionModel extends Equatable {
     );
   }
 
-  static QuestionModel fromResponse(QuestionResponse result) {
+  static QuestionModel fromResponse(QuestionResponse response) {
     return QuestionModel(
-      id: result.id,
-      test: result.test,
-      testTitle: result.testTitle,
-      questionText: result.questionText,
-      questionType: QuestionType.fromString(result.questionType),
-      orderIndex: result.orderIndex,
-      media: result.media,
-      answers: result.answers
-          ?.map(
+      id: response.id,
+      test: response.test,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: QuestionType.fromString(response.questionType),
+      orderIndex: response.orderIndex,
+      media: response.media,
+      answers:
+          response.answers
+              ?.map(
+                (answer) => AnswerItemModel(
+                  id: answer.id,
+                  letter: answer.letter,
+                  answerText: answer.answerText,
+                  isCorrect: answer.isCorrect ?? false,
+                ),
+              )
+              .toList() ??
+          [],
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage?.toDouble(),
+      userAttemptCount: response.userAttemptCount,
+      user: UserItemModel(
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
+      ),
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
+    );
+  }
+
+  static QuestionModel fromFollowedResponse(Question response) {
+    return QuestionModel(
+      id: response.id,
+      test: response.test,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: QuestionType.fromString(response.questionType),
+      orderIndex: response.orderIndex,
+      media: response.media,
+      answers: response.answers
+          .map(
             (answer) => AnswerItemModel(
               id: answer.id,
               letter: answer.letter,
@@ -166,24 +209,63 @@ class QuestionModel extends Equatable {
               isCorrect: answer.isCorrect ?? false,
             ),
           )
-          .toList() ?? [],
-      testDescription: result.testDescription,
-      correctAnswerText: result.correctAnswerText,
-      answerLanguage: result.answerLanguage,
-      correctCount: result.correctCount,
-      wrongCount: result.wrongCount,
-      difficultyPercentage: result.difficultyPercentage?.toDouble(),
-      userAttemptCount: result.userAttemptCount,
+          .toList(),
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage?.toDouble(),
+      userAttemptCount: response.userAttemptCount,
       user: UserItemModel(
-        id: result.user?.id,
-        username: result.user?.username,
-        profileImage: result.user?.profileImage,
-        isBadged: result.user?.isBadged,
-        isFollowing: result.user?.isFollowing,
-        isPremium: result.user?.isPremium,
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
       ),
-      createdAt: result.createdAt,
-      roundImage: result.roundImage,
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
+    );
+  }
+
+  static QuestionModel fromUserQuestionResponse(UserQuestionResponse response) {
+    return QuestionModel(
+      id: response.id,
+      test: response.test,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: QuestionType.fromString(response.questionType),
+      orderIndex: response.orderIndex,
+      media: response.media,
+      answers: response.answers
+          .map(
+            (answer) => AnswerItemModel(
+              id: answer.id,
+              letter: answer.letter,
+              answerText: answer.answerText,
+              isCorrect: answer.isCorrect ?? false,
+            ),
+          )
+          .toList(),
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage?.toDouble(),
+      userAttemptCount: response.userAttemptCount,
+      user: UserItemModel(
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
+      ),
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
     );
   }
 

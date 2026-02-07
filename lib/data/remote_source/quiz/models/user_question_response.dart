@@ -1,32 +1,33 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_question_response.freezed.dart';
+
 part 'user_question_response.g.dart';
 
 @freezed
 class UserQuestionResponse with _$UserQuestionResponse {
   const factory UserQuestionResponse({
-    int? id,
-    int? test,
-    String? test_title,
-    String? question_text,
-    String? question_type,
-    int? order_index,
-    String? media,
-    @Default([]) List<UserAnswerResponse> answers,
-    String? test_description,
-    String? correct_answer_text,
-    String? answer_language,
-    int? correct_count,
-    int? wrong_count,
-    double? difficulty_percentage,
-    int? user_attempt_count,
-    UserShortResponse? user,
-    String? created_at,
-    String? round_image,
-    bool? is_bookmarked,
-    bool? is_following,
-    Category? category,
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'test') int? test,
+    @JsonKey(name: 'testTitle') String? testTitle,
+    @JsonKey(name: 'questionText') String? questionText,
+    @JsonKey(name: 'questionType') String? questionType,
+    @JsonKey(name: 'orderIndex') int? orderIndex,
+    @JsonKey(name: 'media') String? media,
+    @JsonKey(name: 'answers') @Default([]) List<Answer> answers,
+    @JsonKey(name: 'testDescription') String? testDescription,
+    @JsonKey(name: 'correctAnswerText') String? correctAnswerText,
+    @JsonKey(name: 'answerLanguage') String? answerLanguage,
+    @JsonKey(name: 'correctCount') int? correctCount,
+    @JsonKey(name: 'wrongCount') int? wrongCount,
+    @JsonKey(name: 'difficultyPercentage') double? difficultyPercentage,
+    @JsonKey(name: 'userAttemptCount') int? userAttemptCount,
+    @JsonKey(name: 'user') User? user,
+    @JsonKey(name: 'createdAt') DateTime? createdAt,
+    @JsonKey(name: 'roundImage') String? roundImage,
+    @JsonKey(name: 'isBookmarked') bool? isBookmarked,
+    @JsonKey(name: 'isFollowing') bool? isFollowing,
+    @JsonKey(name: 'category') Category? category,
   }) = _UserQuestionResponse;
 
   factory UserQuestionResponse.fromJson(Map<String, dynamic> json) =>
@@ -36,14 +37,14 @@ class UserQuestionResponse with _$UserQuestionResponse {
 @freezed
 class Category with _$Category {
   const factory Category({
-    int? id,
-    int? total_tests,
-    int? total_questions,
-    String? title,
-    String? slug,
-    String? description,
-    String? emoji,
-    String? image,
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'totalTests') int? totalTests,
+    @JsonKey(name: 'totalQuestions') int? totalQuestions,
+    @JsonKey(name: 'title') String? title,
+    @JsonKey(name: 'slug') String? slug,
+    @JsonKey(name: 'description') String? description,
+    @JsonKey(name: 'emoji') String? emoji,
+    @JsonKey(name: 'image') String? image,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) =>
@@ -51,29 +52,27 @@ class Category with _$Category {
 }
 
 @freezed
-class UserAnswerResponse with _$UserAnswerResponse {
-  const factory UserAnswerResponse({
-    int? id,
-    String? letter,
-    String? answer_text,
-    bool? is_correct,
-  }) = _UserAnswerResponse;
+class Answer with _$Answer {
+  const factory Answer({
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'letter') String? letter,
+    @JsonKey(name: 'answerText') String? answerText,
+    @JsonKey(name: 'isCorrect') bool? isCorrect,
+  }) = _Answer;
 
-  factory UserAnswerResponse.fromJson(Map<String, dynamic> json) =>
-      _$UserAnswerResponseFromJson(json);
+  factory Answer.fromJson(Map<String, dynamic> json) => _$AnswerFromJson(json);
 }
 
 @freezed
-class UserShortResponse with _$UserShortResponse {
-  const factory UserShortResponse({
-    int? id,
-    String? username,
-    String? profile_image,
-    bool? is_badged,
-    bool? is_premium,
-    bool? is_following,
-  }) = _UserShortResponse;
+class User with _$User {
+  const factory User({
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'username') String? username,
+    @JsonKey(name: 'profileImage') String? profileImage,
+    @JsonKey(name: 'isBadged') bool? isBadged,
+    @JsonKey(name: 'isPremium') bool? isPremium,
+    @JsonKey(name: 'isFollowing') bool? isFollowing,
+  }) = _User;
 
-  factory UserShortResponse.fromJson(Map<String, dynamic> json) =>
-      _$UserShortResponseFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }

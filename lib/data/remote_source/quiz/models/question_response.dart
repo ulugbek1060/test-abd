@@ -33,7 +33,6 @@ class QuestionResponse with _$QuestionResponse {
       _$QuestionResponseFromJson(json);
 }
 
-
 @freezed
 class QuestionUser with _$QuestionUser {
   const factory QuestionUser({

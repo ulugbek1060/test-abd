@@ -20,26 +20,47 @@ UserQuestionResponse _$UserQuestionResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserQuestionResponse {
+  @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'test')
   int? get test => throw _privateConstructorUsedError;
-  String? get test_title => throw _privateConstructorUsedError;
-  String? get question_text => throw _privateConstructorUsedError;
-  String? get question_type => throw _privateConstructorUsedError;
-  int? get order_index => throw _privateConstructorUsedError;
+  @JsonKey(name: 'testTitle')
+  String? get testTitle => throw _privateConstructorUsedError;
+  @JsonKey(name: 'questionText')
+  String? get questionText => throw _privateConstructorUsedError;
+  @JsonKey(name: 'questionType')
+  String? get questionType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'orderIndex')
+  int? get orderIndex => throw _privateConstructorUsedError;
+  @JsonKey(name: 'media')
   String? get media => throw _privateConstructorUsedError;
-  List<UserAnswerResponse> get answers => throw _privateConstructorUsedError;
-  String? get test_description => throw _privateConstructorUsedError;
-  String? get correct_answer_text => throw _privateConstructorUsedError;
-  String? get answer_language => throw _privateConstructorUsedError;
-  int? get correct_count => throw _privateConstructorUsedError;
-  int? get wrong_count => throw _privateConstructorUsedError;
-  double? get difficulty_percentage => throw _privateConstructorUsedError;
-  int? get user_attempt_count => throw _privateConstructorUsedError;
-  UserShortResponse? get user => throw _privateConstructorUsedError;
-  String? get created_at => throw _privateConstructorUsedError;
-  String? get round_image => throw _privateConstructorUsedError;
-  bool? get is_bookmarked => throw _privateConstructorUsedError;
-  bool? get is_following => throw _privateConstructorUsedError;
+  @JsonKey(name: 'answers')
+  List<Answer> get answers => throw _privateConstructorUsedError;
+  @JsonKey(name: 'testDescription')
+  String? get testDescription => throw _privateConstructorUsedError;
+  @JsonKey(name: 'correctAnswerText')
+  String? get correctAnswerText => throw _privateConstructorUsedError;
+  @JsonKey(name: 'answerLanguage')
+  String? get answerLanguage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'correctCount')
+  int? get correctCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'wrongCount')
+  int? get wrongCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'difficultyPercentage')
+  double? get difficultyPercentage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'userAttemptCount')
+  int? get userAttemptCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'user')
+  User? get user => throw _privateConstructorUsedError;
+  @JsonKey(name: 'createdAt')
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'roundImage')
+  String? get roundImage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isBookmarked')
+  bool? get isBookmarked => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isFollowing')
+  bool? get isFollowing => throw _privateConstructorUsedError;
+  @JsonKey(name: 'category')
   Category? get category => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,29 +76,29 @@ abstract class $UserQuestionResponseCopyWith<$Res> {
       _$UserQuestionResponseCopyWithImpl<$Res, UserQuestionResponse>;
   @useResult
   $Res call(
-      {int? id,
-      int? test,
-      String? test_title,
-      String? question_text,
-      String? question_type,
-      int? order_index,
-      String? media,
-      List<UserAnswerResponse> answers,
-      String? test_description,
-      String? correct_answer_text,
-      String? answer_language,
-      int? correct_count,
-      int? wrong_count,
-      double? difficulty_percentage,
-      int? user_attempt_count,
-      UserShortResponse? user,
-      String? created_at,
-      String? round_image,
-      bool? is_bookmarked,
-      bool? is_following,
-      Category? category});
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'test') int? test,
+      @JsonKey(name: 'testTitle') String? testTitle,
+      @JsonKey(name: 'questionText') String? questionText,
+      @JsonKey(name: 'questionType') String? questionType,
+      @JsonKey(name: 'orderIndex') int? orderIndex,
+      @JsonKey(name: 'media') String? media,
+      @JsonKey(name: 'answers') List<Answer> answers,
+      @JsonKey(name: 'testDescription') String? testDescription,
+      @JsonKey(name: 'correctAnswerText') String? correctAnswerText,
+      @JsonKey(name: 'answerLanguage') String? answerLanguage,
+      @JsonKey(name: 'correctCount') int? correctCount,
+      @JsonKey(name: 'wrongCount') int? wrongCount,
+      @JsonKey(name: 'difficultyPercentage') double? difficultyPercentage,
+      @JsonKey(name: 'userAttemptCount') int? userAttemptCount,
+      @JsonKey(name: 'user') User? user,
+      @JsonKey(name: 'createdAt') DateTime? createdAt,
+      @JsonKey(name: 'roundImage') String? roundImage,
+      @JsonKey(name: 'isBookmarked') bool? isBookmarked,
+      @JsonKey(name: 'isFollowing') bool? isFollowing,
+      @JsonKey(name: 'category') Category? category});
 
-  $UserShortResponseCopyWith<$Res>? get user;
+  $UserCopyWith<$Res>? get user;
   $CategoryCopyWith<$Res>? get category;
 }
 
@@ -97,24 +118,24 @@ class _$UserQuestionResponseCopyWithImpl<$Res,
   $Res call({
     Object? id = freezed,
     Object? test = freezed,
-    Object? test_title = freezed,
-    Object? question_text = freezed,
-    Object? question_type = freezed,
-    Object? order_index = freezed,
+    Object? testTitle = freezed,
+    Object? questionText = freezed,
+    Object? questionType = freezed,
+    Object? orderIndex = freezed,
     Object? media = freezed,
     Object? answers = null,
-    Object? test_description = freezed,
-    Object? correct_answer_text = freezed,
-    Object? answer_language = freezed,
-    Object? correct_count = freezed,
-    Object? wrong_count = freezed,
-    Object? difficulty_percentage = freezed,
-    Object? user_attempt_count = freezed,
+    Object? testDescription = freezed,
+    Object? correctAnswerText = freezed,
+    Object? answerLanguage = freezed,
+    Object? correctCount = freezed,
+    Object? wrongCount = freezed,
+    Object? difficultyPercentage = freezed,
+    Object? userAttemptCount = freezed,
     Object? user = freezed,
-    Object? created_at = freezed,
-    Object? round_image = freezed,
-    Object? is_bookmarked = freezed,
-    Object? is_following = freezed,
+    Object? createdAt = freezed,
+    Object? roundImage = freezed,
+    Object? isBookmarked = freezed,
+    Object? isFollowing = freezed,
     Object? category = freezed,
   }) {
     return _then(_value.copyWith(
@@ -126,21 +147,21 @@ class _$UserQuestionResponseCopyWithImpl<$Res,
           ? _value.test
           : test // ignore: cast_nullable_to_non_nullable
               as int?,
-      test_title: freezed == test_title
-          ? _value.test_title
-          : test_title // ignore: cast_nullable_to_non_nullable
+      testTitle: freezed == testTitle
+          ? _value.testTitle
+          : testTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      question_text: freezed == question_text
-          ? _value.question_text
-          : question_text // ignore: cast_nullable_to_non_nullable
+      questionText: freezed == questionText
+          ? _value.questionText
+          : questionText // ignore: cast_nullable_to_non_nullable
               as String?,
-      question_type: freezed == question_type
-          ? _value.question_type
-          : question_type // ignore: cast_nullable_to_non_nullable
+      questionType: freezed == questionType
+          ? _value.questionType
+          : questionType // ignore: cast_nullable_to_non_nullable
               as String?,
-      order_index: freezed == order_index
-          ? _value.order_index
-          : order_index // ignore: cast_nullable_to_non_nullable
+      orderIndex: freezed == orderIndex
+          ? _value.orderIndex
+          : orderIndex // ignore: cast_nullable_to_non_nullable
               as int?,
       media: freezed == media
           ? _value.media
@@ -149,54 +170,54 @@ class _$UserQuestionResponseCopyWithImpl<$Res,
       answers: null == answers
           ? _value.answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<UserAnswerResponse>,
-      test_description: freezed == test_description
-          ? _value.test_description
-          : test_description // ignore: cast_nullable_to_non_nullable
+              as List<Answer>,
+      testDescription: freezed == testDescription
+          ? _value.testDescription
+          : testDescription // ignore: cast_nullable_to_non_nullable
               as String?,
-      correct_answer_text: freezed == correct_answer_text
-          ? _value.correct_answer_text
-          : correct_answer_text // ignore: cast_nullable_to_non_nullable
+      correctAnswerText: freezed == correctAnswerText
+          ? _value.correctAnswerText
+          : correctAnswerText // ignore: cast_nullable_to_non_nullable
               as String?,
-      answer_language: freezed == answer_language
-          ? _value.answer_language
-          : answer_language // ignore: cast_nullable_to_non_nullable
+      answerLanguage: freezed == answerLanguage
+          ? _value.answerLanguage
+          : answerLanguage // ignore: cast_nullable_to_non_nullable
               as String?,
-      correct_count: freezed == correct_count
-          ? _value.correct_count
-          : correct_count // ignore: cast_nullable_to_non_nullable
+      correctCount: freezed == correctCount
+          ? _value.correctCount
+          : correctCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      wrong_count: freezed == wrong_count
-          ? _value.wrong_count
-          : wrong_count // ignore: cast_nullable_to_non_nullable
+      wrongCount: freezed == wrongCount
+          ? _value.wrongCount
+          : wrongCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      difficulty_percentage: freezed == difficulty_percentage
-          ? _value.difficulty_percentage
-          : difficulty_percentage // ignore: cast_nullable_to_non_nullable
+      difficultyPercentage: freezed == difficultyPercentage
+          ? _value.difficultyPercentage
+          : difficultyPercentage // ignore: cast_nullable_to_non_nullable
               as double?,
-      user_attempt_count: freezed == user_attempt_count
-          ? _value.user_attempt_count
-          : user_attempt_count // ignore: cast_nullable_to_non_nullable
+      userAttemptCount: freezed == userAttemptCount
+          ? _value.userAttemptCount
+          : userAttemptCount // ignore: cast_nullable_to_non_nullable
               as int?,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserShortResponse?,
-      created_at: freezed == created_at
-          ? _value.created_at
-          : created_at // ignore: cast_nullable_to_non_nullable
+              as User?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      roundImage: freezed == roundImage
+          ? _value.roundImage
+          : roundImage // ignore: cast_nullable_to_non_nullable
               as String?,
-      round_image: freezed == round_image
-          ? _value.round_image
-          : round_image // ignore: cast_nullable_to_non_nullable
-              as String?,
-      is_bookmarked: freezed == is_bookmarked
-          ? _value.is_bookmarked
-          : is_bookmarked // ignore: cast_nullable_to_non_nullable
+      isBookmarked: freezed == isBookmarked
+          ? _value.isBookmarked
+          : isBookmarked // ignore: cast_nullable_to_non_nullable
               as bool?,
-      is_following: freezed == is_following
-          ? _value.is_following
-          : is_following // ignore: cast_nullable_to_non_nullable
+      isFollowing: freezed == isFollowing
+          ? _value.isFollowing
+          : isFollowing // ignore: cast_nullable_to_non_nullable
               as bool?,
       category: freezed == category
           ? _value.category
@@ -207,12 +228,12 @@ class _$UserQuestionResponseCopyWithImpl<$Res,
 
   @override
   @pragma('vm:prefer-inline')
-  $UserShortResponseCopyWith<$Res>? get user {
+  $UserCopyWith<$Res>? get user {
     if (_value.user == null) {
       return null;
     }
 
-    return $UserShortResponseCopyWith<$Res>(_value.user!, (value) {
+    return $UserCopyWith<$Res>(_value.user!, (value) {
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
@@ -239,30 +260,30 @@ abstract class _$$UserQuestionResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int? id,
-      int? test,
-      String? test_title,
-      String? question_text,
-      String? question_type,
-      int? order_index,
-      String? media,
-      List<UserAnswerResponse> answers,
-      String? test_description,
-      String? correct_answer_text,
-      String? answer_language,
-      int? correct_count,
-      int? wrong_count,
-      double? difficulty_percentage,
-      int? user_attempt_count,
-      UserShortResponse? user,
-      String? created_at,
-      String? round_image,
-      bool? is_bookmarked,
-      bool? is_following,
-      Category? category});
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'test') int? test,
+      @JsonKey(name: 'testTitle') String? testTitle,
+      @JsonKey(name: 'questionText') String? questionText,
+      @JsonKey(name: 'questionType') String? questionType,
+      @JsonKey(name: 'orderIndex') int? orderIndex,
+      @JsonKey(name: 'media') String? media,
+      @JsonKey(name: 'answers') List<Answer> answers,
+      @JsonKey(name: 'testDescription') String? testDescription,
+      @JsonKey(name: 'correctAnswerText') String? correctAnswerText,
+      @JsonKey(name: 'answerLanguage') String? answerLanguage,
+      @JsonKey(name: 'correctCount') int? correctCount,
+      @JsonKey(name: 'wrongCount') int? wrongCount,
+      @JsonKey(name: 'difficultyPercentage') double? difficultyPercentage,
+      @JsonKey(name: 'userAttemptCount') int? userAttemptCount,
+      @JsonKey(name: 'user') User? user,
+      @JsonKey(name: 'createdAt') DateTime? createdAt,
+      @JsonKey(name: 'roundImage') String? roundImage,
+      @JsonKey(name: 'isBookmarked') bool? isBookmarked,
+      @JsonKey(name: 'isFollowing') bool? isFollowing,
+      @JsonKey(name: 'category') Category? category});
 
   @override
-  $UserShortResponseCopyWith<$Res>? get user;
+  $UserCopyWith<$Res>? get user;
   @override
   $CategoryCopyWith<$Res>? get category;
 }
@@ -280,24 +301,24 @@ class __$$UserQuestionResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? test = freezed,
-    Object? test_title = freezed,
-    Object? question_text = freezed,
-    Object? question_type = freezed,
-    Object? order_index = freezed,
+    Object? testTitle = freezed,
+    Object? questionText = freezed,
+    Object? questionType = freezed,
+    Object? orderIndex = freezed,
     Object? media = freezed,
     Object? answers = null,
-    Object? test_description = freezed,
-    Object? correct_answer_text = freezed,
-    Object? answer_language = freezed,
-    Object? correct_count = freezed,
-    Object? wrong_count = freezed,
-    Object? difficulty_percentage = freezed,
-    Object? user_attempt_count = freezed,
+    Object? testDescription = freezed,
+    Object? correctAnswerText = freezed,
+    Object? answerLanguage = freezed,
+    Object? correctCount = freezed,
+    Object? wrongCount = freezed,
+    Object? difficultyPercentage = freezed,
+    Object? userAttemptCount = freezed,
     Object? user = freezed,
-    Object? created_at = freezed,
-    Object? round_image = freezed,
-    Object? is_bookmarked = freezed,
-    Object? is_following = freezed,
+    Object? createdAt = freezed,
+    Object? roundImage = freezed,
+    Object? isBookmarked = freezed,
+    Object? isFollowing = freezed,
     Object? category = freezed,
   }) {
     return _then(_$UserQuestionResponseImpl(
@@ -309,21 +330,21 @@ class __$$UserQuestionResponseImplCopyWithImpl<$Res>
           ? _value.test
           : test // ignore: cast_nullable_to_non_nullable
               as int?,
-      test_title: freezed == test_title
-          ? _value.test_title
-          : test_title // ignore: cast_nullable_to_non_nullable
+      testTitle: freezed == testTitle
+          ? _value.testTitle
+          : testTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      question_text: freezed == question_text
-          ? _value.question_text
-          : question_text // ignore: cast_nullable_to_non_nullable
+      questionText: freezed == questionText
+          ? _value.questionText
+          : questionText // ignore: cast_nullable_to_non_nullable
               as String?,
-      question_type: freezed == question_type
-          ? _value.question_type
-          : question_type // ignore: cast_nullable_to_non_nullable
+      questionType: freezed == questionType
+          ? _value.questionType
+          : questionType // ignore: cast_nullable_to_non_nullable
               as String?,
-      order_index: freezed == order_index
-          ? _value.order_index
-          : order_index // ignore: cast_nullable_to_non_nullable
+      orderIndex: freezed == orderIndex
+          ? _value.orderIndex
+          : orderIndex // ignore: cast_nullable_to_non_nullable
               as int?,
       media: freezed == media
           ? _value.media
@@ -332,54 +353,54 @@ class __$$UserQuestionResponseImplCopyWithImpl<$Res>
       answers: null == answers
           ? _value._answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<UserAnswerResponse>,
-      test_description: freezed == test_description
-          ? _value.test_description
-          : test_description // ignore: cast_nullable_to_non_nullable
+              as List<Answer>,
+      testDescription: freezed == testDescription
+          ? _value.testDescription
+          : testDescription // ignore: cast_nullable_to_non_nullable
               as String?,
-      correct_answer_text: freezed == correct_answer_text
-          ? _value.correct_answer_text
-          : correct_answer_text // ignore: cast_nullable_to_non_nullable
+      correctAnswerText: freezed == correctAnswerText
+          ? _value.correctAnswerText
+          : correctAnswerText // ignore: cast_nullable_to_non_nullable
               as String?,
-      answer_language: freezed == answer_language
-          ? _value.answer_language
-          : answer_language // ignore: cast_nullable_to_non_nullable
+      answerLanguage: freezed == answerLanguage
+          ? _value.answerLanguage
+          : answerLanguage // ignore: cast_nullable_to_non_nullable
               as String?,
-      correct_count: freezed == correct_count
-          ? _value.correct_count
-          : correct_count // ignore: cast_nullable_to_non_nullable
+      correctCount: freezed == correctCount
+          ? _value.correctCount
+          : correctCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      wrong_count: freezed == wrong_count
-          ? _value.wrong_count
-          : wrong_count // ignore: cast_nullable_to_non_nullable
+      wrongCount: freezed == wrongCount
+          ? _value.wrongCount
+          : wrongCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      difficulty_percentage: freezed == difficulty_percentage
-          ? _value.difficulty_percentage
-          : difficulty_percentage // ignore: cast_nullable_to_non_nullable
+      difficultyPercentage: freezed == difficultyPercentage
+          ? _value.difficultyPercentage
+          : difficultyPercentage // ignore: cast_nullable_to_non_nullable
               as double?,
-      user_attempt_count: freezed == user_attempt_count
-          ? _value.user_attempt_count
-          : user_attempt_count // ignore: cast_nullable_to_non_nullable
+      userAttemptCount: freezed == userAttemptCount
+          ? _value.userAttemptCount
+          : userAttemptCount // ignore: cast_nullable_to_non_nullable
               as int?,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserShortResponse?,
-      created_at: freezed == created_at
-          ? _value.created_at
-          : created_at // ignore: cast_nullable_to_non_nullable
+              as User?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      roundImage: freezed == roundImage
+          ? _value.roundImage
+          : roundImage // ignore: cast_nullable_to_non_nullable
               as String?,
-      round_image: freezed == round_image
-          ? _value.round_image
-          : round_image // ignore: cast_nullable_to_non_nullable
-              as String?,
-      is_bookmarked: freezed == is_bookmarked
-          ? _value.is_bookmarked
-          : is_bookmarked // ignore: cast_nullable_to_non_nullable
+      isBookmarked: freezed == isBookmarked
+          ? _value.isBookmarked
+          : isBookmarked // ignore: cast_nullable_to_non_nullable
               as bool?,
-      is_following: freezed == is_following
-          ? _value.is_following
-          : is_following // ignore: cast_nullable_to_non_nullable
+      isFollowing: freezed == isFollowing
+          ? _value.isFollowing
+          : isFollowing // ignore: cast_nullable_to_non_nullable
               as bool?,
       category: freezed == category
           ? _value.category
@@ -393,85 +414,105 @@ class __$$UserQuestionResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserQuestionResponseImpl implements _UserQuestionResponse {
   const _$UserQuestionResponseImpl(
-      {this.id,
-      this.test,
-      this.test_title,
-      this.question_text,
-      this.question_type,
-      this.order_index,
-      this.media,
-      final List<UserAnswerResponse> answers = const [],
-      this.test_description,
-      this.correct_answer_text,
-      this.answer_language,
-      this.correct_count,
-      this.wrong_count,
-      this.difficulty_percentage,
-      this.user_attempt_count,
-      this.user,
-      this.created_at,
-      this.round_image,
-      this.is_bookmarked,
-      this.is_following,
-      this.category})
+      {@JsonKey(name: 'id') this.id,
+      @JsonKey(name: 'test') this.test,
+      @JsonKey(name: 'testTitle') this.testTitle,
+      @JsonKey(name: 'questionText') this.questionText,
+      @JsonKey(name: 'questionType') this.questionType,
+      @JsonKey(name: 'orderIndex') this.orderIndex,
+      @JsonKey(name: 'media') this.media,
+      @JsonKey(name: 'answers') final List<Answer> answers = const [],
+      @JsonKey(name: 'testDescription') this.testDescription,
+      @JsonKey(name: 'correctAnswerText') this.correctAnswerText,
+      @JsonKey(name: 'answerLanguage') this.answerLanguage,
+      @JsonKey(name: 'correctCount') this.correctCount,
+      @JsonKey(name: 'wrongCount') this.wrongCount,
+      @JsonKey(name: 'difficultyPercentage') this.difficultyPercentage,
+      @JsonKey(name: 'userAttemptCount') this.userAttemptCount,
+      @JsonKey(name: 'user') this.user,
+      @JsonKey(name: 'createdAt') this.createdAt,
+      @JsonKey(name: 'roundImage') this.roundImage,
+      @JsonKey(name: 'isBookmarked') this.isBookmarked,
+      @JsonKey(name: 'isFollowing') this.isFollowing,
+      @JsonKey(name: 'category') this.category})
       : _answers = answers;
 
   factory _$UserQuestionResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserQuestionResponseImplFromJson(json);
 
   @override
+  @JsonKey(name: 'id')
   final int? id;
   @override
+  @JsonKey(name: 'test')
   final int? test;
   @override
-  final String? test_title;
+  @JsonKey(name: 'testTitle')
+  final String? testTitle;
   @override
-  final String? question_text;
+  @JsonKey(name: 'questionText')
+  final String? questionText;
   @override
-  final String? question_type;
+  @JsonKey(name: 'questionType')
+  final String? questionType;
   @override
-  final int? order_index;
+  @JsonKey(name: 'orderIndex')
+  final int? orderIndex;
   @override
+  @JsonKey(name: 'media')
   final String? media;
-  final List<UserAnswerResponse> _answers;
+  final List<Answer> _answers;
   @override
-  @JsonKey()
-  List<UserAnswerResponse> get answers {
+  @JsonKey(name: 'answers')
+  List<Answer> get answers {
     if (_answers is EqualUnmodifiableListView) return _answers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_answers);
   }
 
   @override
-  final String? test_description;
+  @JsonKey(name: 'testDescription')
+  final String? testDescription;
   @override
-  final String? correct_answer_text;
+  @JsonKey(name: 'correctAnswerText')
+  final String? correctAnswerText;
   @override
-  final String? answer_language;
+  @JsonKey(name: 'answerLanguage')
+  final String? answerLanguage;
   @override
-  final int? correct_count;
+  @JsonKey(name: 'correctCount')
+  final int? correctCount;
   @override
-  final int? wrong_count;
+  @JsonKey(name: 'wrongCount')
+  final int? wrongCount;
   @override
-  final double? difficulty_percentage;
+  @JsonKey(name: 'difficultyPercentage')
+  final double? difficultyPercentage;
   @override
-  final int? user_attempt_count;
+  @JsonKey(name: 'userAttemptCount')
+  final int? userAttemptCount;
   @override
-  final UserShortResponse? user;
+  @JsonKey(name: 'user')
+  final User? user;
   @override
-  final String? created_at;
+  @JsonKey(name: 'createdAt')
+  final DateTime? createdAt;
   @override
-  final String? round_image;
+  @JsonKey(name: 'roundImage')
+  final String? roundImage;
   @override
-  final bool? is_bookmarked;
+  @JsonKey(name: 'isBookmarked')
+  final bool? isBookmarked;
   @override
-  final bool? is_following;
+  @JsonKey(name: 'isFollowing')
+  final bool? isFollowing;
   @override
+  @JsonKey(name: 'category')
   final Category? category;
 
   @override
   String toString() {
-    return 'UserQuestionResponse(id: $id, test: $test, test_title: $test_title, question_text: $question_text, question_type: $question_type, order_index: $order_index, media: $media, answers: $answers, test_description: $test_description, correct_answer_text: $correct_answer_text, answer_language: $answer_language, correct_count: $correct_count, wrong_count: $wrong_count, difficulty_percentage: $difficulty_percentage, user_attempt_count: $user_attempt_count, user: $user, created_at: $created_at, round_image: $round_image, is_bookmarked: $is_bookmarked, is_following: $is_following, category: $category)';
+    return 'UserQuestionResponse(id: $id, test: $test, testTitle: $testTitle, questionText: $questionText, questionType: $questionType, orderIndex: $orderIndex, media: $media, answers: $answers, testDescription: $testDescription, correctAnswerText: $correctAnswerText, answerLanguage: $answerLanguage, correctCount: $correctCount, wrongCount: $wrongCount, difficultyPercentage: $difficultyPercentage, userAttemptCount: $userAttemptCount, user: $user, createdAt: $createdAt, roundImage: $roundImage, isBookmarked: $isBookmarked, isFollowing: $isFollowing, category: $category)';
   }
 
   @override
@@ -481,39 +522,39 @@ class _$UserQuestionResponseImpl implements _UserQuestionResponse {
             other is _$UserQuestionResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.test, test) || other.test == test) &&
-            (identical(other.test_title, test_title) ||
-                other.test_title == test_title) &&
-            (identical(other.question_text, question_text) ||
-                other.question_text == question_text) &&
-            (identical(other.question_type, question_type) ||
-                other.question_type == question_type) &&
-            (identical(other.order_index, order_index) ||
-                other.order_index == order_index) &&
+            (identical(other.testTitle, testTitle) ||
+                other.testTitle == testTitle) &&
+            (identical(other.questionText, questionText) ||
+                other.questionText == questionText) &&
+            (identical(other.questionType, questionType) ||
+                other.questionType == questionType) &&
+            (identical(other.orderIndex, orderIndex) ||
+                other.orderIndex == orderIndex) &&
             (identical(other.media, media) || other.media == media) &&
             const DeepCollectionEquality().equals(other._answers, _answers) &&
-            (identical(other.test_description, test_description) ||
-                other.test_description == test_description) &&
-            (identical(other.correct_answer_text, correct_answer_text) ||
-                other.correct_answer_text == correct_answer_text) &&
-            (identical(other.answer_language, answer_language) ||
-                other.answer_language == answer_language) &&
-            (identical(other.correct_count, correct_count) ||
-                other.correct_count == correct_count) &&
-            (identical(other.wrong_count, wrong_count) ||
-                other.wrong_count == wrong_count) &&
-            (identical(other.difficulty_percentage, difficulty_percentage) ||
-                other.difficulty_percentage == difficulty_percentage) &&
-            (identical(other.user_attempt_count, user_attempt_count) ||
-                other.user_attempt_count == user_attempt_count) &&
+            (identical(other.testDescription, testDescription) ||
+                other.testDescription == testDescription) &&
+            (identical(other.correctAnswerText, correctAnswerText) ||
+                other.correctAnswerText == correctAnswerText) &&
+            (identical(other.answerLanguage, answerLanguage) ||
+                other.answerLanguage == answerLanguage) &&
+            (identical(other.correctCount, correctCount) ||
+                other.correctCount == correctCount) &&
+            (identical(other.wrongCount, wrongCount) ||
+                other.wrongCount == wrongCount) &&
+            (identical(other.difficultyPercentage, difficultyPercentage) ||
+                other.difficultyPercentage == difficultyPercentage) &&
+            (identical(other.userAttemptCount, userAttemptCount) ||
+                other.userAttemptCount == userAttemptCount) &&
             (identical(other.user, user) || other.user == user) &&
-            (identical(other.created_at, created_at) ||
-                other.created_at == created_at) &&
-            (identical(other.round_image, round_image) ||
-                other.round_image == round_image) &&
-            (identical(other.is_bookmarked, is_bookmarked) ||
-                other.is_bookmarked == is_bookmarked) &&
-            (identical(other.is_following, is_following) ||
-                other.is_following == is_following) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.roundImage, roundImage) ||
+                other.roundImage == roundImage) &&
+            (identical(other.isBookmarked, isBookmarked) ||
+                other.isBookmarked == isBookmarked) &&
+            (identical(other.isFollowing, isFollowing) ||
+                other.isFollowing == isFollowing) &&
             (identical(other.category, category) ||
                 other.category == category));
   }
@@ -524,24 +565,24 @@ class _$UserQuestionResponseImpl implements _UserQuestionResponse {
         runtimeType,
         id,
         test,
-        test_title,
-        question_text,
-        question_type,
-        order_index,
+        testTitle,
+        questionText,
+        questionType,
+        orderIndex,
         media,
         const DeepCollectionEquality().hash(_answers),
-        test_description,
-        correct_answer_text,
-        answer_language,
-        correct_count,
-        wrong_count,
-        difficulty_percentage,
-        user_attempt_count,
+        testDescription,
+        correctAnswerText,
+        answerLanguage,
+        correctCount,
+        wrongCount,
+        difficultyPercentage,
+        userAttemptCount,
         user,
-        created_at,
-        round_image,
-        is_bookmarked,
-        is_following,
+        createdAt,
+        roundImage,
+        isBookmarked,
+        isFollowing,
         category
       ]);
 
@@ -563,72 +604,94 @@ class _$UserQuestionResponseImpl implements _UserQuestionResponse {
 
 abstract class _UserQuestionResponse implements UserQuestionResponse {
   const factory _UserQuestionResponse(
-      {final int? id,
-      final int? test,
-      final String? test_title,
-      final String? question_text,
-      final String? question_type,
-      final int? order_index,
-      final String? media,
-      final List<UserAnswerResponse> answers,
-      final String? test_description,
-      final String? correct_answer_text,
-      final String? answer_language,
-      final int? correct_count,
-      final int? wrong_count,
-      final double? difficulty_percentage,
-      final int? user_attempt_count,
-      final UserShortResponse? user,
-      final String? created_at,
-      final String? round_image,
-      final bool? is_bookmarked,
-      final bool? is_following,
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'test') final int? test,
+      @JsonKey(name: 'testTitle') final String? testTitle,
+      @JsonKey(name: 'questionText') final String? questionText,
+      @JsonKey(name: 'questionType') final String? questionType,
+      @JsonKey(name: 'orderIndex') final int? orderIndex,
+      @JsonKey(name: 'media') final String? media,
+      @JsonKey(name: 'answers') final List<Answer> answers,
+      @JsonKey(name: 'testDescription') final String? testDescription,
+      @JsonKey(name: 'correctAnswerText') final String? correctAnswerText,
+      @JsonKey(name: 'answerLanguage') final String? answerLanguage,
+      @JsonKey(name: 'correctCount') final int? correctCount,
+      @JsonKey(name: 'wrongCount') final int? wrongCount,
+      @JsonKey(name: 'difficultyPercentage') final double? difficultyPercentage,
+      @JsonKey(name: 'userAttemptCount') final int? userAttemptCount,
+      @JsonKey(name: 'user') final User? user,
+      @JsonKey(name: 'createdAt') final DateTime? createdAt,
+      @JsonKey(name: 'roundImage') final String? roundImage,
+      @JsonKey(name: 'isBookmarked') final bool? isBookmarked,
+      @JsonKey(name: 'isFollowing') final bool? isFollowing,
+      @JsonKey(name: 'category')
       final Category? category}) = _$UserQuestionResponseImpl;
 
   factory _UserQuestionResponse.fromJson(Map<String, dynamic> json) =
       _$UserQuestionResponseImpl.fromJson;
 
   @override
+  @JsonKey(name: 'id')
   int? get id;
   @override
+  @JsonKey(name: 'test')
   int? get test;
   @override
-  String? get test_title;
+  @JsonKey(name: 'testTitle')
+  String? get testTitle;
   @override
-  String? get question_text;
+  @JsonKey(name: 'questionText')
+  String? get questionText;
   @override
-  String? get question_type;
+  @JsonKey(name: 'questionType')
+  String? get questionType;
   @override
-  int? get order_index;
+  @JsonKey(name: 'orderIndex')
+  int? get orderIndex;
   @override
+  @JsonKey(name: 'media')
   String? get media;
   @override
-  List<UserAnswerResponse> get answers;
+  @JsonKey(name: 'answers')
+  List<Answer> get answers;
   @override
-  String? get test_description;
+  @JsonKey(name: 'testDescription')
+  String? get testDescription;
   @override
-  String? get correct_answer_text;
+  @JsonKey(name: 'correctAnswerText')
+  String? get correctAnswerText;
   @override
-  String? get answer_language;
+  @JsonKey(name: 'answerLanguage')
+  String? get answerLanguage;
   @override
-  int? get correct_count;
+  @JsonKey(name: 'correctCount')
+  int? get correctCount;
   @override
-  int? get wrong_count;
+  @JsonKey(name: 'wrongCount')
+  int? get wrongCount;
   @override
-  double? get difficulty_percentage;
+  @JsonKey(name: 'difficultyPercentage')
+  double? get difficultyPercentage;
   @override
-  int? get user_attempt_count;
+  @JsonKey(name: 'userAttemptCount')
+  int? get userAttemptCount;
   @override
-  UserShortResponse? get user;
+  @JsonKey(name: 'user')
+  User? get user;
   @override
-  String? get created_at;
+  @JsonKey(name: 'createdAt')
+  DateTime? get createdAt;
   @override
-  String? get round_image;
+  @JsonKey(name: 'roundImage')
+  String? get roundImage;
   @override
-  bool? get is_bookmarked;
+  @JsonKey(name: 'isBookmarked')
+  bool? get isBookmarked;
   @override
-  bool? get is_following;
+  @JsonKey(name: 'isFollowing')
+  bool? get isFollowing;
   @override
+  @JsonKey(name: 'category')
   Category? get category;
   @override
   @JsonKey(ignore: true)
@@ -642,13 +705,21 @@ Category _$CategoryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Category {
+  @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
-  int? get total_tests => throw _privateConstructorUsedError;
-  int? get total_questions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'totalTests')
+  int? get totalTests => throw _privateConstructorUsedError;
+  @JsonKey(name: 'totalQuestions')
+  int? get totalQuestions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'title')
   String? get title => throw _privateConstructorUsedError;
+  @JsonKey(name: 'slug')
   String? get slug => throw _privateConstructorUsedError;
+  @JsonKey(name: 'description')
   String? get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'emoji')
   String? get emoji => throw _privateConstructorUsedError;
+  @JsonKey(name: 'image')
   String? get image => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -663,14 +734,14 @@ abstract class $CategoryCopyWith<$Res> {
       _$CategoryCopyWithImpl<$Res, Category>;
   @useResult
   $Res call(
-      {int? id,
-      int? total_tests,
-      int? total_questions,
-      String? title,
-      String? slug,
-      String? description,
-      String? emoji,
-      String? image});
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'totalTests') int? totalTests,
+      @JsonKey(name: 'totalQuestions') int? totalQuestions,
+      @JsonKey(name: 'title') String? title,
+      @JsonKey(name: 'slug') String? slug,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'emoji') String? emoji,
+      @JsonKey(name: 'image') String? image});
 }
 
 /// @nodoc
@@ -687,8 +758,8 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
   @override
   $Res call({
     Object? id = freezed,
-    Object? total_tests = freezed,
-    Object? total_questions = freezed,
+    Object? totalTests = freezed,
+    Object? totalQuestions = freezed,
     Object? title = freezed,
     Object? slug = freezed,
     Object? description = freezed,
@@ -700,13 +771,13 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      total_tests: freezed == total_tests
-          ? _value.total_tests
-          : total_tests // ignore: cast_nullable_to_non_nullable
+      totalTests: freezed == totalTests
+          ? _value.totalTests
+          : totalTests // ignore: cast_nullable_to_non_nullable
               as int?,
-      total_questions: freezed == total_questions
-          ? _value.total_questions
-          : total_questions // ignore: cast_nullable_to_non_nullable
+      totalQuestions: freezed == totalQuestions
+          ? _value.totalQuestions
+          : totalQuestions // ignore: cast_nullable_to_non_nullable
               as int?,
       title: freezed == title
           ? _value.title
@@ -741,14 +812,14 @@ abstract class _$$CategoryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int? id,
-      int? total_tests,
-      int? total_questions,
-      String? title,
-      String? slug,
-      String? description,
-      String? emoji,
-      String? image});
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'totalTests') int? totalTests,
+      @JsonKey(name: 'totalQuestions') int? totalQuestions,
+      @JsonKey(name: 'title') String? title,
+      @JsonKey(name: 'slug') String? slug,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'emoji') String? emoji,
+      @JsonKey(name: 'image') String? image});
 }
 
 /// @nodoc
@@ -763,8 +834,8 @@ class __$$CategoryImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? total_tests = freezed,
-    Object? total_questions = freezed,
+    Object? totalTests = freezed,
+    Object? totalQuestions = freezed,
     Object? title = freezed,
     Object? slug = freezed,
     Object? description = freezed,
@@ -776,13 +847,13 @@ class __$$CategoryImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      total_tests: freezed == total_tests
-          ? _value.total_tests
-          : total_tests // ignore: cast_nullable_to_non_nullable
+      totalTests: freezed == totalTests
+          ? _value.totalTests
+          : totalTests // ignore: cast_nullable_to_non_nullable
               as int?,
-      total_questions: freezed == total_questions
-          ? _value.total_questions
-          : total_questions // ignore: cast_nullable_to_non_nullable
+      totalQuestions: freezed == totalQuestions
+          ? _value.totalQuestions
+          : totalQuestions // ignore: cast_nullable_to_non_nullable
               as int?,
       title: freezed == title
           ? _value.title
@@ -812,38 +883,46 @@ class __$$CategoryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CategoryImpl implements _Category {
   const _$CategoryImpl(
-      {this.id,
-      this.total_tests,
-      this.total_questions,
-      this.title,
-      this.slug,
-      this.description,
-      this.emoji,
-      this.image});
+      {@JsonKey(name: 'id') this.id,
+      @JsonKey(name: 'totalTests') this.totalTests,
+      @JsonKey(name: 'totalQuestions') this.totalQuestions,
+      @JsonKey(name: 'title') this.title,
+      @JsonKey(name: 'slug') this.slug,
+      @JsonKey(name: 'description') this.description,
+      @JsonKey(name: 'emoji') this.emoji,
+      @JsonKey(name: 'image') this.image});
 
   factory _$CategoryImpl.fromJson(Map<String, dynamic> json) =>
       _$$CategoryImplFromJson(json);
 
   @override
+  @JsonKey(name: 'id')
   final int? id;
   @override
-  final int? total_tests;
+  @JsonKey(name: 'totalTests')
+  final int? totalTests;
   @override
-  final int? total_questions;
+  @JsonKey(name: 'totalQuestions')
+  final int? totalQuestions;
   @override
+  @JsonKey(name: 'title')
   final String? title;
   @override
+  @JsonKey(name: 'slug')
   final String? slug;
   @override
+  @JsonKey(name: 'description')
   final String? description;
   @override
+  @JsonKey(name: 'emoji')
   final String? emoji;
   @override
+  @JsonKey(name: 'image')
   final String? image;
 
   @override
   String toString() {
-    return 'Category(id: $id, total_tests: $total_tests, total_questions: $total_questions, title: $title, slug: $slug, description: $description, emoji: $emoji, image: $image)';
+    return 'Category(id: $id, totalTests: $totalTests, totalQuestions: $totalQuestions, title: $title, slug: $slug, description: $description, emoji: $emoji, image: $image)';
   }
 
   @override
@@ -852,10 +931,10 @@ class _$CategoryImpl implements _Category {
         (other.runtimeType == runtimeType &&
             other is _$CategoryImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.total_tests, total_tests) ||
-                other.total_tests == total_tests) &&
-            (identical(other.total_questions, total_questions) ||
-                other.total_questions == total_questions) &&
+            (identical(other.totalTests, totalTests) ||
+                other.totalTests == totalTests) &&
+            (identical(other.totalQuestions, totalQuestions) ||
+                other.totalQuestions == totalQuestions) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.slug, slug) || other.slug == slug) &&
             (identical(other.description, description) ||
@@ -866,7 +945,7 @@ class _$CategoryImpl implements _Category {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, total_tests, total_questions,
+  int get hashCode => Object.hash(runtimeType, id, totalTests, totalQuestions,
       title, slug, description, emoji, image);
 
   @JsonKey(ignore: true)
@@ -885,33 +964,41 @@ class _$CategoryImpl implements _Category {
 
 abstract class _Category implements Category {
   const factory _Category(
-      {final int? id,
-      final int? total_tests,
-      final int? total_questions,
-      final String? title,
-      final String? slug,
-      final String? description,
-      final String? emoji,
-      final String? image}) = _$CategoryImpl;
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'totalTests') final int? totalTests,
+      @JsonKey(name: 'totalQuestions') final int? totalQuestions,
+      @JsonKey(name: 'title') final String? title,
+      @JsonKey(name: 'slug') final String? slug,
+      @JsonKey(name: 'description') final String? description,
+      @JsonKey(name: 'emoji') final String? emoji,
+      @JsonKey(name: 'image') final String? image}) = _$CategoryImpl;
 
   factory _Category.fromJson(Map<String, dynamic> json) =
       _$CategoryImpl.fromJson;
 
   @override
+  @JsonKey(name: 'id')
   int? get id;
   @override
-  int? get total_tests;
+  @JsonKey(name: 'totalTests')
+  int? get totalTests;
   @override
-  int? get total_questions;
+  @JsonKey(name: 'totalQuestions')
+  int? get totalQuestions;
   @override
+  @JsonKey(name: 'title')
   String? get title;
   @override
+  @JsonKey(name: 'slug')
   String? get slug;
   @override
+  @JsonKey(name: 'description')
   String? get description;
   @override
+  @JsonKey(name: 'emoji')
   String? get emoji;
   @override
+  @JsonKey(name: 'image')
   String? get image;
   @override
   @JsonKey(ignore: true)
@@ -919,36 +1006,42 @@ abstract class _Category implements Category {
       throw _privateConstructorUsedError;
 }
 
-UserAnswerResponse _$UserAnswerResponseFromJson(Map<String, dynamic> json) {
-  return _UserAnswerResponse.fromJson(json);
+Answer _$AnswerFromJson(Map<String, dynamic> json) {
+  return _Answer.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UserAnswerResponse {
+mixin _$Answer {
+  @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'letter')
   String? get letter => throw _privateConstructorUsedError;
-  String? get answer_text => throw _privateConstructorUsedError;
-  bool? get is_correct => throw _privateConstructorUsedError;
+  @JsonKey(name: 'answerText')
+  String? get answerText => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isCorrect')
+  bool? get isCorrect => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $UserAnswerResponseCopyWith<UserAnswerResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+  $AnswerCopyWith<Answer> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserAnswerResponseCopyWith<$Res> {
-  factory $UserAnswerResponseCopyWith(
-          UserAnswerResponse value, $Res Function(UserAnswerResponse) then) =
-      _$UserAnswerResponseCopyWithImpl<$Res, UserAnswerResponse>;
+abstract class $AnswerCopyWith<$Res> {
+  factory $AnswerCopyWith(Answer value, $Res Function(Answer) then) =
+      _$AnswerCopyWithImpl<$Res, Answer>;
   @useResult
-  $Res call({int? id, String? letter, String? answer_text, bool? is_correct});
+  $Res call(
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'letter') String? letter,
+      @JsonKey(name: 'answerText') String? answerText,
+      @JsonKey(name: 'isCorrect') bool? isCorrect});
 }
 
 /// @nodoc
-class _$UserAnswerResponseCopyWithImpl<$Res, $Val extends UserAnswerResponse>
-    implements $UserAnswerResponseCopyWith<$Res> {
-  _$UserAnswerResponseCopyWithImpl(this._value, this._then);
+class _$AnswerCopyWithImpl<$Res, $Val extends Answer>
+    implements $AnswerCopyWith<$Res> {
+  _$AnswerCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -960,8 +1053,8 @@ class _$UserAnswerResponseCopyWithImpl<$Res, $Val extends UserAnswerResponse>
   $Res call({
     Object? id = freezed,
     Object? letter = freezed,
-    Object? answer_text = freezed,
-    Object? is_correct = freezed,
+    Object? answerText = freezed,
+    Object? isCorrect = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -972,35 +1065,38 @@ class _$UserAnswerResponseCopyWithImpl<$Res, $Val extends UserAnswerResponse>
           ? _value.letter
           : letter // ignore: cast_nullable_to_non_nullable
               as String?,
-      answer_text: freezed == answer_text
-          ? _value.answer_text
-          : answer_text // ignore: cast_nullable_to_non_nullable
+      answerText: freezed == answerText
+          ? _value.answerText
+          : answerText // ignore: cast_nullable_to_non_nullable
               as String?,
-      is_correct: freezed == is_correct
-          ? _value.is_correct
-          : is_correct // ignore: cast_nullable_to_non_nullable
+      isCorrect: freezed == isCorrect
+          ? _value.isCorrect
+          : isCorrect // ignore: cast_nullable_to_non_nullable
               as bool?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$UserAnswerResponseImplCopyWith<$Res>
-    implements $UserAnswerResponseCopyWith<$Res> {
-  factory _$$UserAnswerResponseImplCopyWith(_$UserAnswerResponseImpl value,
-          $Res Function(_$UserAnswerResponseImpl) then) =
-      __$$UserAnswerResponseImplCopyWithImpl<$Res>;
+abstract class _$$AnswerImplCopyWith<$Res> implements $AnswerCopyWith<$Res> {
+  factory _$$AnswerImplCopyWith(
+          _$AnswerImpl value, $Res Function(_$AnswerImpl) then) =
+      __$$AnswerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? id, String? letter, String? answer_text, bool? is_correct});
+  $Res call(
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'letter') String? letter,
+      @JsonKey(name: 'answerText') String? answerText,
+      @JsonKey(name: 'isCorrect') bool? isCorrect});
 }
 
 /// @nodoc
-class __$$UserAnswerResponseImplCopyWithImpl<$Res>
-    extends _$UserAnswerResponseCopyWithImpl<$Res, _$UserAnswerResponseImpl>
-    implements _$$UserAnswerResponseImplCopyWith<$Res> {
-  __$$UserAnswerResponseImplCopyWithImpl(_$UserAnswerResponseImpl _value,
-      $Res Function(_$UserAnswerResponseImpl) _then)
+class __$$AnswerImplCopyWithImpl<$Res>
+    extends _$AnswerCopyWithImpl<$Res, _$AnswerImpl>
+    implements _$$AnswerImplCopyWith<$Res> {
+  __$$AnswerImplCopyWithImpl(
+      _$AnswerImpl _value, $Res Function(_$AnswerImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1008,10 +1104,10 @@ class __$$UserAnswerResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? letter = freezed,
-    Object? answer_text = freezed,
-    Object? is_correct = freezed,
+    Object? answerText = freezed,
+    Object? isCorrect = freezed,
   }) {
-    return _then(_$UserAnswerResponseImpl(
+    return _then(_$AnswerImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1020,13 +1116,13 @@ class __$$UserAnswerResponseImplCopyWithImpl<$Res>
           ? _value.letter
           : letter // ignore: cast_nullable_to_non_nullable
               as String?,
-      answer_text: freezed == answer_text
-          ? _value.answer_text
-          : answer_text // ignore: cast_nullable_to_non_nullable
+      answerText: freezed == answerText
+          ? _value.answerText
+          : answerText // ignore: cast_nullable_to_non_nullable
               as String?,
-      is_correct: freezed == is_correct
-          ? _value.is_correct
-          : is_correct // ignore: cast_nullable_to_non_nullable
+      isCorrect: freezed == isCorrect
+          ? _value.isCorrect
+          : isCorrect // ignore: cast_nullable_to_non_nullable
               as bool?,
     ));
   }
@@ -1034,122 +1130,135 @@ class __$$UserAnswerResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$UserAnswerResponseImpl implements _UserAnswerResponse {
-  const _$UserAnswerResponseImpl(
-      {this.id, this.letter, this.answer_text, this.is_correct});
+class _$AnswerImpl implements _Answer {
+  const _$AnswerImpl(
+      {@JsonKey(name: 'id') this.id,
+      @JsonKey(name: 'letter') this.letter,
+      @JsonKey(name: 'answerText') this.answerText,
+      @JsonKey(name: 'isCorrect') this.isCorrect});
 
-  factory _$UserAnswerResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UserAnswerResponseImplFromJson(json);
+  factory _$AnswerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AnswerImplFromJson(json);
 
   @override
+  @JsonKey(name: 'id')
   final int? id;
   @override
+  @JsonKey(name: 'letter')
   final String? letter;
   @override
-  final String? answer_text;
+  @JsonKey(name: 'answerText')
+  final String? answerText;
   @override
-  final bool? is_correct;
+  @JsonKey(name: 'isCorrect')
+  final bool? isCorrect;
 
   @override
   String toString() {
-    return 'UserAnswerResponse(id: $id, letter: $letter, answer_text: $answer_text, is_correct: $is_correct)';
+    return 'Answer(id: $id, letter: $letter, answerText: $answerText, isCorrect: $isCorrect)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserAnswerResponseImpl &&
+            other is _$AnswerImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.letter, letter) || other.letter == letter) &&
-            (identical(other.answer_text, answer_text) ||
-                other.answer_text == answer_text) &&
-            (identical(other.is_correct, is_correct) ||
-                other.is_correct == is_correct));
+            (identical(other.answerText, answerText) ||
+                other.answerText == answerText) &&
+            (identical(other.isCorrect, isCorrect) ||
+                other.isCorrect == isCorrect));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, letter, answer_text, is_correct);
+      Object.hash(runtimeType, id, letter, answerText, isCorrect);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$UserAnswerResponseImplCopyWith<_$UserAnswerResponseImpl> get copyWith =>
-      __$$UserAnswerResponseImplCopyWithImpl<_$UserAnswerResponseImpl>(
-          this, _$identity);
+  _$$AnswerImplCopyWith<_$AnswerImpl> get copyWith =>
+      __$$AnswerImplCopyWithImpl<_$AnswerImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserAnswerResponseImplToJson(
+    return _$$AnswerImplToJson(
       this,
     );
   }
 }
 
-abstract class _UserAnswerResponse implements UserAnswerResponse {
-  const factory _UserAnswerResponse(
-      {final int? id,
-      final String? letter,
-      final String? answer_text,
-      final bool? is_correct}) = _$UserAnswerResponseImpl;
+abstract class _Answer implements Answer {
+  const factory _Answer(
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'letter') final String? letter,
+      @JsonKey(name: 'answerText') final String? answerText,
+      @JsonKey(name: 'isCorrect') final bool? isCorrect}) = _$AnswerImpl;
 
-  factory _UserAnswerResponse.fromJson(Map<String, dynamic> json) =
-      _$UserAnswerResponseImpl.fromJson;
+  factory _Answer.fromJson(Map<String, dynamic> json) = _$AnswerImpl.fromJson;
 
   @override
+  @JsonKey(name: 'id')
   int? get id;
   @override
+  @JsonKey(name: 'letter')
   String? get letter;
   @override
-  String? get answer_text;
+  @JsonKey(name: 'answerText')
+  String? get answerText;
   @override
-  bool? get is_correct;
+  @JsonKey(name: 'isCorrect')
+  bool? get isCorrect;
   @override
   @JsonKey(ignore: true)
-  _$$UserAnswerResponseImplCopyWith<_$UserAnswerResponseImpl> get copyWith =>
+  _$$AnswerImplCopyWith<_$AnswerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-UserShortResponse _$UserShortResponseFromJson(Map<String, dynamic> json) {
-  return _UserShortResponse.fromJson(json);
+User _$UserFromJson(Map<String, dynamic> json) {
+  return _User.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UserShortResponse {
+mixin _$User {
+  @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'username')
   String? get username => throw _privateConstructorUsedError;
-  String? get profile_image => throw _privateConstructorUsedError;
-  bool? get is_badged => throw _privateConstructorUsedError;
-  bool? get is_premium => throw _privateConstructorUsedError;
-  bool? get is_following => throw _privateConstructorUsedError;
+  @JsonKey(name: 'profileImage')
+  String? get profileImage => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isBadged')
+  bool? get isBadged => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isPremium')
+  bool? get isPremium => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isFollowing')
+  bool? get isFollowing => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $UserShortResponseCopyWith<UserShortResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+  $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserShortResponseCopyWith<$Res> {
-  factory $UserShortResponseCopyWith(
-          UserShortResponse value, $Res Function(UserShortResponse) then) =
-      _$UserShortResponseCopyWithImpl<$Res, UserShortResponse>;
+abstract class $UserCopyWith<$Res> {
+  factory $UserCopyWith(User value, $Res Function(User) then) =
+      _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {int? id,
-      String? username,
-      String? profile_image,
-      bool? is_badged,
-      bool? is_premium,
-      bool? is_following});
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'username') String? username,
+      @JsonKey(name: 'profileImage') String? profileImage,
+      @JsonKey(name: 'isBadged') bool? isBadged,
+      @JsonKey(name: 'isPremium') bool? isPremium,
+      @JsonKey(name: 'isFollowing') bool? isFollowing});
 }
 
 /// @nodoc
-class _$UserShortResponseCopyWithImpl<$Res, $Val extends UserShortResponse>
-    implements $UserShortResponseCopyWith<$Res> {
-  _$UserShortResponseCopyWithImpl(this._value, this._then);
+class _$UserCopyWithImpl<$Res, $Val extends User>
+    implements $UserCopyWith<$Res> {
+  _$UserCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -1161,10 +1270,10 @@ class _$UserShortResponseCopyWithImpl<$Res, $Val extends UserShortResponse>
   $Res call({
     Object? id = freezed,
     Object? username = freezed,
-    Object? profile_image = freezed,
-    Object? is_badged = freezed,
-    Object? is_premium = freezed,
-    Object? is_following = freezed,
+    Object? profileImage = freezed,
+    Object? isBadged = freezed,
+    Object? isPremium = freezed,
+    Object? isFollowing = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -1175,49 +1284,47 @@ class _$UserShortResponseCopyWithImpl<$Res, $Val extends UserShortResponse>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String?,
-      profile_image: freezed == profile_image
-          ? _value.profile_image
-          : profile_image // ignore: cast_nullable_to_non_nullable
+      profileImage: freezed == profileImage
+          ? _value.profileImage
+          : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
-      is_badged: freezed == is_badged
-          ? _value.is_badged
-          : is_badged // ignore: cast_nullable_to_non_nullable
+      isBadged: freezed == isBadged
+          ? _value.isBadged
+          : isBadged // ignore: cast_nullable_to_non_nullable
               as bool?,
-      is_premium: freezed == is_premium
-          ? _value.is_premium
-          : is_premium // ignore: cast_nullable_to_non_nullable
+      isPremium: freezed == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
               as bool?,
-      is_following: freezed == is_following
-          ? _value.is_following
-          : is_following // ignore: cast_nullable_to_non_nullable
+      isFollowing: freezed == isFollowing
+          ? _value.isFollowing
+          : isFollowing // ignore: cast_nullable_to_non_nullable
               as bool?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$UserShortResponseImplCopyWith<$Res>
-    implements $UserShortResponseCopyWith<$Res> {
-  factory _$$UserShortResponseImplCopyWith(_$UserShortResponseImpl value,
-          $Res Function(_$UserShortResponseImpl) then) =
-      __$$UserShortResponseImplCopyWithImpl<$Res>;
+abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
+  factory _$$UserImplCopyWith(
+          _$UserImpl value, $Res Function(_$UserImpl) then) =
+      __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {int? id,
-      String? username,
-      String? profile_image,
-      bool? is_badged,
-      bool? is_premium,
-      bool? is_following});
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'username') String? username,
+      @JsonKey(name: 'profileImage') String? profileImage,
+      @JsonKey(name: 'isBadged') bool? isBadged,
+      @JsonKey(name: 'isPremium') bool? isPremium,
+      @JsonKey(name: 'isFollowing') bool? isFollowing});
 }
 
 /// @nodoc
-class __$$UserShortResponseImplCopyWithImpl<$Res>
-    extends _$UserShortResponseCopyWithImpl<$Res, _$UserShortResponseImpl>
-    implements _$$UserShortResponseImplCopyWith<$Res> {
-  __$$UserShortResponseImplCopyWithImpl(_$UserShortResponseImpl _value,
-      $Res Function(_$UserShortResponseImpl) _then)
+class __$$UserImplCopyWithImpl<$Res>
+    extends _$UserCopyWithImpl<$Res, _$UserImpl>
+    implements _$$UserImplCopyWith<$Res> {
+  __$$UserImplCopyWithImpl(_$UserImpl _value, $Res Function(_$UserImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1225,12 +1332,12 @@ class __$$UserShortResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? username = freezed,
-    Object? profile_image = freezed,
-    Object? is_badged = freezed,
-    Object? is_premium = freezed,
-    Object? is_following = freezed,
+    Object? profileImage = freezed,
+    Object? isBadged = freezed,
+    Object? isPremium = freezed,
+    Object? isFollowing = freezed,
   }) {
-    return _then(_$UserShortResponseImpl(
+    return _then(_$UserImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1239,21 +1346,21 @@ class __$$UserShortResponseImplCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String?,
-      profile_image: freezed == profile_image
-          ? _value.profile_image
-          : profile_image // ignore: cast_nullable_to_non_nullable
+      profileImage: freezed == profileImage
+          ? _value.profileImage
+          : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
-      is_badged: freezed == is_badged
-          ? _value.is_badged
-          : is_badged // ignore: cast_nullable_to_non_nullable
+      isBadged: freezed == isBadged
+          ? _value.isBadged
+          : isBadged // ignore: cast_nullable_to_non_nullable
               as bool?,
-      is_premium: freezed == is_premium
-          ? _value.is_premium
-          : is_premium // ignore: cast_nullable_to_non_nullable
+      isPremium: freezed == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
               as bool?,
-      is_following: freezed == is_following
-          ? _value.is_following
-          : is_following // ignore: cast_nullable_to_non_nullable
+      isFollowing: freezed == isFollowing
+          ? _value.isFollowing
+          : isFollowing // ignore: cast_nullable_to_non_nullable
               as bool?,
     ));
   }
@@ -1261,100 +1368,110 @@ class __$$UserShortResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$UserShortResponseImpl implements _UserShortResponse {
-  const _$UserShortResponseImpl(
-      {this.id,
-      this.username,
-      this.profile_image,
-      this.is_badged,
-      this.is_premium,
-      this.is_following});
+class _$UserImpl implements _User {
+  const _$UserImpl(
+      {@JsonKey(name: 'id') this.id,
+      @JsonKey(name: 'username') this.username,
+      @JsonKey(name: 'profileImage') this.profileImage,
+      @JsonKey(name: 'isBadged') this.isBadged,
+      @JsonKey(name: 'isPremium') this.isPremium,
+      @JsonKey(name: 'isFollowing') this.isFollowing});
 
-  factory _$UserShortResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UserShortResponseImplFromJson(json);
+  factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserImplFromJson(json);
 
   @override
+  @JsonKey(name: 'id')
   final int? id;
   @override
+  @JsonKey(name: 'username')
   final String? username;
   @override
-  final String? profile_image;
+  @JsonKey(name: 'profileImage')
+  final String? profileImage;
   @override
-  final bool? is_badged;
+  @JsonKey(name: 'isBadged')
+  final bool? isBadged;
   @override
-  final bool? is_premium;
+  @JsonKey(name: 'isPremium')
+  final bool? isPremium;
   @override
-  final bool? is_following;
+  @JsonKey(name: 'isFollowing')
+  final bool? isFollowing;
 
   @override
   String toString() {
-    return 'UserShortResponse(id: $id, username: $username, profile_image: $profile_image, is_badged: $is_badged, is_premium: $is_premium, is_following: $is_following)';
+    return 'User(id: $id, username: $username, profileImage: $profileImage, isBadged: $isBadged, isPremium: $isPremium, isFollowing: $isFollowing)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserShortResponseImpl &&
+            other is _$UserImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.profile_image, profile_image) ||
-                other.profile_image == profile_image) &&
-            (identical(other.is_badged, is_badged) ||
-                other.is_badged == is_badged) &&
-            (identical(other.is_premium, is_premium) ||
-                other.is_premium == is_premium) &&
-            (identical(other.is_following, is_following) ||
-                other.is_following == is_following));
+            (identical(other.profileImage, profileImage) ||
+                other.profileImage == profileImage) &&
+            (identical(other.isBadged, isBadged) ||
+                other.isBadged == isBadged) &&
+            (identical(other.isPremium, isPremium) ||
+                other.isPremium == isPremium) &&
+            (identical(other.isFollowing, isFollowing) ||
+                other.isFollowing == isFollowing));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, username, profile_image,
-      is_badged, is_premium, is_following);
+  int get hashCode => Object.hash(runtimeType, id, username, profileImage,
+      isBadged, isPremium, isFollowing);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$UserShortResponseImplCopyWith<_$UserShortResponseImpl> get copyWith =>
-      __$$UserShortResponseImplCopyWithImpl<_$UserShortResponseImpl>(
-          this, _$identity);
+  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
+      __$$UserImplCopyWithImpl<_$UserImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserShortResponseImplToJson(
+    return _$$UserImplToJson(
       this,
     );
   }
 }
 
-abstract class _UserShortResponse implements UserShortResponse {
-  const factory _UserShortResponse(
-      {final int? id,
-      final String? username,
-      final String? profile_image,
-      final bool? is_badged,
-      final bool? is_premium,
-      final bool? is_following}) = _$UserShortResponseImpl;
+abstract class _User implements User {
+  const factory _User(
+      {@JsonKey(name: 'id') final int? id,
+      @JsonKey(name: 'username') final String? username,
+      @JsonKey(name: 'profileImage') final String? profileImage,
+      @JsonKey(name: 'isBadged') final bool? isBadged,
+      @JsonKey(name: 'isPremium') final bool? isPremium,
+      @JsonKey(name: 'isFollowing') final bool? isFollowing}) = _$UserImpl;
 
-  factory _UserShortResponse.fromJson(Map<String, dynamic> json) =
-      _$UserShortResponseImpl.fromJson;
+  factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
   @override
+  @JsonKey(name: 'id')
   int? get id;
   @override
+  @JsonKey(name: 'username')
   String? get username;
   @override
-  String? get profile_image;
+  @JsonKey(name: 'profileImage')
+  String? get profileImage;
   @override
-  bool? get is_badged;
+  @JsonKey(name: 'isBadged')
+  bool? get isBadged;
   @override
-  bool? get is_premium;
+  @JsonKey(name: 'isPremium')
+  bool? get isPremium;
   @override
-  bool? get is_following;
+  @JsonKey(name: 'isFollowing')
+  bool? get isFollowing;
   @override
   @JsonKey(ignore: true)
-  _$$UserShortResponseImplCopyWith<_$UserShortResponseImpl> get copyWith =>
+  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

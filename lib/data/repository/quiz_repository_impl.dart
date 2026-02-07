@@ -29,7 +29,7 @@ class QuizRepositoryImpl extends QuizRepository {
         count: result.count,
         next: result.next,
         previous: result.previous,
-        data: result.results.map((e) => QuestionModel.fromAny(e)).toList(),
+        data: result.results.map(QuestionModel.fromFollowedResponse).toList(),
       );
       return Right(data);
     } on AppException catch (e) {
@@ -85,7 +85,7 @@ class QuizRepositoryImpl extends QuizRepository {
   ) async {
     try {
       final result = await _quizSource.getUserQuestions(userId);
-      final list = result.map(QuestionModel.fromAny).toList();
+      final list = result.map(QuestionModel.fromUserQuestionResponse).toList();
       return Right(list);
     } on AppException catch (e) {
       return Left(e);
