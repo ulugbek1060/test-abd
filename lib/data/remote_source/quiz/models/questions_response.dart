@@ -35,7 +35,7 @@ class Question with _$Question {
     @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
     @JsonKey(name: 'user_attempt_count') int? userAttemptCount,
     @JsonKey(name: 'user') User? user,
-    @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'round_image') String? roundImage,
     @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
     @JsonKey(name: 'is_following') bool? isFollowing,

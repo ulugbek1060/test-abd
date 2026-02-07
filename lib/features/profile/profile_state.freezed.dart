@@ -23,8 +23,8 @@ mixin _$ProfileState {
       throw _privateConstructorUsedError;
   QuestionsBookmarkState get questionsBookmarkState =>
       throw _privateConstructorUsedError;
-  MyBlocksState get myBlocksState => throw _privateConstructorUsedError;
-  MyQuestionsState get myQuestionsState => throw _privateConstructorUsedError;
+  MyBlocksState get blocksState => throw _privateConstructorUsedError;
+  MyQuestionsState get questionsState => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileStateCopyWith<ProfileState> get copyWith =>
@@ -43,13 +43,13 @@ abstract class $ProfileStateCopyWith<$Res> {
       bool isLoading,
       UserConnectionsState userConnectionsState,
       QuestionsBookmarkState questionsBookmarkState,
-      MyBlocksState myBlocksState,
-      MyQuestionsState myQuestionsState});
+      MyBlocksState blocksState,
+      MyQuestionsState questionsState});
 
   $UserConnectionsStateCopyWith<$Res> get userConnectionsState;
   $QuestionsBookmarkStateCopyWith<$Res> get questionsBookmarkState;
-  $MyBlocksStateCopyWith<$Res> get myBlocksState;
-  $MyQuestionsStateCopyWith<$Res> get myQuestionsState;
+  $MyBlocksStateCopyWith<$Res> get blocksState;
+  $MyQuestionsStateCopyWith<$Res> get questionsState;
 }
 
 /// @nodoc
@@ -70,8 +70,8 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
     Object? isLoading = null,
     Object? userConnectionsState = null,
     Object? questionsBookmarkState = null,
-    Object? myBlocksState = null,
-    Object? myQuestionsState = null,
+    Object? blocksState = null,
+    Object? questionsState = null,
   }) {
     return _then(_value.copyWith(
       error: freezed == error
@@ -94,13 +94,13 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
           ? _value.questionsBookmarkState
           : questionsBookmarkState // ignore: cast_nullable_to_non_nullable
               as QuestionsBookmarkState,
-      myBlocksState: null == myBlocksState
-          ? _value.myBlocksState
-          : myBlocksState // ignore: cast_nullable_to_non_nullable
+      blocksState: null == blocksState
+          ? _value.blocksState
+          : blocksState // ignore: cast_nullable_to_non_nullable
               as MyBlocksState,
-      myQuestionsState: null == myQuestionsState
-          ? _value.myQuestionsState
-          : myQuestionsState // ignore: cast_nullable_to_non_nullable
+      questionsState: null == questionsState
+          ? _value.questionsState
+          : questionsState // ignore: cast_nullable_to_non_nullable
               as MyQuestionsState,
     ) as $Val);
   }
@@ -125,17 +125,17 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
 
   @override
   @pragma('vm:prefer-inline')
-  $MyBlocksStateCopyWith<$Res> get myBlocksState {
-    return $MyBlocksStateCopyWith<$Res>(_value.myBlocksState, (value) {
-      return _then(_value.copyWith(myBlocksState: value) as $Val);
+  $MyBlocksStateCopyWith<$Res> get blocksState {
+    return $MyBlocksStateCopyWith<$Res>(_value.blocksState, (value) {
+      return _then(_value.copyWith(blocksState: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $MyQuestionsStateCopyWith<$Res> get myQuestionsState {
-    return $MyQuestionsStateCopyWith<$Res>(_value.myQuestionsState, (value) {
-      return _then(_value.copyWith(myQuestionsState: value) as $Val);
+  $MyQuestionsStateCopyWith<$Res> get questionsState {
+    return $MyQuestionsStateCopyWith<$Res>(_value.questionsState, (value) {
+      return _then(_value.copyWith(questionsState: value) as $Val);
     });
   }
 }
@@ -154,17 +154,17 @@ abstract class _$$ProfileStateImplCopyWith<$Res>
       bool isLoading,
       UserConnectionsState userConnectionsState,
       QuestionsBookmarkState questionsBookmarkState,
-      MyBlocksState myBlocksState,
-      MyQuestionsState myQuestionsState});
+      MyBlocksState blocksState,
+      MyQuestionsState questionsState});
 
   @override
   $UserConnectionsStateCopyWith<$Res> get userConnectionsState;
   @override
   $QuestionsBookmarkStateCopyWith<$Res> get questionsBookmarkState;
   @override
-  $MyBlocksStateCopyWith<$Res> get myBlocksState;
+  $MyBlocksStateCopyWith<$Res> get blocksState;
   @override
-  $MyQuestionsStateCopyWith<$Res> get myQuestionsState;
+  $MyQuestionsStateCopyWith<$Res> get questionsState;
 }
 
 /// @nodoc
@@ -183,8 +183,8 @@ class __$$ProfileStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? userConnectionsState = null,
     Object? questionsBookmarkState = null,
-    Object? myBlocksState = null,
-    Object? myQuestionsState = null,
+    Object? blocksState = null,
+    Object? questionsState = null,
   }) {
     return _then(_$ProfileStateImpl(
       error: freezed == error
@@ -207,13 +207,13 @@ class __$$ProfileStateImplCopyWithImpl<$Res>
           ? _value.questionsBookmarkState
           : questionsBookmarkState // ignore: cast_nullable_to_non_nullable
               as QuestionsBookmarkState,
-      myBlocksState: null == myBlocksState
-          ? _value.myBlocksState
-          : myBlocksState // ignore: cast_nullable_to_non_nullable
+      blocksState: null == blocksState
+          ? _value.blocksState
+          : blocksState // ignore: cast_nullable_to_non_nullable
               as MyBlocksState,
-      myQuestionsState: null == myQuestionsState
-          ? _value.myQuestionsState
-          : myQuestionsState // ignore: cast_nullable_to_non_nullable
+      questionsState: null == questionsState
+          ? _value.questionsState
+          : questionsState // ignore: cast_nullable_to_non_nullable
               as MyQuestionsState,
     ));
   }
@@ -228,8 +228,8 @@ class _$ProfileStateImpl implements _ProfileState {
       this.isLoading = false,
       this.userConnectionsState = const UserConnectionsState(),
       this.questionsBookmarkState = const QuestionsBookmarkState(),
-      this.myBlocksState = const MyBlocksState(),
-      this.myQuestionsState = const MyQuestionsState()});
+      this.blocksState = const MyBlocksState(),
+      this.questionsState = const MyQuestionsState()});
 
   @override
   final String? error;
@@ -246,14 +246,14 @@ class _$ProfileStateImpl implements _ProfileState {
   final QuestionsBookmarkState questionsBookmarkState;
   @override
   @JsonKey()
-  final MyBlocksState myBlocksState;
+  final MyBlocksState blocksState;
   @override
   @JsonKey()
-  final MyQuestionsState myQuestionsState;
+  final MyQuestionsState questionsState;
 
   @override
   String toString() {
-    return 'ProfileState(error: $error, myInfoModel: $myInfoModel, isLoading: $isLoading, userConnectionsState: $userConnectionsState, questionsBookmarkState: $questionsBookmarkState, myBlocksState: $myBlocksState, myQuestionsState: $myQuestionsState)';
+    return 'ProfileState(error: $error, myInfoModel: $myInfoModel, isLoading: $isLoading, userConnectionsState: $userConnectionsState, questionsBookmarkState: $questionsBookmarkState, blocksState: $blocksState, questionsState: $questionsState)';
   }
 
   @override
@@ -270,10 +270,10 @@ class _$ProfileStateImpl implements _ProfileState {
                 other.userConnectionsState == userConnectionsState) &&
             (identical(other.questionsBookmarkState, questionsBookmarkState) ||
                 other.questionsBookmarkState == questionsBookmarkState) &&
-            (identical(other.myBlocksState, myBlocksState) ||
-                other.myBlocksState == myBlocksState) &&
-            (identical(other.myQuestionsState, myQuestionsState) ||
-                other.myQuestionsState == myQuestionsState));
+            (identical(other.blocksState, blocksState) ||
+                other.blocksState == blocksState) &&
+            (identical(other.questionsState, questionsState) ||
+                other.questionsState == questionsState));
   }
 
   @override
@@ -284,8 +284,8 @@ class _$ProfileStateImpl implements _ProfileState {
       isLoading,
       userConnectionsState,
       questionsBookmarkState,
-      myBlocksState,
-      myQuestionsState);
+      blocksState,
+      questionsState);
 
   @JsonKey(ignore: true)
   @override
@@ -301,8 +301,8 @@ abstract class _ProfileState implements ProfileState {
       final bool isLoading,
       final UserConnectionsState userConnectionsState,
       final QuestionsBookmarkState questionsBookmarkState,
-      final MyBlocksState myBlocksState,
-      final MyQuestionsState myQuestionsState}) = _$ProfileStateImpl;
+      final MyBlocksState blocksState,
+      final MyQuestionsState questionsState}) = _$ProfileStateImpl;
 
   @override
   String? get error;
@@ -315,9 +315,9 @@ abstract class _ProfileState implements ProfileState {
   @override
   QuestionsBookmarkState get questionsBookmarkState;
   @override
-  MyBlocksState get myBlocksState;
+  MyBlocksState get blocksState;
   @override
-  MyQuestionsState get myQuestionsState;
+  MyQuestionsState get questionsState;
   @override
   @JsonKey(ignore: true)
   _$$ProfileStateImplCopyWith<_$ProfileStateImpl> get copyWith =>
@@ -829,10 +829,11 @@ abstract class _MyBlocksState implements MyBlocksState {
 mixin _$MyQuestionsState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get isLastPage => throw _privateConstructorUsedError;
   String? get previous => throw _privateConstructorUsedError;
   String? get next => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
-  List<QuestionModel> get myQuestions => throw _privateConstructorUsedError;
+  List<QuestionModel> get questions => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MyQuestionsStateCopyWith<MyQuestionsState> get copyWith =>
@@ -848,10 +849,11 @@ abstract class $MyQuestionsStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
+      bool isLastPage,
       String? previous,
       String? next,
       String? error,
-      List<QuestionModel> myQuestions});
+      List<QuestionModel> questions});
 }
 
 /// @nodoc
@@ -869,10 +871,11 @@ class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
   $Res call({
     Object? isLoading = null,
     Object? isLoadingMore = null,
+    Object? isLastPage = null,
     Object? previous = freezed,
     Object? next = freezed,
     Object? error = freezed,
-    Object? myQuestions = null,
+    Object? questions = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -882,6 +885,10 @@ class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
       isLoadingMore: null == isLoadingMore
           ? _value.isLoadingMore
           : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
       previous: freezed == previous
           ? _value.previous
@@ -895,9 +902,9 @@ class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
-      myQuestions: null == myQuestions
-          ? _value.myQuestions
-          : myQuestions // ignore: cast_nullable_to_non_nullable
+      questions: null == questions
+          ? _value.questions
+          : questions // ignore: cast_nullable_to_non_nullable
               as List<QuestionModel>,
     ) as $Val);
   }
@@ -914,10 +921,11 @@ abstract class _$$MyQuestionsStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
+      bool isLastPage,
       String? previous,
       String? next,
       String? error,
-      List<QuestionModel> myQuestions});
+      List<QuestionModel> questions});
 }
 
 /// @nodoc
@@ -933,10 +941,11 @@ class __$$MyQuestionsStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? isLoadingMore = null,
+    Object? isLastPage = null,
     Object? previous = freezed,
     Object? next = freezed,
     Object? error = freezed,
-    Object? myQuestions = null,
+    Object? questions = null,
   }) {
     return _then(_$MyQuestionsStateImpl(
       isLoading: null == isLoading
@@ -946,6 +955,10 @@ class __$$MyQuestionsStateImplCopyWithImpl<$Res>
       isLoadingMore: null == isLoadingMore
           ? _value.isLoadingMore
           : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
       previous: freezed == previous
           ? _value.previous
@@ -959,9 +972,9 @@ class __$$MyQuestionsStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
-      myQuestions: null == myQuestions
-          ? _value._myQuestions
-          : myQuestions // ignore: cast_nullable_to_non_nullable
+      questions: null == questions
+          ? _value._questions
+          : questions // ignore: cast_nullable_to_non_nullable
               as List<QuestionModel>,
     ));
   }
@@ -973,11 +986,12 @@ class _$MyQuestionsStateImpl implements _MyQuestionsState {
   const _$MyQuestionsStateImpl(
       {this.isLoading = false,
       this.isLoadingMore = false,
+      this.isLastPage = false,
       this.previous,
       this.next,
       this.error,
-      final List<QuestionModel> myQuestions = const []})
-      : _myQuestions = myQuestions;
+      final List<QuestionModel> questions = const []})
+      : _questions = questions;
 
   @override
   @JsonKey()
@@ -986,23 +1000,26 @@ class _$MyQuestionsStateImpl implements _MyQuestionsState {
   @JsonKey()
   final bool isLoadingMore;
   @override
+  @JsonKey()
+  final bool isLastPage;
+  @override
   final String? previous;
   @override
   final String? next;
   @override
   final String? error;
-  final List<QuestionModel> _myQuestions;
+  final List<QuestionModel> _questions;
   @override
   @JsonKey()
-  List<QuestionModel> get myQuestions {
-    if (_myQuestions is EqualUnmodifiableListView) return _myQuestions;
+  List<QuestionModel> get questions {
+    if (_questions is EqualUnmodifiableListView) return _questions;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_myQuestions);
+    return EqualUnmodifiableListView(_questions);
   }
 
   @override
   String toString() {
-    return 'MyQuestionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, previous: $previous, next: $next, error: $error, myQuestions: $myQuestions)';
+    return 'MyQuestionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLastPage: $isLastPage, previous: $previous, next: $next, error: $error, questions: $questions)';
   }
 
   @override
@@ -1014,17 +1031,26 @@ class _$MyQuestionsStateImpl implements _MyQuestionsState {
                 other.isLoading == isLoading) &&
             (identical(other.isLoadingMore, isLoadingMore) ||
                 other.isLoadingMore == isLoadingMore) &&
+            (identical(other.isLastPage, isLastPage) ||
+                other.isLastPage == isLastPage) &&
             (identical(other.previous, previous) ||
                 other.previous == previous) &&
             (identical(other.next, next) || other.next == next) &&
             (identical(other.error, error) || other.error == error) &&
             const DeepCollectionEquality()
-                .equals(other._myQuestions, _myQuestions));
+                .equals(other._questions, _questions));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading, isLoadingMore,
-      previous, next, error, const DeepCollectionEquality().hash(_myQuestions));
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      isLoadingMore,
+      isLastPage,
+      previous,
+      next,
+      error,
+      const DeepCollectionEquality().hash(_questions));
 
   @JsonKey(ignore: true)
   @override
@@ -1038,15 +1064,18 @@ abstract class _MyQuestionsState implements MyQuestionsState {
   const factory _MyQuestionsState(
       {final bool isLoading,
       final bool isLoadingMore,
+      final bool isLastPage,
       final String? previous,
       final String? next,
       final String? error,
-      final List<QuestionModel> myQuestions}) = _$MyQuestionsStateImpl;
+      final List<QuestionModel> questions}) = _$MyQuestionsStateImpl;
 
   @override
   bool get isLoading;
   @override
   bool get isLoadingMore;
+  @override
+  bool get isLastPage;
   @override
   String? get previous;
   @override
@@ -1054,7 +1083,7 @@ abstract class _MyQuestionsState implements MyQuestionsState {
   @override
   String? get error;
   @override
-  List<QuestionModel> get myQuestions;
+  List<QuestionModel> get questions;
   @override
   @JsonKey(ignore: true)
   _$$MyQuestionsStateImplCopyWith<_$MyQuestionsStateImpl> get copyWith =>

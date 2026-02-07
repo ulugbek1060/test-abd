@@ -15,8 +15,8 @@ class ProfileState with _$ProfileState {
     @Default(false) bool isLoading,
     @Default(UserConnectionsState()) UserConnectionsState userConnectionsState,
     @Default(QuestionsBookmarkState()) QuestionsBookmarkState questionsBookmarkState,
-    @Default(MyBlocksState()) MyBlocksState myBlocksState,
-    @Default(MyQuestionsState()) MyQuestionsState myQuestionsState,
+    @Default(MyBlocksState()) MyBlocksState blocksState,
+    @Default(MyQuestionsState()) MyQuestionsState questionsState,
   }) = _ProfileState;
 }
 
@@ -52,9 +52,10 @@ class MyQuestionsState with _$MyQuestionsState {
   const factory MyQuestionsState({
     @Default(false) bool isLoading,
     @Default(false) bool isLoadingMore,
+    @Default(false) bool isLastPage,
     String? previous,
     String? next,
     String? error,
-    @Default([]) List<QuestionModel> myQuestions,
+    @Default([]) List<QuestionModel> questions,
   }) = _MyQuestionsState;
 }

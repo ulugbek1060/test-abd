@@ -275,7 +275,7 @@ mixin _$Question {
   @JsonKey(name: 'user')
   User? get user => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  String? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'round_image')
   String? get roundImage => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_bookmarked')
@@ -313,7 +313,7 @@ abstract class $QuestionCopyWith<$Res> {
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
       @JsonKey(name: 'user_attempt_count') int? userAttemptCount,
       @JsonKey(name: 'user') User? user,
-      @JsonKey(name: 'created_at') String? createdAt,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'round_image') String? roundImage,
       @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
       @JsonKey(name: 'is_following') bool? isFollowing,
@@ -426,7 +426,7 @@ class _$QuestionCopyWithImpl<$Res, $Val extends Question>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       roundImage: freezed == roundImage
           ? _value.roundImage
           : roundImage // ignore: cast_nullable_to_non_nullable
@@ -496,7 +496,7 @@ abstract class _$$QuestionImplCopyWith<$Res>
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
       @JsonKey(name: 'user_attempt_count') int? userAttemptCount,
       @JsonKey(name: 'user') User? user,
-      @JsonKey(name: 'created_at') String? createdAt,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'round_image') String? roundImage,
       @JsonKey(name: 'is_bookmarked') bool? isBookmarked,
       @JsonKey(name: 'is_following') bool? isFollowing,
@@ -609,7 +609,7 @@ class __$$QuestionImplCopyWithImpl<$Res>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       roundImage: freezed == roundImage
           ? _value.roundImage
           : roundImage // ignore: cast_nullable_to_non_nullable
@@ -716,7 +716,7 @@ class _$QuestionImpl implements _Question {
   final User? user;
   @override
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
   @override
   @JsonKey(name: 'round_image')
   final String? roundImage;
@@ -839,7 +839,7 @@ abstract class _Question implements Question {
       final double? difficultyPercentage,
       @JsonKey(name: 'user_attempt_count') final int? userAttemptCount,
       @JsonKey(name: 'user') final User? user,
-      @JsonKey(name: 'created_at') final String? createdAt,
+      @JsonKey(name: 'created_at') final DateTime? createdAt,
       @JsonKey(name: 'round_image') final String? roundImage,
       @JsonKey(name: 'is_bookmarked') final bool? isBookmarked,
       @JsonKey(name: 'is_following') final bool? isFollowing,
@@ -898,7 +898,7 @@ abstract class _Question implements Question {
   User? get user;
   @override
   @JsonKey(name: 'created_at')
-  String? get createdAt;
+  DateTime? get createdAt;
   @override
   @JsonKey(name: 'round_image')
   String? get roundImage;

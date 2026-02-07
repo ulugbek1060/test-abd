@@ -22,7 +22,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   late final StreamSubscription _themeSubscription;
   late final StreamSubscription _myInfoSubscription;
 
-  static const int _pageSize = 20;
+  static const int _pageSize = 10;
 
   ProfileCubit(
     this._accountRepository,
@@ -50,13 +50,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> load() async {
     fetchUserInfo();
     fetchMyBlocks();
-    fetchMyQuestions();
+    fetchQuestionsByPage();
   }
 
-  Future<void> refresh() async {
-    fetchUserInfo();
-    fetchMyBlocks();
-  }
+  Future<void> refresh() async => await load();
 
   Future<void> fetchUserInfo() async {
     if (state.isLoading) return;
@@ -145,12 +142,12 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> fetchMyBlocks() async {
-    final current = state.myBlocksState;
+    final current = state.blocksState;
     if (current.isLoading) return;
 
     emit(
       state.copyWith(
-        myBlocksState: current.copyWith(isLoading: true, error: null),
+        blocksState: current.copyWith(isLoading: true, error: null),
       ),
     );
 
@@ -160,7 +157,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       (error) {
         emit(
           state.copyWith(
-            myBlocksState: current.copyWith(
+            blocksState: current.copyWith(
               isLoading: false,
               error: error.message,
             ),
@@ -174,7 +171,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         list.insert(0, itemForAddButton);
         emit(
           state.copyWith(
-            myBlocksState: current.copyWith(
+            blocksState: current.copyWith(
               isLoading: false,
               myQuestions: list,
               error: null,
@@ -185,14 +182,69 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  /// this paginated question list
-  Future<void> fetchMyQuestions() async {
+  Future<void> fetchQuestionsByPage() async {
+    final currentState = state.questionsState;
 
+    if (currentState.isLoading) return;
+    if (currentState.isLoadingMore) return;
+    if (currentState.isLastPage) return;
+
+    logger.d('currentState.isLoading: ${currentState.isLoading}');
+    logger.d('currentState.isLoadingMore: ${currentState.isLoadingMore}');
+    logger.d('currentState.isLastPage: ${currentState.isLastPage}');
+
+    if (currentState.questions.isEmpty){
+      emit(
+        state.copyWith(
+          questionsState: currentState.copyWith(
+            isLoading: true,
+          ),
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          questionsState: currentState.copyWith(
+            isLoadingMore: true,
+          ),
+        ),
+      );
+    }
 
     final result = await _quizRepository.getMyQuestions(
       pageSize: _pageSize,
-      page: "",
+      page: state.questionsState.next ?? "",
     );
-    result.fold((e) {}, (value) {});
+
+    result.fold(
+      (e) {
+        emit(
+          state.copyWith(
+            questionsState: state.questionsState.copyWith(
+              isLoading: false,
+              isLoadingMore: false,
+              error: e.message,
+            ),
+          ),
+        );
+        _messageHandler.handleDialog(e);
+      },
+      (value) {
+        final list = List.of(state.questionsState.questions);
+        list.addAll(value.data);
+        emit(
+          state.copyWith(
+            questionsState: state.questionsState.copyWith(
+              isLoading: false,
+              isLoadingMore: false,
+              isLastPage: value.data.length < _pageSize || value.next == null,
+              next: value.next,
+              previous: value.previous,
+              questions: list,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

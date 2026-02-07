@@ -50,7 +50,9 @@ _$QuestionImpl _$$QuestionImplFromJson(Map<String, dynamic> json) =>
       user: json['user'] == null
           ? null
           : User.fromJson(json['user'] as Map<String, dynamic>),
-      createdAt: json['created_at'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
       roundImage: json['round_image'] as String?,
       isBookmarked: json['is_bookmarked'] as bool?,
       isFollowing: json['is_following'] as bool?,
@@ -77,7 +79,7 @@ Map<String, dynamic> _$$QuestionImplToJson(_$QuestionImpl instance) =>
       'difficulty_percentage': instance.difficultyPercentage,
       'user_attempt_count': instance.userAttemptCount,
       'user': instance.user,
-      'created_at': instance.createdAt,
+      'created_at': instance.createdAt?.toIso8601String(),
       'round_image': instance.roundImage,
       'is_bookmarked': instance.isBookmarked,
       'is_following': instance.isFollowing,

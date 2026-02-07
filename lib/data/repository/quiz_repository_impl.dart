@@ -196,7 +196,9 @@ class QuizRepositoryImpl extends QuizRepository {
         count: result.count,
         next: result.next,
         previous: result.previous,
-        data: result.results.map((e) => QuestionModel.fromAny(e)).toList(),
+        data: result.results
+            .map(QuestionModel.fromProfileQuestionResponse)
+            .toList(),
       );
       return Right(data);
     } on AppException catch (e) {

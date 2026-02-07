@@ -24,7 +24,7 @@ abstract class AppModule {
     requestHeader: true,
     requestBody: false,
     responseHeader: false,
-    responseBody: true,
+    responseBody: false,
   );
 
   Dio provideDio(

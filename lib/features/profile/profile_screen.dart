@@ -13,6 +13,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/question_difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
+import 'package:testabd/main.dart';
 import 'package:testabd/router/app_router.dart';
 
 enum PageType { questions, block, books }
@@ -25,18 +26,21 @@ class ProfileScreen extends StatelessWidget {
     create: (_) => locator<ProfileCubit>(),
     child: const _View(),
   );
-
 }
 
 class _View extends StatefulWidget {
   const _View();
+
   @override
   State<_View> createState() => _ViewState();
 }
 
 class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
-
   late TabController _tabController;
+
+  late ScrollController _scrollController;
+  final _scrollThreshold = 200.0;
+
   late var pageTye;
   late var _blockKey;
   late var _questionsKey;
@@ -45,11 +49,43 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
     pageTye = PageType.questions;
     _blockKey = PageStorageKey('blocksSection');
     _questionsKey = PageStorageKey('questionsSection');
     _booksKey = PageStorageKey('booksSection');
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
+  }
+
+  void _onScroll() {
+    if (_shouldLoadNextPage()) {
+      if (pageTye == PageType.questions) {
+        context.read<ProfileCubit>().fetchQuestionsByPage();
+      }
+      if (pageTye == PageType.block) {
+        // context.read<ProfileCubit>().fetchMyBlocks();
+      }
+    }
+  }
+
+  bool _shouldLoadNextPage() {
+    final state = context.read<ProfileCubit>().state;
+    if (state.isLoading) {
+      return false;
+    }
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    return maxScroll - currentScroll <= _scrollThreshold;
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -75,8 +111,9 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
 
             // body
             body: state.isLoading
-                ? const Center(child: ProgressView())
+                ? ProgressView()
                 : CustomScrollView(
+                    controller: _scrollController,
                     slivers: [
                       /// Header
                       HeaderSection(
@@ -146,22 +183,21 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                       ),
 
                       BlocBuilder<ProfileCubit, ProfileState>(
-                        buildWhen: (s1, s2) =>
-                            s1.myBlocksState != s2.myBlocksState,
+                        buildWhen: (s1, s2) => s1.blocksState != s2.blocksState,
                         builder: (_, s) => MyBlockSection(
                           key: _blockKey,
                           isEnabled: pageTye == PageType.block,
-                          state: s.myBlocksState,
+                          state: s.blocksState,
                         ),
                       ),
 
                       BlocBuilder<ProfileCubit, ProfileState>(
                         buildWhen: (s1, s2) =>
-                            s1.myBlocksState != s2.myBlocksState,
+                            s1.questionsState != s2.questionsState,
                         builder: (_, s) => MyQuestionsSection(
                           key: _questionsKey,
                           isEnabled: pageTye == PageType.questions,
-                          state: s.myBlocksState,
+                          state: s.questionsState,
                         ),
                       ),
 
@@ -661,7 +697,7 @@ class MyBlockSection extends StatelessWidget {
 /// ---------------- My questions section ----------------
 class MyQuestionsSection extends StatelessWidget {
   final bool isEnabled;
-  final MyBlocksState state;
+  final MyQuestionsState state;
 
   const MyQuestionsSection({
     super.key,
@@ -695,73 +731,86 @@ class MyQuestionsSection extends StatelessWidget {
     }
 
     /// for active state
-    return SliverPadding(
-      padding: const EdgeInsets.all(8),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 1.0,
-        ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final question = state.myQuestions[index];
-
-          if (question.id == -1) {
-            return GestureDetector(
-              onTap: () {
-                context.push(AppRouter.createQuestions);
-              },
-              child: Container(
-                margin: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.1),
-                      blurRadius: 12,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Add question',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return QuestionCard(
-            title: question.title ?? '',
-            description: question.description ?? '',
-            createdAt: question.createdAt,
-            correctAnswers: 2,
-            wrongAnswers: 2,
-            difficulty: QuestionDifficulty.easy,
-            onTap: () => context.push(
-              AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(8),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+              childAspectRatio: 1.0,
             ),
-          );
-        }, childCount: state.myQuestions.length),
-      ),
+            delegate: SliverChildBuilderDelegate((
+              BuildContext context,
+              int index,
+            ) {
+              final question = state.questions[index];
+
+              if (question.id == -1) {
+                return GestureDetector(
+                  onTap: () {
+                    context.push(AppRouter.createQuestions);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.1),
+                          blurRadius: 12,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Add question',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return QuestionCard(
+                title: question.testTitle ?? '',
+                description: question.testDescription ?? '',
+                createdAt: question.createdAt,
+                correctAnswers: 2,
+                wrongAnswers: 2,
+                difficulty: QuestionDifficulty.easy,
+                onTap: () => context.push(
+                  AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+                ),
+              );
+            }, childCount: state.questions.length),
+          ),
+        ),
+
+        if (state.isLoadingMore)
+          const SliverToBoxAdapter(child: ProgressView()),
+      ],
     );
   }
 }
