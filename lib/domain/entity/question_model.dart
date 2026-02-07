@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
+import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
 
@@ -9,10 +11,10 @@ class QuestionModel extends Equatable {
   final int? test;
   final String? testTitle;
   final String? questionText;
-  final String? questionType;
+  final QuestionType? questionType;
   final int? orderIndex;
   final String? media;
-  final List<AnswerModel>? answers;
+  final List<AnswerItemModel> answers;
   final String? testDescription;
   final String? correctAnswerText;
   final String? answerLanguage;
@@ -27,6 +29,12 @@ class QuestionModel extends Equatable {
   final bool? isFollowing;
   final CategoryModel? category;
 
+  // additional
+  final bool isLoading;
+  final bool isCompleted;
+  final bool isCorrect;
+  final List<int> myAnswersId;
+
   const QuestionModel({
     this.id,
     this.test,
@@ -35,7 +43,7 @@ class QuestionModel extends Equatable {
     this.questionType,
     this.orderIndex,
     this.media,
-    this.answers,
+    this.answers = const [],
     this.testDescription,
     this.correctAnswerText,
     this.answerLanguage,
@@ -49,6 +57,10 @@ class QuestionModel extends Equatable {
     this.isBookmarked,
     this.isFollowing,
     this.category,
+    this.isLoading = false,
+    this.isCompleted = false,
+    this.isCorrect = false,
+    this.myAnswersId = const [],
   });
 
   @override
@@ -74,6 +86,10 @@ class QuestionModel extends Equatable {
     isBookmarked,
     isFollowing,
     category,
+    isLoading,
+    isCompleted,
+    isCorrect,
+    myAnswersId,
   ];
 
   QuestionModel copyWith({
@@ -81,10 +97,10 @@ class QuestionModel extends Equatable {
     int? test,
     String? testTitle,
     String? questionText,
-    String? questionType,
+    QuestionType? questionType,
     int? orderIndex,
     String? media,
-    List<AnswerModel>? answers,
+    List<AnswerItemModel>? answers,
     String? testDescription,
     String? correctAnswerText,
     String? answerLanguage,
@@ -98,6 +114,10 @@ class QuestionModel extends Equatable {
     bool? isBookmarked,
     bool? isFollowing,
     CategoryModel? category,
+    bool? isLoading,
+    bool? isCompleted,
+    bool? isCorrect,
+    List<int>? myAnswersId,
   }) {
     return QuestionModel(
       id: id ?? this.id,
@@ -121,6 +141,10 @@ class QuestionModel extends Equatable {
       isBookmarked: isBookmarked ?? this.isBookmarked,
       isFollowing: isFollowing ?? this.isFollowing,
       category: category ?? this.category,
+      isLoading: isLoading ?? this.isLoading,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isCorrect: isCorrect ?? this.isCorrect,
+      myAnswersId: myAnswersId ?? this.myAnswersId,
     );
   }
 
@@ -130,19 +154,19 @@ class QuestionModel extends Equatable {
       test: result.test,
       testTitle: result.testTitle,
       questionText: result.questionText,
-      questionType: result.questionType,
+      questionType: QuestionType.fromString(result.questionType),
       orderIndex: result.orderIndex,
       media: result.media,
       answers: result.answers
           ?.map(
-            (answer) => AnswerModel(
+            (answer) => AnswerItemModel(
               id: answer.id,
               letter: answer.letter,
               answerText: answer.answerText,
-              isCorrect: answer.isCorrect,
+              isCorrect: answer.isCorrect ?? false,
             ),
           )
-          .toList(),
+          .toList() ?? [],
       testDescription: result.testDescription,
       correctAnswerText: result.correctAnswerText,
       answerLanguage: result.answerLanguage,

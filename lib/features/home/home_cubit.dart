@@ -3,10 +3,8 @@ import 'package:injectable/injectable.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
-import 'package:testabd/domain/quiz/entities/quiz_item.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
-import 'package:testabd/main.dart';
-
 import 'home_state.dart';
 
 @injectable
@@ -70,9 +68,9 @@ class HomeCubit extends Cubit<HomeState> {
         // handle message
         _messageHandler.handleDialog(err);
       },
-      (data) {
+      (value) {
         final followedState = state.followedQuizStata;
-        final fetched = data.results ?? [];
+        final fetched = value.data;
         final newFollowedState = followedState.copyWith(
           isLoading: false,
           isLoadMore: false,
@@ -139,7 +137,7 @@ class HomeCubit extends Cubit<HomeState> {
   int _findQuestionIndex(int questionId) =>
       state.followedQuizStata.questions.indexWhere((e) => e.id == questionId);
 
-  void _updateQuestion(int questionId, QuizItem Function(QuizItem) updateFn) {
+  void _updateQuestion(int questionId, QuestionModel Function(QuestionModel) updateFn) {
     final index = _findQuestionIndex(questionId);
     if (index == -1) return;
 
@@ -165,7 +163,7 @@ class HomeCubit extends Cubit<HomeState> {
     _replaceQuestion(index, updated);
   }
 
-  void _replaceQuestion(int index, QuizItem updated) {
+  void _replaceQuestion(int index, QuestionModel updated) {
     final list = List.of(state.followedQuizStata.questions);
     list[index] = updated;
     _updateFollowedState(state.followedQuizStata.copyWith(questions: list));
@@ -190,7 +188,7 @@ class HomeCubit extends Cubit<HomeState> {
     final updated = q.copyWith(
       isLoading: false,
       isCompleted: true,
-      isCorrect: response.isCorrect,
+      isCorrect: response.isCorrect ?? false,
       myAnswersId: answers,
       answers: updatedAnswers,
     );

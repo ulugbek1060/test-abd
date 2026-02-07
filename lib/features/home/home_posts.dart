@@ -11,7 +11,7 @@ import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
-import 'package:testabd/domain/quiz/entities/quiz_item.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/home/home_cubit.dart';
 import 'package:testabd/features/home/home_state.dart';
 import 'package:testabd/main.dart';
@@ -65,7 +65,7 @@ class PostsWidget extends StatelessWidget {
 }
 
 class QuestionCard extends StatelessWidget {
-  final QuizItem quiz;
+  final QuestionModel quiz;
 
   const QuestionCard({super.key, required this.quiz});
 

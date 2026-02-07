@@ -7,23 +7,19 @@ import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
-import 'package:testabd/domain/quiz/entities/global_quiz_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
-import 'package:testabd/domain/quiz/entities/quiz_item.dart';
 import 'package:testabd/domain/quiz/entities/topics_model.dart';
 
 abstract class QuizRepository {
-  Future<Either<AppException, GlobalQuizModel>> getFollowedQuestions({
-    required int page,
-    required int pageSize,
-  });
+  Future<Either<AppException, PagedData<String, QuestionModel>>>
+  getFollowedQuestions({required int page, required int pageSize});
   Future<Either<AppException, CheckAnswerModel>> submitAnswer({
     required int questionId,
     required List<int> selectedAnswers,
     int? duration,
   });
-  Future<Either<AppException, List<QuizItem>>> getUserQuestions(int userId);
+  Future<Either<AppException, List<QuestionModel>>> getUserQuestions(int userId);
   Future<Either<AppException, TopicsModel>> getTopics(
     int userId, {
     int? page,
@@ -45,8 +41,6 @@ abstract class QuizRepository {
     required int categoryId,
     required List<AnswerItemModel> answers,
   });
-  Future<Either<AppException, PagedData<String, QuestionModel>>> getMyQuestions({
-    required String page,
-    required int pageSize,
-  });
+  Future<Either<AppException, PagedData<String, QuestionModel>>>
+  getMyQuestions({required String page, required int pageSize});
 }

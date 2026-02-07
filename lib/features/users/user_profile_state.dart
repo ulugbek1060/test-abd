@@ -1,10 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:testabd/domain/account/entities/user_profile_model.dart';
-import 'package:testabd/domain/quiz/entities/quiz_item.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/topics_model.dart';
 
 part 'user_profile_state.freezed.dart';
-
 
 /// Main screen state
 @freezed
@@ -44,7 +43,7 @@ class BlocksState with _$BlocksState {
 class QuestionsState with _$QuestionsState {
   const factory QuestionsState({
     @Default(false) bool isLoading,
-    @Default([]) List<QuizItem> questions,
+    @Default([]) List<QuestionModel> questions,
     String? error,
   }) = _QuestionsState;
 }

@@ -572,7 +572,7 @@ abstract class _BlocksState implements BlocksState {
 /// @nodoc
 mixin _$QuestionsState {
   bool get isLoading => throw _privateConstructorUsedError;
-  List<QuizItem> get questions => throw _privateConstructorUsedError;
+  List<QuestionModel> get questions => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -586,7 +586,7 @@ abstract class $QuestionsStateCopyWith<$Res> {
           QuestionsState value, $Res Function(QuestionsState) then) =
       _$QuestionsStateCopyWithImpl<$Res, QuestionsState>;
   @useResult
-  $Res call({bool isLoading, List<QuizItem> questions, String? error});
+  $Res call({bool isLoading, List<QuestionModel> questions, String? error});
 }
 
 /// @nodoc
@@ -614,7 +614,7 @@ class _$QuestionsStateCopyWithImpl<$Res, $Val extends QuestionsState>
       questions: null == questions
           ? _value.questions
           : questions // ignore: cast_nullable_to_non_nullable
-              as List<QuizItem>,
+              as List<QuestionModel>,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -631,7 +631,7 @@ abstract class _$$QuestionsStateImplCopyWith<$Res>
       __$$QuestionsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, List<QuizItem> questions, String? error});
+  $Res call({bool isLoading, List<QuestionModel> questions, String? error});
 }
 
 /// @nodoc
@@ -657,7 +657,7 @@ class __$$QuestionsStateImplCopyWithImpl<$Res>
       questions: null == questions
           ? _value._questions
           : questions // ignore: cast_nullable_to_non_nullable
-              as List<QuizItem>,
+              as List<QuestionModel>,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -671,17 +671,17 @@ class __$$QuestionsStateImplCopyWithImpl<$Res>
 class _$QuestionsStateImpl implements _QuestionsState {
   const _$QuestionsStateImpl(
       {this.isLoading = false,
-      final List<QuizItem> questions = const [],
+      final List<QuestionModel> questions = const [],
       this.error})
       : _questions = questions;
 
   @override
   @JsonKey()
   final bool isLoading;
-  final List<QuizItem> _questions;
+  final List<QuestionModel> _questions;
   @override
   @JsonKey()
-  List<QuizItem> get questions {
+  List<QuestionModel> get questions {
     if (_questions is EqualUnmodifiableListView) return _questions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_questions);
@@ -722,13 +722,13 @@ class _$QuestionsStateImpl implements _QuestionsState {
 abstract class _QuestionsState implements QuestionsState {
   const factory _QuestionsState(
       {final bool isLoading,
-      final List<QuizItem> questions,
+      final List<QuestionModel> questions,
       final String? error}) = _$QuestionsStateImpl;
 
   @override
   bool get isLoading;
   @override
-  List<QuizItem> get questions;
+  List<QuestionModel> get questions;
   @override
   String? get error;
   @override

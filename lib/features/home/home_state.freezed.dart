@@ -150,7 +150,7 @@ abstract class _HomeState implements HomeState {
 mixin _$FollowedQuizState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadMore => throw _privateConstructorUsedError;
-  List<QuizItem> get questions => throw _privateConstructorUsedError;
+  List<QuestionModel> get questions => throw _privateConstructorUsedError;
   bool get isLastPage => throw _privateConstructorUsedError;
   int get nextPage => throw _privateConstructorUsedError;
   int get previousPage => throw _privateConstructorUsedError;
@@ -170,7 +170,7 @@ abstract class $FollowedQuizStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       bool isLoadMore,
-      List<QuizItem> questions,
+      List<QuestionModel> questions,
       bool isLastPage,
       int nextPage,
       int previousPage,
@@ -210,7 +210,7 @@ class _$FollowedQuizStateCopyWithImpl<$Res, $Val extends FollowedQuizState>
       questions: null == questions
           ? _value.questions
           : questions // ignore: cast_nullable_to_non_nullable
-              as List<QuizItem>,
+              as List<QuestionModel>,
       isLastPage: null == isLastPage
           ? _value.isLastPage
           : isLastPage // ignore: cast_nullable_to_non_nullable
@@ -242,7 +242,7 @@ abstract class _$$FollowedQuizStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       bool isLoadMore,
-      List<QuizItem> questions,
+      List<QuestionModel> questions,
       bool isLastPage,
       int nextPage,
       int previousPage,
@@ -280,7 +280,7 @@ class __$$FollowedQuizStateImplCopyWithImpl<$Res>
       questions: null == questions
           ? _value._questions
           : questions // ignore: cast_nullable_to_non_nullable
-              as List<QuizItem>,
+              as List<QuestionModel>,
       isLastPage: null == isLastPage
           ? _value.isLastPage
           : isLastPage // ignore: cast_nullable_to_non_nullable
@@ -307,7 +307,7 @@ class _$FollowedQuizStateImpl implements _FollowedQuizState {
   const _$FollowedQuizStateImpl(
       {this.isLoading = false,
       this.isLoadMore = false,
-      final List<QuizItem> questions = const [],
+      final List<QuestionModel> questions = const [],
       this.isLastPage = false,
       this.nextPage = 1,
       this.previousPage = 1,
@@ -320,10 +320,10 @@ class _$FollowedQuizStateImpl implements _FollowedQuizState {
   @override
   @JsonKey()
   final bool isLoadMore;
-  final List<QuizItem> _questions;
+  final List<QuestionModel> _questions;
   @override
   @JsonKey()
-  List<QuizItem> get questions {
+  List<QuestionModel> get questions {
     if (_questions is EqualUnmodifiableListView) return _questions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_questions);
@@ -389,7 +389,7 @@ abstract class _FollowedQuizState implements FollowedQuizState {
   const factory _FollowedQuizState(
       {final bool isLoading,
       final bool isLoadMore,
-      final List<QuizItem> questions,
+      final List<QuestionModel> questions,
       final bool isLastPage,
       final int nextPage,
       final int previousPage,
@@ -400,7 +400,7 @@ abstract class _FollowedQuizState implements FollowedQuizState {
   @override
   bool get isLoadMore;
   @override
-  List<QuizItem> get questions;
+  List<QuestionModel> get questions;
   @override
   bool get isLastPage;
   @override
