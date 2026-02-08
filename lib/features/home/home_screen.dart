@@ -81,12 +81,9 @@ class _ViewState extends State<_View> {
               title: Text('TestAbd'),
               centerTitle: false,
               actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    onPressed: () => context.push(AppRouter.leaderboard),
-                    icon: Icon(Icons.leaderboard_rounded),
-                  ),
+                IconButton(
+                  onPressed: () => context.push(AppRouter.leaderboard),
+                  icon: Icon(Icons.leaderboard_rounded),
                 ),
                 IconButton(
                   onPressed: () => context.push(AppRouter.notifications),
