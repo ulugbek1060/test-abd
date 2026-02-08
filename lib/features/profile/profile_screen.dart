@@ -809,7 +809,10 @@ class MyQuestionsSection extends StatelessWidget {
         ),
 
         if (state.isLoadingMore)
-          const SliverToBoxAdapter(child: ProgressView()),
+          SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: const SliverToBoxAdapter(child: ProgressView()),
+          ),
       ],
     );
   }

@@ -72,6 +72,7 @@ class _ViewState extends State<_View> {
         onRefresh: context.read<HomeCubit>().refresh,
         child: CustomScrollView(
           controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             /// Appbar
             SliverAppBar(
@@ -82,10 +83,9 @@ class _ViewState extends State<_View> {
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(side: BorderSide.none),
+                  child: IconButton(
                     onPressed: () => context.push(AppRouter.leaderboard),
-                    child: Text('Meroschi'),
+                    icon: Icon(Icons.leaderboard_rounded),
                   ),
                 ),
                 IconButton(
