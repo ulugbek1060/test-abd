@@ -13,7 +13,6 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/question_difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
-import 'package:testabd/main.dart';
 import 'package:testabd/router/app_router.dart';
 
 enum PageType { questions, block, books }
@@ -147,23 +146,17 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                             connectionType: ConnectionsEnum.following.name,
                           ),
                         ),
-                        onEditProfileTap: () =>
-                            context.push(AppRouter.editProfile),
+                        onEditProfileTap: () => context.push(AppRouter.editProfile),
                       ),
 
                       /// Statistics Cards
                       SubHeaderSection(
                         coins: state.myInfoModel?.coins?.toString() ?? '0',
-                        correctAnswers:
-                            state.myInfoModel?.correctCount?.toString() ?? '0',
-                        wrongAnswers:
-                            state.myInfoModel?.wrongCount?.toString() ?? '0',
-                        accuracy:
-                            state.myInfoModel?.findAccuracy().toString() ?? '0',
-                        accuracyProgress:
-                            state.myInfoModel?.findAccuracy() ?? 0,
-                        onQuestionsBookmarkTap: () =>
-                            context.push(AppRouter.bookmarkQuestions),
+                        correctAnswers: state.myInfoModel?.correctCount?.toString() ?? '0',
+                        wrongAnswers: state.myInfoModel?.wrongCount?.toString() ?? '0',
+                        accuracy: state.myInfoModel?.findAccuracy().toString() ?? '0',
+                        accuracyProgress: state.myInfoModel?.findAccuracy() ?? 0,
+                        onQuestionsBookmarkTap: () => context.push(AppRouter.bookmarkQuestions),
                       ),
 
                       /// tabBar
@@ -685,7 +678,8 @@ class MyBlockSection extends StatelessWidget {
             wrongAnswers: 2,
             difficulty: QuestionDifficulty.easy,
             onTap: () => context.push(
-              AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+              AppRouter.blockDetail
+              // AppRouter.questionDetailWithQuestionId(question.id ?? -1),
             ),
           );
         }, childCount: state.myQuestions.length),

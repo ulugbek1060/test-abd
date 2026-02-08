@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testabd/core/enums/connections_enum.dart';
-import 'package:testabd/di/app_config.dart';
 import 'package:testabd/features/auth/forgotpswd/forgot_pswd_screen.dart';
 import 'package:testabd/features/auth/login/login_screen.dart';
 import 'package:testabd/features/auth/register/register_screen.dart';
@@ -12,16 +10,15 @@ import 'package:testabd/features/home/leaderboard_screen.dart';
 import 'package:testabd/features/home/notifications_screen.dart';
 import 'package:testabd/features/init/init_screen.dart';
 import 'package:testabd/features/library/library_screen.dart';
+import 'package:testabd/features/profile/block_detail_screen.dart';
 import 'package:testabd/features/profile/bookmark_questions_screen.dart';
 import 'package:testabd/features/profile/create_block_screen.dart';
 import 'package:testabd/features/profile/create_questions_screen.dart';
+import 'package:testabd/features/profile/my_question_detail_screen.dart';
 import 'package:testabd/features/profile/profile_connection_screen.dart';
-import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/profile/settings/change_password_screen.dart';
 import 'package:testabd/features/profile/settings/edit_profile_screen.dart';
-import 'package:testabd/features/profile/settings/edit_user_location_screen.dart';
-import 'package:testabd/features/profile/settings/language_bottom_sheet.dart';
 import 'package:testabd/features/profile/settings/personal_info_screen.dart';
 import 'package:testabd/features/profile/settings/referrals_screen.dart';
 import 'package:testabd/features/profile/settings/regional_settings_screen.dart';
@@ -54,6 +51,8 @@ abstract class AppRouter {
   static const changePassword = '/change_password';
   static const createQuestions = '/create_questions';
   static const createBlock = '/create_block';
+  static const blockDetail = '/block_detail';
+  static const myQuestionDetail = '/my_question_detail';
 
   static String userProfileWithUsername(String username) => '/users/$username';
 
@@ -144,6 +143,17 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: AppRouter.myQuestionDetail,
+      pageBuilder: (context, state) {
+        // final questionId = state.pathParameters['questionId']!;
+        return CupertinoPage(
+          child: MyQuestionDetailScreen(
+            // questionId: int.tryParse(questionId) ?? -1,
+          ),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRouter.blockQuestions,
       pageBuilder: (context, state) {
         final blockId = state.pathParameters['blockId']!;
@@ -168,6 +178,12 @@ final appRouter = GoRouter(
       path: AppRouter.bookmarkQuestions,
       pageBuilder: (context, state) {
         return CupertinoPage(child: BookmarkQuestionsScreen());
+      },
+    ),
+    GoRoute(
+      path: AppRouter.blockDetail,
+      pageBuilder: (context, state) {
+        return CupertinoPage(child: BlockDetailScreen());
       },
     ),
     GoRoute(
