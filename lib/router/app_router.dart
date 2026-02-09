@@ -17,7 +17,6 @@ import 'package:testabd/features/profile/create_questions_screen.dart';
 import 'package:testabd/features/profile/my_question_detail_screen.dart';
 import 'package:testabd/features/profile/new_profile_screen.dart';
 import 'package:testabd/features/profile/profile_connection_screen.dart';
-import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/profile/settings/change_password_screen.dart';
 import 'package:testabd/features/profile/settings/edit_profile_screen.dart';
 import 'package:testabd/features/profile/settings/personal_info_screen.dart';
@@ -52,7 +51,9 @@ abstract class AppRouter {
   static const changePassword = '/change_password';
   static const createQuestions = '/create_questions';
   static const createBlock = '/create_block';
-  static const blockDetail = '/block_detail';
+  static const blockDetail = '/block_detail/:block_id';
+  static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
+
   static const myQuestionDetail = '/my_question_detail';
 
   static String userProfileWithUsername(String username) => '/users/$username';
@@ -184,7 +185,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.blockDetail,
       pageBuilder: (context, state) {
-        return CupertinoPage(child: BlockDetailScreen());
+        final blockId = state.pathParameters['block_id']!;
+        return CupertinoPage(
+          child: BlockDetailScreen(blockId: int.tryParse(blockId) ?? -1),
+        );
       },
     ),
     GoRoute(

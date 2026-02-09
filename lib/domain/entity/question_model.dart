@@ -1,11 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
+import 'package:testabd/data/remote_source/quiz/models/block_detail_response.dart'
+    as blockDetail;
 import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
-import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart' as userBlock;
-import 'package:testabd/data/remote_source/quiz/models/questions_response.dart' as questions;
+import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart'
+    as userBlock;
+import 'package:testabd/data/remote_source/quiz/models/questions_response.dart'
+    as questions;
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
@@ -280,17 +284,16 @@ class QuestionModel extends Equatable {
       questionType: QuestionType.fromString(response.questionType),
       orderIndex: response.orderIndex,
       media: response.media,
-      answers:
-          response.answers
-              .map(
-                (answer) => AnswerItemModel(
-                  id: answer.id,
-                  letter: answer.letter,
-                  answerText: answer.answerText,
-                  isCorrect: answer.isCorrect ?? false,
-                ),
-              )
-              .toList(),
+      answers: response.answers
+          .map(
+            (answer) => AnswerItemModel(
+              id: answer.id,
+              letter: answer.letter,
+              answerText: answer.answerText,
+              isCorrect: answer.isCorrect ?? false,
+            ),
+          )
+          .toList(),
       testDescription: response.testDescription,
       correctAnswerText: response.correctAnswerText,
       answerLanguage: response.answerLanguage,
@@ -311,7 +314,9 @@ class QuestionModel extends Equatable {
     );
   }
 
-  static QuestionModel fromProfileQuestionResponse(questions.Question response) {
+  static QuestionModel fromProfileQuestionResponse(
+    questions.Question response,
+  ) {
     return QuestionModel(
       id: response.id,
       test: response.test,
@@ -320,16 +325,54 @@ class QuestionModel extends Equatable {
       questionType: QuestionType.fromString(response.questionType),
       orderIndex: response.orderIndex,
       media: response.media,
-      answers:
-      response.answers
+      answers: response.answers
           .map(
             (answer) => AnswerItemModel(
-          id: answer.id,
-          letter: answer.letter,
-          answerText: answer.answerText,
-          isCorrect: answer.isCorrect ?? false,
-        ),
-      )
+              id: answer.id,
+              letter: answer.letter,
+              answerText: answer.answerText,
+              isCorrect: answer.isCorrect ?? false,
+            ),
+          )
+          .toList(),
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage?.toDouble(),
+      userAttemptCount: response.userAttemptCount,
+      user: UserItemModel(
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
+      ),
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
+    );
+  }
+
+  static QuestionModel fromBlockDetailResponse(blockDetail.Question response) {
+    return QuestionModel(
+      id: response.id,
+      test: response.test,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: QuestionType.fromString(response.questionType),
+      orderIndex: response.orderIndex,
+      media: response.media,
+      answers: response.answers
+          .map(
+            (answer) => AnswerItemModel(
+              id: answer.id,
+              letter: answer.letter,
+              answerText: answer.answerText,
+              isCorrect: answer.isCorrect ?? false,
+            ),
+          )
           .toList(),
       testDescription: response.testDescription,
       correctAnswerText: response.correctAnswerText,

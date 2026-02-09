@@ -502,10 +502,14 @@ class _TabsSection extends StatelessWidget {
       delegate: _SliverAppBarDelegate(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         TabBar(
-          unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.6),
           labelColor: Theme.of(context).colorScheme.onSurface,
           labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           onTap: onTabChange,
           controller: controller,
@@ -625,8 +629,7 @@ class _BlocksSection extends StatelessWidget {
             wrongAnswers: 2,
             difficulty: Difficulty.easy,
             onTap: () => context.push(
-              AppRouter.blockDetail,
-              // AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+              AppRouter.blockDetailWithBlockId(question.id ?? -1),
             ),
           );
         }, childCount: state.myQuestions.length),

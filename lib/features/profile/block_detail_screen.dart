@@ -1,19 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/di/app_config.dart';
+import 'package:testabd/features/profile/block_detail_cubit.dart';
 import 'package:testabd/router/app_router.dart';
 
 class BlockDetailScreen extends StatelessWidget {
-  const BlockDetailScreen({super.key});
+  final int blockId;
+
+  const BlockDetailScreen({super.key, required this.blockId});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          locator<BlockDetailCubit>(param1: blockId),
+      child: const _View(),
+    );
+  }
+}
+
+class _View extends StatefulWidget {
+  const _View({super.key});
+
+  @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+
+  @override
+  void initState() {
+    BlocProvider.of<BlockDetailCubit>(context).fetchBlock();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Algebra Basics"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Algebra Basics"), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         children: [
@@ -31,10 +58,10 @@ class BlockDetailScreen extends StatelessWidget {
           /// 🧾 BLOCK DESCRIPTION
           Text(
             "This block focuses on solving algebraic expressions and equations. "
-                "Practice each question to improve accuracy and speed.",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: scheme.onSurfaceVariant,
-            ),
+            "Practice each question to improve accuracy and speed.",
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
 
           const SizedBox(height: 16),
@@ -42,10 +69,7 @@ class BlockDetailScreen extends StatelessWidget {
           /// 🏷 CATEGORY + 👁 VISIBILITY
           Row(
             children: const [
-              _InfoChip(
-                icon: Icons.category_outlined,
-                label: "Mathematics",
-              ),
+              _InfoChip(icon: Icons.category_outlined, label: "Mathematics"),
               SizedBox(width: 8),
               _InfoChip(
                 icon: Icons.public,
@@ -107,16 +131,14 @@ class _QuestionsGrid extends StatelessWidget {
         return InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
-           context.push(AppRouter.myQuestionDetail);
+            context.push(AppRouter.myQuestionDetail);
           },
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: scheme.surfaceVariant,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: scheme.outlineVariant.withOpacity(0.3),
-              ),
+              border: Border.all(color: scheme.outlineVariant.withOpacity(0.3)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,11 +280,7 @@ class _InfoChip extends StatelessWidget {
   final String label;
   final Color? color;
 
-  const _InfoChip({
-    required this.icon,
-    required this.label,
-    this.color,
-  });
+  const _InfoChip({required this.icon, required this.label, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -273,9 +291,7 @@ class _InfoChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: scheme.surfaceVariant,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: scheme.outlineVariant.withOpacity(0.3),
-        ),
+        border: Border.all(color: scheme.outlineVariant.withOpacity(0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

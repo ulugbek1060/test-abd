@@ -4,6 +4,7 @@ import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
+import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
@@ -43,4 +44,5 @@ abstract class QuizRepository {
   });
   Future<Either<AppException, PagedData<String, QuestionModel>>>
   getMyQuestions({required String page, required int pageSize});
+  Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
 }

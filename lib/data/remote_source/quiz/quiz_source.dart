@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/remote_source/quiz/models/answer_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/block_detail_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/category_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
@@ -68,6 +69,8 @@ abstract class QuizSource {
     int categoryId,
     List<AnswerItemModel> answers,
   );
+
+  Future<BlockDetailResponse> getBlockById(int id);
 }
 
 /// =========================> Source implementation <=========================
@@ -335,6 +338,18 @@ class QuizSourceImpl implements QuizSource {
         ),
       );
       return QuestionsResponse.fromJson(response.data);
+    } on DioException catch (error) {
+      throw error.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<BlockDetailResponse> getBlockById(int id) async {
+    try {
+      final response = await _dio.get('/quiz/tests/$id/');
+      return BlockDetailResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
