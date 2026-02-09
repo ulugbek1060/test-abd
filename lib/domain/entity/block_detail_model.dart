@@ -1,3 +1,4 @@
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/data/remote_source/quiz/models/block_detail_response.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
@@ -9,7 +10,7 @@ class BlockDetailModel {
   final String? title;
   final String? description;
   final CategoryModel? category;
-  final String? visibility;
+  final AccessType? visibility;
   final String? accessMode;
   final int? maxParticipants;
   final String? startTime;
@@ -75,7 +76,7 @@ class BlockDetailModel {
         slug: response.category?.slug,
         emoji: response.category?.emoji,
       ),
-      visibility: response.visibility,
+      visibility: AccessType.fromString(response.visibility),
       accessMode: response.accessMode,
       maxParticipants: response.maxParticipants,
       startTime: response.startTime,

@@ -9,7 +9,6 @@ extension QuestionDifficultyColorX on Difficulty {
     switch (this) {
       case Difficulty.easy:
         return Colors.green;
-
       case Difficulty.medium:
         return const Color(0xFFFFCA28);
 
