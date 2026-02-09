@@ -10,7 +10,7 @@ import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/domain/question_difficulty.dart';
+import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
 import 'package:testabd/router/app_router.dart';
@@ -246,77 +246,77 @@ class HeaderSection extends StatelessWidget {
           children: [
             Row(
               children: [
-                SizedBox(
-                  width: 90,
-                  height: 90,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
+                  SizedBox(
+                    width: 90,
+                    height: 90,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
 
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.purple, width: 3),
-                            gradient: const LinearGradient(
-                              colors: [Colors.purple, Colors.blue],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: CachedNetworkImage(
-                              width: 46,
-                              height: 46,
-                              imageUrl: imageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (_, __) => Image.asset(
-                                AppImages.defaultAvatar,
-                                fit: BoxFit.cover,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.purple, width: 3),
+                              gradient: const LinearGradient(
+                                colors: [Colors.purple, Colors.blue],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              errorWidget: (_, __, ___) => Image.asset(
-                                AppImages.defaultAvatar,
+                            ),
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                width: 46,
+                                height: 46,
+                                imageUrl: imageUrl,
                                 fit: BoxFit.cover,
+                                placeholder: (_, __) => Image.asset(
+                                  AppImages.defaultAvatar,
+                                  fit: BoxFit.cover,
+                                ),
+                                errorWidget: (_, __, ___) => Image.asset(
+                                  AppImages.defaultAvatar,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
 
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        left: 0,
-                        child: Container(
-                          width: 80,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            gradient: const LinearGradient(
-                              colors: [Colors.purple, Colors.blue],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          left: 0,
+                          child: Container(
+                            width: 80,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                              gradient: const LinearGradient(
+                                colors: [Colors.purple, Colors.blue],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
                             ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              level.getText(context),
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
-                                  ),
+                            child: Center(
+                              child: Text(
+                                level.getText(context),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                    ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 const SizedBox(width: 20),
 
                 /// Stats
@@ -676,7 +676,7 @@ class MyBlockSection extends StatelessWidget {
             createdAt: question.createdAt,
             correctAnswers: 2,
             wrongAnswers: 2,
-            difficulty: QuestionDifficulty.easy,
+            difficulty: Difficulty.easy,
             onTap: () => context.push(
               AppRouter.blockDetail
               // AppRouter.questionDetailWithQuestionId(question.id ?? -1),
@@ -793,7 +793,7 @@ class MyQuestionsSection extends StatelessWidget {
                 createdAt: question.createdAt,
                 correctAnswers: 2,
                 wrongAnswers: 2,
-                difficulty: QuestionDifficulty.easy,
+                difficulty: Difficulty.easy,
                 onTap: () => context.push(
                   AppRouter.questionDetailWithQuestionId(question.id ?? -1),
                 ),
@@ -950,7 +950,7 @@ class QuestionCard extends StatelessWidget {
   final DateTime? createdAt;
   final int? correctAnswers;
   final int? wrongAnswers;
-  final QuestionDifficulty difficulty;
+  final Difficulty difficulty;
   final void Function()? onTap;
 
   const QuestionCard({

@@ -9,7 +9,7 @@ import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/domain/question_difficulty.dart';
+import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/features/users/user_profile_cubit.dart';
 import 'package:testabd/features/users/user_profile_state.dart';
 import 'package:testabd/router/app_router.dart';
@@ -817,7 +817,7 @@ class QuestionCard extends StatelessWidget {
   final DateTime? createdAt;
   final int? correctAnswers;
   final int? wrongAnswers;
-  final QuestionDifficulty difficulty;
+  final Difficulty difficulty;
   final void Function()? onTap;
 
   const QuestionCard({

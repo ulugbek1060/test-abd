@@ -15,6 +15,7 @@ import 'package:testabd/features/profile/bookmark_questions_screen.dart';
 import 'package:testabd/features/profile/create_block_screen.dart';
 import 'package:testabd/features/profile/create_questions_screen.dart';
 import 'package:testabd/features/profile/my_question_detail_screen.dart';
+import 'package:testabd/features/profile/new_profile_screen.dart';
 import 'package:testabd/features/profile/profile_connection_screen.dart';
 import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/profile/settings/change_password_screen.dart';
@@ -304,7 +305,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRouter.profile,
-              builder: (_, state) => ProfileScreen(),
+              builder: (_, state) => NewProfileScreen(),
             ),
           ],
         ),

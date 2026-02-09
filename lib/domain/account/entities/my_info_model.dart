@@ -97,6 +97,8 @@ class MyInfoModel extends Equatable {
     );
   }
 
+  String get fullName => "$firstName $lastName";
+
   static MyInfoModel fromResponse(MyInfoResponse? response) {
     return MyInfoModel(
       id: response?.id,

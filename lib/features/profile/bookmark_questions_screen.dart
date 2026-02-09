@@ -5,7 +5,7 @@ import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/domain/question_difficulty.dart';
+import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/features/profile/bookmark_questions_cubit.dart';
 import 'package:testabd/features/profile/bookmark_questions_state.dart';
 import 'package:testabd/router/app_router.dart';
@@ -85,7 +85,7 @@ class _QuestionsSection extends StatelessWidget {
             createdAt: question.createdAt,
             correctAnswers: 2,
             wrongAnswers: 2,
-            difficulty: QuestionDifficulty.easy,
+            difficulty: Difficulty.easy,
             onTap: () => context.push(
               AppRouter.questionDetailWithQuestionId(question.id ?? -1),
             ),
@@ -103,7 +103,7 @@ class QuestionCard extends StatelessWidget {
   final DateTime? createdAt;
   final int? correctAnswers;
   final int? wrongAnswers;
-  final QuestionDifficulty difficulty;
+  final Difficulty difficulty;
   final void Function()? onTap;
 
   const QuestionCard({
