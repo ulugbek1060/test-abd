@@ -177,15 +177,15 @@ class _ViewState extends State<_View> {
                       ),
                       const SizedBox(height: 8),
 
-                      // TODO add answer
-                      ElevatedButton(
-                        onPressed: context
-                            .read<CreateQuestionCubit>()
-                            .addAnswer,
-                        child: Text("Add answer"),
-                      ),
+                      if (state.questionType != QuestionType.trueFalse ||
+                          state.questionType != QuestionType.textQuestion)
+                        ElevatedButton(
+                          onPressed: context
+                              .read<CreateQuestionCubit>()
+                              .addAnswer,
+                          child: Text("Add answer"),
+                        ),
 
-                      // TODO answer buttons a, b, c, d
                       ...answerList(context, state),
                     ],
                   ),
@@ -196,53 +196,103 @@ class _ViewState extends State<_View> {
   }
 
   List<Widget> answerList(BuildContext context, CreateQuestionState state) {
-    return state.answers.mapIndexed((i, e) {
+    return state.answers.mapIndexed((index, element) {
       if (state.questionType == QuestionType.singleSelect) {
-        return AnswerInputTile(
-          index: i,
-          onDismissed: (v) {
-            context.read<CreateQuestionCubit>().removeAnswer(i);
-          },
-          letter: e.letter ?? "",
+        return _AnswerInputTile(
+          index: index,
+          onDismissed: (v) =>
+              context.read<CreateQuestionCubit>().removeAnswer(index),
+          isSelected: element.isCorrect,
+          onSelectItem: () => context
+              .read<CreateQuestionCubit>()
+              .onSelectItemFromSingleAnswer(index),
+          letter: element.letter ?? "",
+          onChange: (value) => context
+              .read<CreateQuestionCubit>()
+              .onChangeAnswerByIndex(index, value),
         );
       }
 
-      // if (state.questionType == QuestionType.multipleSelect) {
-      //   return MultipleAnswerTile(
-      //     index: i,
-      //     letter: e.letter ?? "",
-      //     onDismissed: (v) {
-      //       context.read<CreateQuestionCubit>().removeAnswer(i);
-      //     },
-      //     isSelected: e.isCorrect,
-      //     onChanged: (value) {
-      //       context.read<CreateQuestionCubit>().selectItemFromMultipleAnswers(
-      //         i,
-      //         value,
-      //       );
-      //     },
-      //   );
-      // }
+      if (state.questionType == QuestionType.multipleSelect) {
+        return _MultipleAnswerTile(
+          index: index,
+          letter: element.letter ?? "",
+          onDismissed: (v) {
+            context.read<CreateQuestionCubit>().removeAnswer(index);
+          },
+          isSelected: element.isCorrect,
+          onSelectItem: (value) {
+            context.read<CreateQuestionCubit>().onSelectItemFromMultipleAnswers(
+              index,
+              value,
+            );
+          },
+          onChanged: (value) => context
+              .read<CreateQuestionCubit>()
+              .onChangeAnswerByIndex(index, value),
+        );
+      }
 
-      return SizedBox.shrink();
+      if (state.questionType == QuestionType.trueFalse) {
+        return _TrueFalseCard(
+          text: "",
+          isSelected: element.isCorrect,
+          onTap: () {},
+        );
+      }
+
+      return Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Text answer'),
+            const SizedBox(height: 8),
+            TextField(
+              maxLines: null,
+              decoration: InputDecoration(
+                hintText: "Answer",
+                fillColor: Colors.transparent,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                isCollapsed: true,
+              ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ),
+      );
     }).toList();
   }
 }
 
 /// ================= ANSWER INPUTS =================
-class AnswerInputTile extends StatelessWidget {
+class _AnswerInputTile extends StatelessWidget {
   final int index;
   final ValueChanged<DismissDirection> onDismissed;
+  final bool isSelected;
+  final void Function() onSelectItem;
+  final ValueChanged<String> onChange;
   final String letter;
-  final TextEditingController? controller;
   final String hintText;
 
-  const AnswerInputTile({
+  const _AnswerInputTile({
     super.key,
     required this.index,
     required this.onDismissed,
+    required this.isSelected,
+    required this.onSelectItem,
+    required this.onChange,
     required this.letter,
-    this.controller,
     this.hintText = 'Answer',
   });
 
@@ -251,21 +301,24 @@ class AnswerInputTile extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final widget = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12),
         tileColor: colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         leading: _LetterCircle(
           letter: letter,
+          onSelectItem: onSelectItem,
+          isSelected: isSelected,
           colorScheme: colorScheme,
           textTheme: textTheme,
         ),
         title: TextField(
-          controller: controller,
+          onChanged: onChange,
           maxLines: null,
           decoration: InputDecoration(
             hintText: hintText,
+            fillColor: Colors.transparent,
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
@@ -303,83 +356,158 @@ class _LetterCircle extends StatelessWidget {
   final String letter;
   final ColorScheme colorScheme;
   final TextTheme textTheme;
+  final void Function() onSelectItem;
+  final bool isSelected;
 
   const _LetterCircle({
     required this.letter,
     required this.colorScheme,
     required this.textTheme,
+    required this.onSelectItem,
+    required this.isSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: colorScheme.primary.withOpacity(0.1),
-        shape: BoxShape.circle,
-      ),
-      child: Text(
-        letter,
-        style: textTheme.labelMedium?.copyWith(
-          color: colorScheme.onSurface,
-          fontWeight: FontWeight.w700,
+    return GestureDetector(
+      onTap: onSelectItem,
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.green
+              : colorScheme.primary.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Text(
+          letter,
+          style: textTheme.labelMedium?.copyWith(
+            color: isSelected ? Colors.white : colorScheme.onSurface,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );
   }
 }
 
-class MultipleAnswerTile extends StatelessWidget {
+class _MultipleAnswerTile extends StatelessWidget {
   final int index;
   final String letter;
   final bool isSelected;
   final ValueChanged<DismissDirection> onDismissed;
-  final ValueChanged<bool?> onChanged;
-  final TextEditingController? controller;
+  final ValueChanged<bool?> onSelectItem;
+  final ValueChanged<String> onChanged;
   final String hintText;
 
-  const MultipleAnswerTile({
+  const _MultipleAnswerTile({
     super.key,
     required this.index,
     required this.onDismissed,
     required this.letter,
     required this.isSelected,
+    required this.onSelectItem,
     required this.onChanged,
-    this.controller,
     this.hintText = 'Answer',
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    return Dismissible(
-      key: Key("$index"),
-      onDismissed: onDismissed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-          tileColor: colorScheme.surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          leading: Checkbox(value: isSelected, onChanged: onChanged),
-          title: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: hintText,
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              isCollapsed: true,
+    final widget = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        tileColor: colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        leading: Transform.scale(
+          scale: 1.1,
+          child: Checkbox(
+            value: isSelected,
+            onChanged: onSelectItem,
+            activeColor: Colors.green,
+            checkColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
+            side: const BorderSide(color: Colors.grey, width: 1),
+          ),
+        ),
+        title: TextField(
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            hintText: hintText,
+            border: InputBorder.none,
+            fillColor: Colors.transparent,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            isCollapsed: true,
+          ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+      ),
+    );
+
+    if (index > 2) {
+      return Dismissible(
+        key: Key("$index"),
+        onDismissed: onDismissed,
+        background: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
+        ),
+        child: widget,
+      );
+    }
+
+    return widget;
+  }
+}
+
+class _TrueFalseCard extends StatelessWidget {
+  final String text;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _TrueFalseCard({
+    super.key,
+    required this.text,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colorScheme.primary.withOpacity(0.1)
+              : colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected
+                ? colorScheme.primary
+                : colorScheme.outlineVariant,
+          ),
+        ),
+        child: Center(
+          child: Text(text, style: Theme.of(context).textTheme.titleMedium),
         ),
       ),
     );

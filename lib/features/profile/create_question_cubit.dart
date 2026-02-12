@@ -56,7 +56,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     );
   }
 
-  void submit(String title, String description) async {
+  Future<void> submit(String title, String description) async {
     final blockId = state.selectedBlock?.id;
     final categoryId = state.selectedCategory?.id;
 
@@ -112,31 +112,6 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     ),
   );
 
-  void removeAnswer(int index) {
-    final answers = List.of(state.answers);
-    switch (state.questionType) {
-      case QuestionType.singleSelect:
-        if (answers.length > 3) answers.removeAt(index);
-        break;
-      case QuestionType.multipleSelect:
-        if (answers.length > 3) answers.removeAt(index);
-        break;
-      case QuestionType.trueFalse:
-        break;
-      case QuestionType.textQuestion:
-        break;
-    }
-    emit(state.copyWith(answers: answers));
-  }
-
-  void toggleQuestionType(QuestionType type) {
-    emit(state.copyWith(questionType: type));
-    if (type == QuestionType.singleSelect) {
-      generateSingleSelectAnswers();
-    } else if (type == QuestionType.multipleSelect) {
-      // generateSingleAnswer();
-    }
-  }
 
   void selectQuestionType(int? value) {
     if (value == null) return;
@@ -154,15 +129,15 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
         break;
       case QuestionType.multipleSelect:
         answers = List.of([
-          AnswerItemModel(letter: "", isCorrect: true),
-          AnswerItemModel(letter: "", isCorrect: false),
-          AnswerItemModel(letter: "", isCorrect: false),
+          AnswerItemModel(letter: "A", isCorrect: true),
+          AnswerItemModel(letter: "B", isCorrect: false),
+          AnswerItemModel(letter: "C", isCorrect: false),
         ]);
         break;
       case QuestionType.trueFalse:
         answers = List.of([
-          AnswerItemModel(letter: "", isCorrect: true),
-          AnswerItemModel(letter: "", isCorrect: false),
+          AnswerItemModel(letter: "A", isCorrect: true),
+          AnswerItemModel(letter: "B", isCorrect: false),
         ]);
         break;
       case QuestionType.textQuestion:
@@ -230,7 +205,24 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     emit(state.copyWith(answers: answers));
   }
 
-  void selectItemFromMultipleAnswers(int index, bool? value) {
+  void removeAnswer(int index) {
+    final answers = List.of(state.answers);
+    switch (state.questionType) {
+      case QuestionType.singleSelect:
+        if (answers.length > 3) answers.removeAt(index);
+        break;
+      case QuestionType.multipleSelect:
+        if (answers.length > 3) answers.removeAt(index);
+        break;
+      case QuestionType.trueFalse:
+        break;
+      case QuestionType.textQuestion:
+        break;
+    }
+    emit(state.copyWith(answers: answers));
+  }
+
+  void onSelectItemFromMultipleAnswers(int index, bool? value) {
     final answers = List.of(state.answers);
     answers[index] = answers[index].copyWith(isCorrect: value);
     int checker = 0;
@@ -240,5 +232,23 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       }
     }
     if (checker > 0) emit(state.copyWith(answers: answers));
+  }
+
+  void onSelectItemFromSingleAnswer(int index) {
+    final answers = List.of(state.answers);
+    for (var i = 0; i < answers.length; i++) {
+      if (index == i) {
+        answers[i] = answers[i].copyWith(isCorrect: true);
+      } else {
+        answers[i] = answers[i].copyWith(isCorrect: false);
+      }
+    }
+    emit(state.copyWith(answers: answers));
+  }
+
+  void onChangeAnswerByIndex(int index, String value) {
+    final answers = List.of(state.answers);
+    answers[index] = answers[index].copyWith(answerText: value);
+    emit(state.copyWith(answers: answers));
   }
 }
