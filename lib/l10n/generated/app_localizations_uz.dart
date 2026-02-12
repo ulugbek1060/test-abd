@@ -67,4 +67,16 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get knowledge_level_expert => 'Эксперт';
+
+  @override
+  String get singleSelect => 'Bitta tanlov';
+
+  @override
+  String get multipleSelect => 'Bir nechta tanlov';
+
+  @override
+  String get trueFalse => 'To‘g‘ri yoki Noto‘g‘ri';
+
+  @override
+  String get textQuestion => 'Matnli javob';
 }

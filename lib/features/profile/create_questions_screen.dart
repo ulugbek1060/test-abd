@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'dart:ui';
-
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/features/profile/create_question_cubit.dart';
@@ -13,7 +13,7 @@ class CreateQuestionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => locator<CreateQuestionCubit>(),
+    create: (_) => locator<CreateQuestionCubit>()..fetchData(),
     child: const _View(),
   );
 }
@@ -48,13 +48,10 @@ class _ViewState extends State<_View> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
     return BlocBuilder<CreateQuestionCubit, CreateQuestionState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(title: const Text('Create Block')),
-
           bottomNavigationBar: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -82,145 +79,310 @@ class _ViewState extends State<_View> {
 
           body: state.isLoading
               ? ProgressView()
-              : Stack(
-                  children: [
-                    // Background Image
-                    Image.network(
-                      'https://picsum.photos/seed/$randomSeed/${size.width.toInt()}/${size.height.toInt()}',
-                      fit: BoxFit.cover,
-                      width: size.width,
-                      height: size.height,
-                    ),
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Category
+                      _DropdownField(
+                        label: "Category",
+                        hint: "Select category",
+                        value: state.selectedCategory?.id,
+                        items: state.categories
+                            .map(
+                              (e) => _DropdownItem(
+                                id: e.id ?? 0,
+                                name: e.title ?? '',
+                              ),
+                            )
+                            .toList(),
+                        onChanged: context
+                            .read<CreateQuestionCubit>()
+                            .selectCategory,
+                      ),
 
-                    // Blur Layer
-                    Positioned.fill(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                        child: Container(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surface.withOpacity(0.5),
+                      /// Category
+                      _DropdownField(
+                        label: "Blocks",
+                        hint: "Select block",
+                        value: state.selectedBlock?.id,
+                        items: state.blocks
+                            .map(
+                              (e) => _DropdownItem(
+                                id: e.id ?? 0,
+                                name: e.title ?? "",
+                              ),
+                            )
+                            .toList(),
+                        onChanged: context
+                            .read<CreateQuestionCubit>()
+                            .selectBlock,
+                      ),
+
+                      /// Question type
+                      _DropdownField(
+                        label: "Question type",
+                        hint: "Select category",
+                        value: 0,
+                        items: QuestionType.values
+                            .mapIndexed(
+                              (i, e) => _DropdownItem(
+                                id: i,
+                                name: e.getName(context),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: context
+                            .read<CreateQuestionCubit>()
+                            .selectQuestionType,
+                      ),
+
+                      /// Description
+                      Text(
+                        "Block description",
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 8),
 
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// Category
-                          _DropdownField(
-                            label: "Category",
-                            hint: "Select category",
-                            value: state.selectedCategory?.id,
-                            items: state.categories
-                                .map(
-                                  (e) => _DropdownItem(
-                                    id: e.id ?? 0,
-                                    name: e.title ?? '',
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: context
-                                .read<CreateQuestionCubit>()
-                                .selectCategory,
-                          ),
-
-                          /// Category
-                          _DropdownField(
-                            label: "Blocks",
-                            hint: "Select block",
-                            value: state.selectedBlock?.id,
-                            items: state.blocks
-                                .map(
-                                  (e) => _DropdownItem(
-                                    id: e.id ?? 0,
-                                    name: e.title ?? "",
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: context
-                                .read<CreateQuestionCubit>()
-                                .selectBlock,
-                          ),
-
-                          /// Category
-                          _DropdownField(
-                            label: "Category",
-                            hint: "Select category",
-                            value: 0,
-                            items: const [
-                              _DropdownItem(id: 0, name: "Category 1"),
-                              _DropdownItem(id: 1, name: "Category 2"),
-                              _DropdownItem(id: 2, name: "Category 3"),
-                            ],
-                            onChanged: (v) {},
-                          ),
-
-                          /// Description
-                          Text(
-                            "Block description",
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
+                      SizedBox(
+                        height: 150,
+                        child: TextFormField(
+                          controller: _questionDescription,
+                          expands: true,
+                          maxLines: null,
+                          textAlignVertical: TextAlignVertical.top,
+                          style: TextStyle(color: theme.colorScheme.onSurface),
+                          decoration: InputDecoration(
+                            hintText: "Describe your block",
+                            filled: true,
+                            contentPadding: const EdgeInsets.all(12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
                             ),
                           ),
-                          const SizedBox(height: 8),
-
-                          SizedBox(
-                            height: 150,
-                            child: TextFormField(
-                              controller: _questionDescription,
-                              expands: true,
-                              maxLines: null,
-                              textAlignVertical: TextAlignVertical.top,
-                              style: TextStyle(
-                                color: theme.colorScheme.onSurface,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: "Describe your block",
-                                filled: true,
-                                contentPadding: const EdgeInsets.all(12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          /// Access type
-                          Text(
-                            "Access type",
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          // TODO add answer
-                          ElevatedButton(
-                            onPressed: () {
-                              context.read<CreateQuestionCubit>().addAnswer();
-                            },
-                            child: Text("Add answer"),
-                          ),
-
-                          // TODO answer buttons a, b, c, d
-                          ...answerList(state),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+
+                      /// Access type
+                      Text(
+                        "Access type",
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // TODO add answer
+                      ElevatedButton(
+                        onPressed: context
+                            .read<CreateQuestionCubit>()
+                            .addAnswer,
+                        child: Text("Add answer"),
+                      ),
+
+                      // TODO answer buttons a, b, c, d
+                      ...answerList(context, state),
+                    ],
+                  ),
                 ),
         );
       },
     );
   }
 
-  List<Widget> answerList(CreateQuestionState state) {
-    return state.answers.map((e) => Text(e.letter ?? 'answer')).toList();
+  List<Widget> answerList(BuildContext context, CreateQuestionState state) {
+    return state.answers.mapIndexed((i, e) {
+      if (state.questionType == QuestionType.singleSelect) {
+        return AnswerInputTile(
+          index: i,
+          onDismissed: (v) {
+            context.read<CreateQuestionCubit>().removeAnswer(i);
+          },
+          letter: e.letter ?? "",
+        );
+      }
+
+      // if (state.questionType == QuestionType.multipleSelect) {
+      //   return MultipleAnswerTile(
+      //     index: i,
+      //     letter: e.letter ?? "",
+      //     onDismissed: (v) {
+      //       context.read<CreateQuestionCubit>().removeAnswer(i);
+      //     },
+      //     isSelected: e.isCorrect,
+      //     onChanged: (value) {
+      //       context.read<CreateQuestionCubit>().selectItemFromMultipleAnswers(
+      //         i,
+      //         value,
+      //       );
+      //     },
+      //   );
+      // }
+
+      return SizedBox.shrink();
+    }).toList();
+  }
+}
+
+/// ================= ANSWER INPUTS =================
+class AnswerInputTile extends StatelessWidget {
+  final int index;
+  final ValueChanged<DismissDirection> onDismissed;
+  final String letter;
+  final TextEditingController? controller;
+  final String hintText;
+
+  const AnswerInputTile({
+    super.key,
+    required this.index,
+    required this.onDismissed,
+    required this.letter,
+    this.controller,
+    this.hintText = 'Answer',
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final widget = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        tileColor: colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        leading: _LetterCircle(
+          letter: letter,
+          colorScheme: colorScheme,
+          textTheme: textTheme,
+        ),
+        title: TextField(
+          controller: controller,
+          maxLines: null,
+          decoration: InputDecoration(
+            hintText: hintText,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            isCollapsed: true,
+          ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+      ),
+    );
+    if (index > 2) {
+      return Dismissible(
+        background: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        key: Key("$index"),
+        onDismissed: onDismissed,
+        child: widget,
+      );
+    }
+    return widget;
+  }
+}
+
+class _LetterCircle extends StatelessWidget {
+  final String letter;
+  final ColorScheme colorScheme;
+  final TextTheme textTheme;
+
+  const _LetterCircle({
+    required this.letter,
+    required this.colorScheme,
+    required this.textTheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: colorScheme.primary.withOpacity(0.1),
+        shape: BoxShape.circle,
+      ),
+      child: Text(
+        letter,
+        style: textTheme.labelMedium?.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+class MultipleAnswerTile extends StatelessWidget {
+  final int index;
+  final String letter;
+  final bool isSelected;
+  final ValueChanged<DismissDirection> onDismissed;
+  final ValueChanged<bool?> onChanged;
+  final TextEditingController? controller;
+  final String hintText;
+
+  const MultipleAnswerTile({
+    super.key,
+    required this.index,
+    required this.onDismissed,
+    required this.letter,
+    required this.isSelected,
+    required this.onChanged,
+    this.controller,
+    this.hintText = 'Answer',
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return Dismissible(
+      key: Key("$index"),
+      onDismissed: onDismissed,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          tileColor: colorScheme.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          leading: Checkbox(value: isSelected, onChanged: onChanged),
+          title: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              isCollapsed: true,
+            ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

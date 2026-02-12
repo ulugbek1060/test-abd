@@ -67,4 +67,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get knowledge_level_expert => 'Эксперт';
+
+  @override
+  String get singleSelect => 'Один вариант';
+
+  @override
+  String get multipleSelect => 'Несколько вариантов';
+
+  @override
+  String get trueFalse => 'Верно или Неверно';
+
+  @override
+  String get textQuestion => 'Текстовый ответ';
 }

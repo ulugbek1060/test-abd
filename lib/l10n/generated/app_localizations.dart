@@ -219,6 +219,30 @@ abstract class AppLocalizations {
   /// In uz, this message translates to:
   /// **'Эксперт'**
   String get knowledge_level_expert;
+
+  /// No description provided for @singleSelect.
+  ///
+  /// In uz, this message translates to:
+  /// **'Bitta tanlov'**
+  String get singleSelect;
+
+  /// No description provided for @multipleSelect.
+  ///
+  /// In uz, this message translates to:
+  /// **'Bir nechta tanlov'**
+  String get multipleSelect;
+
+  /// No description provided for @trueFalse.
+  ///
+  /// In uz, this message translates to:
+  /// **'To‘g‘ri yoki Noto‘g‘ri'**
+  String get trueFalse;
+
+  /// No description provided for @textQuestion.
+  ///
+  /// In uz, this message translates to:
+  /// **'Matnli javob'**
+  String get textQuestion;
 }
 
 class _AppLocalizationsDelegate

@@ -19,4 +19,6 @@ abstract class CreateQuestionState with _$CreateQuestionState {
     CategoryModel? selectedCategory,
     @Default(QuestionType.singleSelect) QuestionType questionType,
   }) = _CreateQuestionState;
+
 }
+

@@ -19,5 +19,9 @@
   "knowledge_level_basic": "Basic",
   "knowledge_level_intermediate": "Intermediate",
   "knowledge_level_advanced": "Advanced",
-  "knowledge_level_expert": "Expert"
+  "knowledge_level_expert": "Expert",
+  "singleSelect": "Single select",
+  "multipleSelect": "Multi select",
+  "trueFalse" : "True or False",
+  "textQuestion": "Text answer"
 }

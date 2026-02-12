@@ -670,6 +670,7 @@ class _QuestionsSection extends StatelessWidget {
                   top: index == 0 ? 16 : 0,
                 ),
                 child: ListTile(
+                  onTap: () => context.push(AppRouter.createQuestions),
                   tileColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

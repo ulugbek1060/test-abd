@@ -1,3 +1,6 @@
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
+
 enum QuestionType {
   singleSelect,
   multipleSelect,
@@ -29,6 +32,21 @@ enum QuestionType {
         return QuestionType.textQuestion;
       default:
         return null;
+    }
+  }
+}
+
+extension QuestionTypeEnumX on QuestionType {
+  String getName(BuildContext context) {
+    switch (this) {
+      case QuestionType.singleSelect:
+        return context.l10n.singleSelect;
+      case QuestionType.multipleSelect:
+        return context.l10n.multipleSelect;
+      case QuestionType.trueFalse:
+        return context.l10n.trueFalse;
+      case QuestionType.textQuestion:
+        return context.l10n.textQuestion;
     }
   }
 }

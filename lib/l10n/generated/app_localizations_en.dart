@@ -67,4 +67,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get knowledge_level_expert => 'Expert';
+
+  @override
+  String get singleSelect => 'Single select';
+
+  @override
+  String get multipleSelect => 'Multi select';
+
+  @override
+  String get trueFalse => 'True or False';
+
+  @override
+  String get textQuestion => 'Text answer';
 }

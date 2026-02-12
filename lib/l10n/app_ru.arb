@@ -19,5 +19,9 @@
   "knowledge_level_basic": "Базовый",
   "knowledge_level_intermediate": "Средний",
   "knowledge_level_advanced": "Продвинутый",
-  "knowledge_level_expert": "Эксперт"
+  "knowledge_level_expert": "Эксперт",
+  "singleSelect": "Один вариант",
+  "multipleSelect": "Несколько вариантов",
+  "trueFalse": "Верно или Неверно",
+  "textQuestion": "Текстовый ответ"
 }
