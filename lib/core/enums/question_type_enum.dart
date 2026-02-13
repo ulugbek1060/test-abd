@@ -1,4 +1,4 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:testabd/l10n/l10n_extension.dart';
 
 enum QuestionType {
@@ -7,7 +7,7 @@ enum QuestionType {
   trueFalse,
   textQuestion;
 
-  static String fromEnum(QuestionType type) {
+  static String fromEnum(QuestionType? type) {
     switch (type) {
       case QuestionType.singleSelect:
         return "single";
@@ -17,6 +17,8 @@ enum QuestionType {
         return "true_false";
       case QuestionType.textQuestion:
         return "text";
+      default:
+        return "single";
     }
   }
 

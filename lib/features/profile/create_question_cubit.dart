@@ -6,8 +6,8 @@ import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
-import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
+import 'package:testabd/domain/entity/create_question_data_arg.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/create_question_state.dart';
@@ -19,7 +19,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
 
   CreateQuestionCubit(this._quizRepository, this._appMessageHandler)
     : super(CreateQuestionState()) {
-    generateSingleSelectAnswers();
+    selectQuestionType(0);
   }
 
   Future<void> fetchData() async {
@@ -56,7 +56,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     );
   }
 
-  Future<void> submit(String title, String description) async {
+  Future<void> submit(String question) async {
     final blockId = state.selectedBlock?.id;
     final categoryId = state.selectedCategory?.id;
 
@@ -64,7 +64,6 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       _appMessageHandler.handleDialog(UnknownException("Category id is null"));
       return;
     }
-
     if (blockId == null) {
       _appMessageHandler.handleDialog(UnknownException("Block id is null"));
       return;
@@ -72,21 +71,21 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
 
     emit(state.copyWith(isLoading: true));
 
-    final result = await _quizRepository.createQuestion(
-      blockId: blockId,
-      questionText: description,
-      questionType: state.questionType,
+    final model = CreateQuestionModel(
+      test: blockId,
+      questionText: question,
       categoryId: categoryId,
+      questionType: state.questionType,
       answers: state.answers,
     );
-
+    final result = await _quizRepository.createQuestion(model: model);
     result.fold(
       (e) {
         emit(state.copyWith(error: e.message, isLoading: false));
         _appMessageHandler.handleDialog(e);
       },
       (value) {
-        // emit(state.copyWith(isLoading: false, question: value));
+        emit(state.copyWith(isLoading: false, question: value));
         successMessage();
       },
     );
@@ -95,7 +94,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
   void reset() => emit(CreateQuestionState());
 
   void successMessage() {
-    _appMessageHandler.handleDialog(
+    _appMessageHandler.handleSnackBar(
       SuccessException("Question created successfully"),
     );
   }
@@ -111,7 +110,6 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       selectedBlock: state.blocks.firstWhereOrNull((e) => e.id == v),
     ),
   );
-
 
   void selectQuestionType(int? value) {
     if (value == null) return;
@@ -146,37 +144,6 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     }
 
     emit(state.copyWith(questionType: type, answers: answers));
-  }
-
-  void generateSingleSelectAnswers() async {
-    final answers = List.of(state.answers);
-    answers.clear();
-    answers.add(AnswerItemModel(answerText: "", letter: "A", isCorrect: false));
-    answers.add(AnswerItemModel(answerText: "", letter: "B", isCorrect: false));
-    answers.add(AnswerItemModel(answerText: "", letter: "C", isCorrect: false));
-    emit(state.copyWith(answers: answers));
-  }
-
-  void generateMultipleSelectAnswers() {
-    final answers = List.of(state.answers);
-    answers.clear();
-    answers.add(AnswerItemModel(answerText: "", letter: "A", isCorrect: false));
-    emit(state.copyWith(answers: answers));
-  }
-
-  void generateTrueFalse() {
-    final answers = List.of(state.answers);
-    answers.clear();
-    answers.add(AnswerItemModel(answerText: "", letter: "A", isCorrect: false));
-    answers.add(AnswerItemModel(answerText: "", letter: "B", isCorrect: false));
-    emit(state.copyWith(answers: answers));
-  }
-
-  void generateTextAnswer() {
-    final answers = List.of(state.answers);
-    answers.clear();
-    answers.add(AnswerItemModel(answerText: "", letter: "A", isCorrect: false));
-    emit(state.copyWith(answers: answers));
   }
 
   void addAnswer() {

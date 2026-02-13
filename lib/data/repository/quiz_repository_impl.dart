@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
+import 'package:testabd/data/remote_source/quiz/models/create_question_data_request.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
 import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
@@ -10,6 +11,7 @@ import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
+import 'package:testabd/domain/entity/create_question_data_arg.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
@@ -163,20 +165,26 @@ class QuizRepositoryImpl extends QuizRepository {
 
   @override
   Future<Either<AppException, QuestionModel>> createQuestion({
-    required int blockId,
-    required String questionText,
-    required QuestionType questionType,
-    required int categoryId,
-    required List<AnswerItemModel> answers,
+    required CreateQuestionModel model,
   }) async {
     try {
-      final result = await _quizSource.createQuestion(
-        blockId,
-        questionText,
-        questionType,
-        categoryId,
-        answers,
+      final data = CreateQuestionDataRequest(
+        test: model.test,
+        questionText: model.questionText,
+        questionType: QuestionType.fromEnum(model.questionType),
+        orderIndex: model.orderIndex,
+        categoryId: model.categoryId,
+        answers: model.answers
+            ?.map(
+              (e) => CreateAnswerRequest(
+                letter: e.letter,
+                answerText: e.answerText,
+                isCorrect: e.isCorrect,
+              ),
+            )
+            .toList(),
       );
+      final result = await _quizSource.createQuestion(data);
       return Right(QuestionModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);

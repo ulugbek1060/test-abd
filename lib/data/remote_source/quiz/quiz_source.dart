@@ -5,6 +5,7 @@ import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/remote_source/quiz/models/answer_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/block_detail_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/category_response.dart';
+import 'package:testabd/data/remote_source/quiz/models/create_question_data_request.dart';
 import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
@@ -62,13 +63,7 @@ abstract class QuizSource {
     AccessType accessType,
   );
 
-  Future<QuestionResponse> createQuestion(
-    int blockId,
-    String questionText,
-    QuestionType questionType,
-    int categoryId,
-    List<AnswerItemModel> answers,
-  );
+  Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
 
   Future<BlockDetailResponse> getBlockById(int id);
 }
@@ -272,47 +267,10 @@ class QuizSourceImpl implements QuizSource {
 
   @override
   Future<QuestionResponse> createQuestion(
-    int blockId,
-    String questionText,
-    QuestionType questionType,
-    int categoryId,
-    List<AnswerItemModel> answers,
+    CreateQuestionDataRequest data,
   ) async {
-    // {
-    // "test" : 143,
-    // "question_text" : "qwerty",
-    // "question_type" : "single",
-    // "order_index" : 1770360737846,
-    // "category_id" : 34,
-    // "answers" : [
-    //    {
-    //     "letter" : "A",
-    //     "answer_text" : "qwert",
-    //     "is_correct" : false
-    //    },
-    //    {
-    //      "letter" : "B",
-    //      "answer_text" : "qwert",
-    //      "is_correct" : true
-    //     },
-    //     {
-    //      "letter" : "D",
-    //      "answer_text" : "qwert",
-    //      "is_correct" : false
-    //      }
-    //  ]
-    // }
     try {
-      final response = await _dio.post(
-        '/quiz/tests/',
-        data: {
-          "test": blockId,
-          "question_text": questionText,
-          "question_type": QuestionType.fromEnum(questionType),
-          "category_id": categoryId,
-          "answers": answers.map((e) => e.toJson()).toList(),
-        },
-      );
+      final response = await _dio.post('/quiz/questions/', data: data.toJson());
       return QuestionResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();

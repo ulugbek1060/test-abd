@@ -26,21 +26,18 @@ class _View extends StatefulWidget {
 }
 
 class _ViewState extends State<_View> {
-  late final TextEditingController _questionTitle;
   late final TextEditingController _questionDescription;
   int randomSeed = 0;
 
   @override
   void initState() {
     randomSeed = Random().nextInt(100);
-    _questionTitle = TextEditingController();
     _questionDescription = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _questionTitle.dispose();
     _questionDescription.dispose();
     super.dispose();
   }
@@ -59,9 +56,9 @@ class _ViewState extends State<_View> {
                 height: 52,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // submit logic
-                  },
+                  onPressed: () => context.read<CreateQuestionCubit>().submit(
+                    _questionDescription.text,
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     shape: RoundedRectangleBorder(
