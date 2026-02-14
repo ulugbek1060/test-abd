@@ -6,14 +6,19 @@ import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/create_block_state.dart';
+import 'package:testabd/features/profile/profile_cubit.dart';
 
 @injectable
 class CreateBlockCubit extends Cubit<CreateBlockState> {
   final QuizRepository _quizRepository;
   final AppMessageHandler _messageHandler;
+  final UpdateListener _updateListener;
 
-  CreateBlockCubit(this._quizRepository, this._messageHandler)
-    : super(CreateBlockState());
+  CreateBlockCubit(
+    this._quizRepository,
+    this._messageHandler,
+    @Named.from(ProfileBlockUpdater) this._updateListener,
+  ) : super(CreateBlockState());
 
   Future<void> reset() async {
     emit(CreateBlockState());
@@ -65,6 +70,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       },
       (value) {
         emit(state.copyWith(isLoading: false, block: value));
+        _updateListener.onUpdate();
       },
     );
   }

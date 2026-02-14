@@ -1,25 +1,21 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
-import 'package:testabd/core/utils/app_mode_service.dart';
 import 'package:testabd/domain/account/account_repository.dart';
-import 'package:testabd/domain/auth/auth_repository.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/profile_state.dart';
-import 'package:testabd/main.dart';
 
 @injectable
 class ProfileCubit extends Cubit<ProfileState> {
   final AccountRepository _accountRepository;
   final QuizRepository _quizRepository;
   final AppMessageHandler _messageHandler;
+  final UpdateListener _questionsUpdateListener;
+  final UpdateListener _blocksUpdateListener;
 
   late final StreamSubscription _themeSubscription;
   late final StreamSubscription _myInfoSubscription;
@@ -30,6 +26,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     this._accountRepository,
     this._quizRepository,
     this._messageHandler,
+    @Named.from(ProfileQuestionsUpdater) this._questionsUpdateListener,
+    @Named.from(ProfileBlockUpdater) this._blocksUpdateListener,
   ) : super(ProfileState()) {
     // listen the my info subscription
     _myInfoSubscription = _accountRepository.userInfoStream.listen((event) {
@@ -38,6 +36,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       // emit state
       emit(state.copyWith(myInfoModel: event));
     });
+
+    _questionsUpdateListener.listen(() => fetchQuestionsByPage());
+    _blocksUpdateListener.listen(() => fetchBlocks());
 
     load();
   }
@@ -241,5 +242,30 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
   }
-
 }
+
+abstract class UpdateListener {
+  void onUpdate();
+  void listen(void Function() param0);
+}
+
+@named
+@Singleton(as: UpdateListener)
+class ProfileQuestionsUpdater implements UpdateListener {
+  late final void Function() listener;
+  @override
+  void listen(void Function() param0) => listener = param0;
+  @override
+  void onUpdate() => listener.call();
+}
+
+@named
+@Singleton(as: UpdateListener)
+class ProfileBlockUpdater implements UpdateListener {
+  late final void Function() listener;
+  @override
+  void listen(void Function() param0) => listener = param0;
+  @override
+  void onUpdate() => listener.call();
+}
+

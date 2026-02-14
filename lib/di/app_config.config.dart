@@ -41,6 +41,7 @@ import '../features/home/leaderboard_cubit.dart' as _i279;
 import '../features/profile/block_detail_cubit.dart' as _i952;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
+import '../features/profile/create_question_cubit.dart' as _i84;
 import '../features/profile/profile_connection_cubit.dart' as _i570;
 import '../features/profile/profile_cubit.dart' as _i760;
 import '../features/profile/settings/change_pswd_cubit.dart' as _i186;
@@ -74,6 +75,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i528.PrettyDioLogger>(
         () => appModule.providePrettyDioLogger());
     gh.singleton<_i877.AppMessageHandler>(() => _i877.AppMessenger());
+    gh.singleton<_i760.UpdateListener>(
+      () => _i760.ProfileBlockUpdater(),
+      instanceName: 'ProfileBlockUpdater',
+    );
     gh.lazySingleton<_i244.ConnectionFollowEventListener>(
       () => _i244.ProfileFollowListener(),
       instanceName: 'ProfileFollowListener',
@@ -93,6 +98,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i792.SharedPrefsTokenService(gh<_i460.SharedPreferences>()));
     gh.singleton<_i456.LanguageService>(
         () => _i456.LanguageServiceImpl(gh<_i460.SharedPreferences>()));
+    gh.singleton<_i760.UpdateListener>(
+      () => _i760.ProfileQuestionsUpdater(),
+      instanceName: 'ProfileQuestionsUpdater',
+    );
     gh.lazySingleton<_i555.AppSettingsService>(
         () => _i555.AppSettingsServiceImpl(gh<_i460.SharedPreferences>()));
     gh.singleton<_i371.SessionService>(
@@ -137,11 +146,12 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
-    gh.factory<_i137.BookmarkQuestionsCubit>(() => _i137.BookmarkQuestionsCubit(
+    gh.factory<_i341.CreateBlockCubit>(() => _i341.CreateBlockCubit(
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
         ));
-    gh.factory<_i341.CreateBlockCubit>(() => _i341.CreateBlockCubit(
+    gh.factory<_i137.BookmarkQuestionsCubit>(() => _i137.BookmarkQuestionsCubit(
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
@@ -154,6 +164,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i36.ForgotPswdCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
+    gh.factory<_i84.CreateQuestionCubit>(() => _i84.CreateQuestionCubit(
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
+        ));
     gh.factory<_i163.RegisterCubit>(
         () => _i163.RegisterCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i958.LoginCubit>(
@@ -185,6 +200,13 @@ extension GetItInjectableX on _i174.GetIt {
               instanceName: 'ProfileFollowListener'),
           gh<_i877.AppMessageHandler>(),
         ));
+    gh.factory<_i760.ProfileCubit>(() => _i760.ProfileCubit(
+          gh<_i575.AccountRepository>(),
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
+        ));
     gh.factory<_i279.LeaderboardCubit>(() => _i279.LeaderboardCubit(
           gh<_i575.AccountRepository>(),
           gh<_i575.LeaderboardRepository>(),
@@ -202,11 +224,6 @@ extension GetItInjectableX on _i174.GetIt {
               instanceName: 'ConnectionFollowListener'),
           gh<_i244.ConnectionFollowEventListener>(
               instanceName: 'UserFollowListener'),
-        ));
-    gh.factory<_i760.ProfileCubit>(() => _i760.ProfileCubit(
-          gh<_i575.AccountRepository>(),
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
         ));
     gh.factory<_i688.PersonalInfoCubit>(() => _i688.PersonalInfoCubit(
           gh<_i575.AccountRepository>(),

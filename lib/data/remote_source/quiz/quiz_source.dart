@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/remote_source/quiz/models/answer_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/block_detail_response.dart';
@@ -15,8 +14,6 @@ import 'package:testabd/data/remote_source/quiz/models/random_questions_response
 import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 import 'package:testabd/core/enums/access_enum.dart';
-import 'package:testabd/domain/entity/answer_item_model.dart';
-
 import 'models/block_questions_response.dart';
 
 abstract class QuizSource {
@@ -270,7 +267,10 @@ class QuizSourceImpl implements QuizSource {
     CreateQuestionDataRequest data,
   ) async {
     try {
-      final response = await _dio.post('/quiz/questions/', data: data.toJson());
+      final response = await _dio.post(
+        '/quiz/questions/',
+        data: data.toJson(),
+      );
       return QuestionResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();

@@ -4,7 +4,6 @@ import 'package:rxdart/rxdart.dart';
 class UserFollowEvent {
   final int userId;
   final bool isFollowing;
-
   UserFollowEvent(this.userId, this.isFollowing);
 }
 
@@ -17,8 +16,7 @@ abstract class ConnectionFollowEventListener {
 @named
 @LazySingleton(as: ConnectionFollowEventListener, dispose: disposeMethod)
 class ConnectionFollowListener implements ConnectionFollowEventListener {
-  final PublishSubject<UserFollowEvent> _followSubject =
-      PublishSubject<UserFollowEvent>();
+  final PublishSubject<UserFollowEvent> _followSubject = PublishSubject<UserFollowEvent>();
 
   @override
   Stream<UserFollowEvent> get followStream => _followSubject.stream;

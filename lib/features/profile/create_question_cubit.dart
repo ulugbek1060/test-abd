@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show Cubit;
@@ -11,14 +13,21 @@ import 'package:testabd/domain/entity/create_question_data_arg.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/create_question_state.dart';
+import 'package:testabd/features/profile/profile_cubit.dart';
 
 @injectable
 class CreateQuestionCubit extends Cubit<CreateQuestionState> {
   final QuizRepository _quizRepository;
   final AppMessageHandler _appMessageHandler;
+  final UpdateListener _updateListener;
+  late final Random _random;
 
-  CreateQuestionCubit(this._quizRepository, this._appMessageHandler)
-    : super(CreateQuestionState()) {
+  CreateQuestionCubit(
+    this._quizRepository,
+    this._appMessageHandler,
+    @Named.from(ProfileQuestionsUpdater) this._updateListener,
+  ) : super(CreateQuestionState()) {
+    _random = Random();
     selectQuestionType(0);
   }
 
@@ -75,6 +84,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       test: blockId,
       questionText: question,
       categoryId: categoryId,
+      orderIndex: _random.nextInt(100),
       questionType: state.questionType,
       answers: state.answers,
     );
@@ -97,6 +107,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     _appMessageHandler.handleSnackBar(
       SuccessException("Question created successfully"),
     );
+    _updateListener.onUpdate();
   }
 
   void selectCategory(int? v) => emit(
@@ -122,14 +133,14 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
         answers = List.of([
           AnswerItemModel(letter: "A", isCorrect: true),
           AnswerItemModel(letter: "B", isCorrect: false),
-          AnswerItemModel(letter: "C", isCorrect: false),
+          AnswerItemModel(letter: "D", isCorrect: false),
         ]);
         break;
       case QuestionType.multipleSelect:
         answers = List.of([
           AnswerItemModel(letter: "A", isCorrect: true),
           AnswerItemModel(letter: "B", isCorrect: false),
-          AnswerItemModel(letter: "C", isCorrect: false),
+          AnswerItemModel(letter: "D", isCorrect: false),
         ]);
         break;
       case QuestionType.trueFalse:
@@ -139,7 +150,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
         ]);
         break;
       case QuestionType.textQuestion:
-        answers = List.of([AnswerItemModel(letter: "", isCorrect: false)]);
+        answers = List.of([AnswerItemModel(letter: "A", isCorrect: false)]);
         break;
     }
 
@@ -152,7 +163,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     switch (state.questionType) {
       case QuestionType.singleSelect:
         if (state.answers.length == 3) {
-          answers.add(AnswerItemModel(letter: "D", isCorrect: false));
+          answers.add(AnswerItemModel(letter: "C", isCorrect: false));
         }
         if (state.answers.length == 4) {
           answers.add(AnswerItemModel(letter: "E", isCorrect: false));
@@ -160,7 +171,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
         break;
       case QuestionType.multipleSelect:
         if (state.answers.length < 4) {
-          answers.add(AnswerItemModel(letter: "", isCorrect: false));
+          answers.add(AnswerItemModel(letter: "C", isCorrect: false));
         }
         break;
       case QuestionType.trueFalse:
