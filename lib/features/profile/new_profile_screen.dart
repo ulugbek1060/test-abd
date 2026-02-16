@@ -704,6 +704,11 @@ class _QuestionsSection extends StatelessWidget {
                 top: index == 0 ? 16 : 0,
               ),
               child: ListTile(
+                onTap: () => context.push(
+                  AppRouter.questionDetailWithQuestionId(
+                    state.questions[index].id,
+                  ),
+                ),
                 tileColor: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

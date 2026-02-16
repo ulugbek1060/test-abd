@@ -42,6 +42,7 @@ import '../features/profile/block_detail_cubit.dart' as _i952;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
+import '../features/profile/my_question_detail_cubit.dart' as _i537;
 import '../features/profile/profile_connection_cubit.dart' as _i570;
 import '../features/profile/profile_cubit.dart' as _i760;
 import '../features/profile/settings/change_pswd_cubit.dart' as _i186;
@@ -146,11 +147,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
-    gh.factory<_i341.CreateBlockCubit>(() => _i341.CreateBlockCubit(
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-          gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
-        ));
     gh.factory<_i137.BookmarkQuestionsCubit>(() => _i137.BookmarkQuestionsCubit(
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
@@ -159,6 +155,16 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i65.AccountSource>(),
           gh<_i656.MyInfoHiveService>(),
           gh<_i259.WsLeaderboardSource>(),
+        ));
+    gh.factoryParam<_i341.CreateBlockCubit, int?, dynamic>((
+      blockId,
+      _,
+    ) =>
+        _i341.CreateBlockCubit(
+          blockId,
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
         ));
     gh.factory<_i36.ForgotPswdCubit>(
         () => _i36.ForgotPswdCubit(gh<_i893.AuthRepository>()));
@@ -176,6 +182,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i186.ChangePswdCubit>(() => _i186.ChangePswdCubit(
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factoryParam<_i537.MyQuestionDetailCubit, int, dynamic>((
+      questionId,
+      _,
+    ) =>
+        _i537.MyQuestionDetailCubit(
+          questionId,
+          gh<_i877.AppMessageHandler>(),
+          gh<_i156.QuizRepository>(),
         ));
     gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
       username,

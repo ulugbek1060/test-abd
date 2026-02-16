@@ -141,7 +141,7 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, MyBlockModel>> createBlock({
+  Future<Either<AppException, BlockDetailModel>> createBlock({
     required String title,
     required String description,
     required int categoryId,
@@ -154,7 +154,7 @@ class QuizRepositoryImpl extends QuizRepository {
         categoryId,
         accessType,
       );
-      return Right(MyBlockModel.fromResponse(result));
+      return Right(BlockDetailModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

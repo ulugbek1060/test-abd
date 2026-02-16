@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MyQuestionDetailScreen extends StatefulWidget {
-  const MyQuestionDetailScreen({super.key});
+  final int? questionId;
+
+  const MyQuestionDetailScreen({super.key, this.questionId});
 
   @override
   State<MyQuestionDetailScreen> createState() => _MyQuestionDetailScreenState();
@@ -62,8 +64,8 @@ class _MyQuestionDetailScreenState extends State<MyQuestionDetailScreen> {
   Widget _questionHeader() {
     return Row(
       children: [
-        _chip("Easy", Colors.green),
-        const SizedBox(width: 8),
+        // _chip("Easy", Colors.green),
+        // const SizedBox(width: 8),
         _chip("Correct: 12", Colors.blue),
         const SizedBox(width: 8),
         _chip("Wrong: 3", Colors.red),

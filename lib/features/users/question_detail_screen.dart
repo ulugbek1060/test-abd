@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class QuestionDetailScreen extends StatelessWidget {
-  final int questionId;
+  final int? questionId;
 
-  const QuestionDetailScreen({super.key, required this.questionId});
+  const QuestionDetailScreen({super.key, this.questionId});
 
   @override
   Widget build(BuildContext context) {

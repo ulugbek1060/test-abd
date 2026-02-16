@@ -54,7 +54,9 @@ abstract class AppRouter {
   static const blockDetail = '/block_detail/:block_id';
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
 
-  static const myQuestionDetail = '/my_question_detail';
+  static const myQuestionDetail = '/my_question_detail/:question_id';
+
+  static String myQuestionDetailWithArgs(int? questionId) => '/my_question_detail/$questionId';
 
   static String userProfileWithUsername(String username) => '/users/$username';
 
@@ -72,7 +74,7 @@ abstract class AppRouter {
 
   static const questionDetail = '/question_detail/:questionId';
 
-  static String questionDetailWithQuestionId(int questionId) =>
+  static String questionDetailWithQuestionId(int? questionId) =>
       '/question_detail/$questionId';
   static const blockQuestions = '/block_questions/:blockId';
 
@@ -136,10 +138,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.questionDetail,
       pageBuilder: (context, state) {
-        final questionId = state.pathParameters['questionId']!;
+        final questionId = state.pathParameters['questionId'] ?? "";
         return CupertinoPage(
           child: QuestionDetailScreen(
-            questionId: int.tryParse(questionId) ?? -1,
+            questionId: int.tryParse(questionId),
           ),
         );
       },
@@ -147,10 +149,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.myQuestionDetail,
       pageBuilder: (context, state) {
-        // final questionId = state.pathParameters['questionId']!;
+        final questionId = state.pathParameters['question_id'];
         return CupertinoPage(
           child: MyQuestionDetailScreen(
-            // questionId: int.tryParse(questionId) ?? -1,
+            questionId: int.tryParse(questionId ?? ""),
           ),
         );
       },

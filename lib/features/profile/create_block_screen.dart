@@ -8,11 +8,13 @@ import 'package:testabd/features/profile/create_block_cubit.dart';
 import 'package:testabd/features/profile/create_block_state.dart';
 
 class CreateBlockScreen extends StatelessWidget {
-  const CreateBlockScreen({super.key});
+  final int? blockId;
+
+  const CreateBlockScreen({super.key, this.blockId});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => locator<CreateBlockCubit>()..fetchCategories(),
+    create: (_) => locator<CreateBlockCubit>(param1: blockId),
     child: const _View(),
   );
 }
@@ -303,7 +305,7 @@ class _DropdownField extends StatelessWidget {
 Widget _accessTile({
   required BuildContext context,
   required AccessType value,
-  required AccessType groupValue,
+  required AccessType? groupValue,
   required String title,
   required String subtitle,
   required ValueChanged<AccessType?> onChanged,

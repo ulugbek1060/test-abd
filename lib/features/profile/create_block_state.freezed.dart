@@ -18,10 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$CreateBlockState {
   String? get error => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
-  MyBlockModel? get block => throw _privateConstructorUsedError;
+  BlockDetailModel? get block => throw _privateConstructorUsedError;
   List<CategoryModel> get categories => throw _privateConstructorUsedError;
   CategoryModel? get selectedCategory => throw _privateConstructorUsedError;
-  AccessType get selectedAccessType => throw _privateConstructorUsedError;
+  AccessType? get selectedAccessType => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CreateBlockStateCopyWith<CreateBlockState> get copyWith =>
@@ -37,10 +37,10 @@ abstract class $CreateBlockStateCopyWith<$Res> {
   $Res call(
       {String? error,
       bool isLoading,
-      MyBlockModel? block,
+      BlockDetailModel? block,
       List<CategoryModel> categories,
       CategoryModel? selectedCategory,
-      AccessType selectedAccessType});
+      AccessType? selectedAccessType});
 }
 
 /// @nodoc
@@ -61,7 +61,7 @@ class _$CreateBlockStateCopyWithImpl<$Res, $Val extends CreateBlockState>
     Object? block = freezed,
     Object? categories = null,
     Object? selectedCategory = freezed,
-    Object? selectedAccessType = null,
+    Object? selectedAccessType = freezed,
   }) {
     return _then(_value.copyWith(
       error: freezed == error
@@ -75,7 +75,7 @@ class _$CreateBlockStateCopyWithImpl<$Res, $Val extends CreateBlockState>
       block: freezed == block
           ? _value.block
           : block // ignore: cast_nullable_to_non_nullable
-              as MyBlockModel?,
+              as BlockDetailModel?,
       categories: null == categories
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -84,10 +84,10 @@ class _$CreateBlockStateCopyWithImpl<$Res, $Val extends CreateBlockState>
           ? _value.selectedCategory
           : selectedCategory // ignore: cast_nullable_to_non_nullable
               as CategoryModel?,
-      selectedAccessType: null == selectedAccessType
+      selectedAccessType: freezed == selectedAccessType
           ? _value.selectedAccessType
           : selectedAccessType // ignore: cast_nullable_to_non_nullable
-              as AccessType,
+              as AccessType?,
     ) as $Val);
   }
 }
@@ -103,10 +103,10 @@ abstract class _$$CreateBlockStateImplCopyWith<$Res>
   $Res call(
       {String? error,
       bool isLoading,
-      MyBlockModel? block,
+      BlockDetailModel? block,
       List<CategoryModel> categories,
       CategoryModel? selectedCategory,
-      AccessType selectedAccessType});
+      AccessType? selectedAccessType});
 }
 
 /// @nodoc
@@ -125,7 +125,7 @@ class __$$CreateBlockStateImplCopyWithImpl<$Res>
     Object? block = freezed,
     Object? categories = null,
     Object? selectedCategory = freezed,
-    Object? selectedAccessType = null,
+    Object? selectedAccessType = freezed,
   }) {
     return _then(_$CreateBlockStateImpl(
       error: freezed == error
@@ -139,7 +139,7 @@ class __$$CreateBlockStateImplCopyWithImpl<$Res>
       block: freezed == block
           ? _value.block
           : block // ignore: cast_nullable_to_non_nullable
-              as MyBlockModel?,
+              as BlockDetailModel?,
       categories: null == categories
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -148,10 +148,10 @@ class __$$CreateBlockStateImplCopyWithImpl<$Res>
           ? _value.selectedCategory
           : selectedCategory // ignore: cast_nullable_to_non_nullable
               as CategoryModel?,
-      selectedAccessType: null == selectedAccessType
+      selectedAccessType: freezed == selectedAccessType
           ? _value.selectedAccessType
           : selectedAccessType // ignore: cast_nullable_to_non_nullable
-              as AccessType,
+              as AccessType?,
     ));
   }
 }
@@ -174,7 +174,7 @@ class _$CreateBlockStateImpl implements _CreateBlockState {
   @JsonKey()
   final bool isLoading;
   @override
-  final MyBlockModel? block;
+  final BlockDetailModel? block;
   final List<CategoryModel> _categories;
   @override
   @JsonKey()
@@ -188,7 +188,7 @@ class _$CreateBlockStateImpl implements _CreateBlockState {
   final CategoryModel? selectedCategory;
   @override
   @JsonKey()
-  final AccessType selectedAccessType;
+  final AccessType? selectedAccessType;
 
   @override
   String toString() {
@@ -234,23 +234,23 @@ abstract class _CreateBlockState implements CreateBlockState {
   const factory _CreateBlockState(
       {final String? error,
       final bool isLoading,
-      final MyBlockModel? block,
+      final BlockDetailModel? block,
       final List<CategoryModel> categories,
       final CategoryModel? selectedCategory,
-      final AccessType selectedAccessType}) = _$CreateBlockStateImpl;
+      final AccessType? selectedAccessType}) = _$CreateBlockStateImpl;
 
   @override
   String? get error;
   @override
   bool get isLoading;
   @override
-  MyBlockModel? get block;
+  BlockDetailModel? get block;
   @override
   List<CategoryModel> get categories;
   @override
   CategoryModel? get selectedCategory;
   @override
-  AccessType get selectedAccessType;
+  AccessType? get selectedAccessType;
   @override
   @JsonKey(ignore: true)
   _$$CreateBlockStateImplCopyWith<_$CreateBlockStateImpl> get copyWith =>

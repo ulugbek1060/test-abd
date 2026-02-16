@@ -39,7 +39,7 @@ abstract class QuizRepository {
 
   Future<Either<AppException, List<CategoryModel>>> getCategories();
 
-  Future<Either<AppException, MyBlockModel>> createBlock({
+  Future<Either<AppException, BlockDetailModel>> createBlock({
     required String title,
     required String description,
     required int categoryId,

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:testabd/core/enums/access_enum.dart';
+import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
@@ -11,9 +12,9 @@ class CreateBlockState with _$CreateBlockState {
   const factory CreateBlockState({
     String? error,
     @Default(false) bool isLoading,
-    MyBlockModel? block,
+    BlockDetailModel? block,
     @Default([]) List<CategoryModel> categories,
     CategoryModel? selectedCategory,
-    @Default(AccessType.public) AccessType selectedAccessType,
+    @Default(AccessType.public) AccessType? selectedAccessType,
   }) = _CreateBlockState;
 }

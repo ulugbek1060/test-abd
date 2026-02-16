@@ -13,12 +13,43 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
   final QuizRepository _quizRepository;
   final AppMessageHandler _messageHandler;
   final UpdateListener _updateListener;
+  final int? blockId;
 
+  @factoryMethod
   CreateBlockCubit(
+    @factoryParam this.blockId,
     this._quizRepository,
     this._messageHandler,
     @Named.from(ProfileBlockUpdater) this._updateListener,
-  ) : super(CreateBlockState());
+  ) : super(CreateBlockState()) {
+    fetchCategories();
+    fetchBlockById();
+  }
+
+  Future<void> fetchBlockById() async {
+    if (blockId == null) return;
+    if (state.isLoading) return;
+
+    emit(state.copyWith(isLoading: true));
+
+    final result = await _quizRepository.getBlockById(blockId!);
+    result.fold(
+      (error) {
+        emit(state.copyWith(error: error.message, isLoading: false));
+        _messageHandler.handleDialog(error);
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            block: value,
+            selectedAccessType: value.visibility,
+            selectedCategory: value.category,
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> reset() async {
     emit(CreateBlockState());
@@ -26,7 +57,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
   Future<void> refresh() async => fetchCategories();
 
-  void fetchCategories() async {
+  Future<void> fetchCategories() async {
     final result = await _quizRepository.getCategories();
     result.fold(
       (e) {
@@ -39,8 +70,17 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
     );
   }
 
-  void submit({required String title, required String description}) async {
+  Future<void> submit({
+    required String title,
+    required String description,
+  }) async {
     if (state.isLoading) return;
+
+    if (state.selectedAccessType == null) {
+      _messageHandler.handleDialog(UnknownException("Visibility type is required"));
+      return;
+    }
+
     if (state.selectedCategory?.id == null) {
       _messageHandler.handleDialog(UnknownException("Category is required"));
       return;
@@ -60,7 +100,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       title: title,
       description: description,
       categoryId: state.selectedCategory!.id!,
-      accessType: state.selectedAccessType,
+      accessType: state.selectedAccessType!,
     );
 
     result.fold(

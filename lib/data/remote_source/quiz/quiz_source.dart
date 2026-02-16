@@ -18,53 +18,39 @@ import 'models/block_questions_response.dart';
 
 abstract class QuizSource {
   Future<List<UserQuestionResponse>> getUserQuestions(int userId);
-
   Future<BlockQuestionsResponse> getBlockTests(int blockId);
-
   Future<dynamic> bookmarkQuestions(int questionId);
-
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
-
   Future<List<CategoryResponse>> getCategories();
-
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
-
   Future<List<MyBlockResponse>> getMyBlocks();
-
   Future<QuestionsResponse> getMyQuestions({
     required String page,
     required int pageSize,
   });
-
   Future<FollowedQuestionsResponse> getFollowedQuestions(
     int page,
     int pageSize,
   );
-
   Future<AnswerResponse> submitAnswer(
     int questionId,
     List<int> selectedAnswers,
     int? duration,
   );
-
   Future<UserBlocksResponse> getBlocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
   });
-
-  Future<MyBlockResponse> createBlock(
+  Future<BlockDetailResponse> createBlock(
     String title,
     String description,
     int categoryId,
     AccessType accessType,
   );
-
   Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
-
   Future<BlockDetailResponse> getBlockById(int id);
-
-  Future<dynamic> getQuestionById(int questionId);
+  Future<QuestionResponse> getQuestionById(int questionId);
 }
 
 /// =========================> Source implementation <=========================
@@ -240,7 +226,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<MyBlockResponse> createBlock(
+  Future<BlockDetailResponse> createBlock(
     String title,
     String description,
     int categoryId,
@@ -256,7 +242,7 @@ class QuizSourceImpl implements QuizSource {
           "category_id": categoryId,
         },
       );
-      return MyBlockResponse.fromJson(response.data);
+      return BlockDetailResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
@@ -318,10 +304,10 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<dynamic> getQuestionById(int questionId) async {
+  Future<QuestionResponse> getQuestionById(int questionId) async {
     try {
       final response = await _dio.get('/quiz/tests/$questionId/');
-      return BlockDetailResponse.fromJson(response.data);
+      return QuestionResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

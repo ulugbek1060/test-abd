@@ -141,12 +141,12 @@ class _$MyQuestionDetailStateImpl implements _MyQuestionDetailState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
-            const DeepCollectionEquality().equals(other.question, question));
+            (identical(other.question, question) ||
+                other.question == question));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading, error,
-      const DeepCollectionEquality().hash(question));
+  int get hashCode => Object.hash(runtimeType, isLoading, error, question);
 
   @JsonKey(ignore: true)
   @override
