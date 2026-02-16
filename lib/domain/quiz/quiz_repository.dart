@@ -54,4 +54,6 @@ abstract class QuizRepository {
   getMyQuestions({required String page, required int pageSize});
 
   Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
+
+  Future<dynamic> getQuestionById(int questionId);
 }

@@ -63,6 +63,8 @@ abstract class QuizSource {
   Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
 
   Future<BlockDetailResponse> getBlockById(int id);
+
+  Future<dynamic> getQuestionById(int questionId);
 }
 
 /// =========================> Source implementation <=========================
@@ -307,6 +309,18 @@ class QuizSourceImpl implements QuizSource {
   Future<BlockDetailResponse> getBlockById(int id) async {
     try {
       final response = await _dio.get('/quiz/tests/$id/');
+      return BlockDetailResponse.fromJson(response.data);
+    } on DioException catch (error) {
+      throw error.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<dynamic> getQuestionById(int questionId) async {
+    try {
+      final response = await _dio.get('/quiz/tests/$questionId/');
       return BlockDetailResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();

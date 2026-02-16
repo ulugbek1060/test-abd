@@ -6,7 +6,6 @@ import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/data/remote_source/quiz/models/create_question_data_request.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
 import 'package:testabd/core/enums/access_enum.dart';
-import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
@@ -222,6 +221,18 @@ class QuizRepositoryImpl extends QuizRepository {
     try {
       final result = await _quizSource.getBlockById(id);
       return Right(BlockDetailModel.fromResponse(result));
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<dynamic> getQuestionById(int questionId) async {
+    try {
+      final result = await _quizSource.getQuestionById(questionId);
+      return Right(QuestionModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
