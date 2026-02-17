@@ -20,15 +20,19 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
   final QuizRepository _quizRepository;
   final AppMessageHandler _appMessageHandler;
   final UpdateListener _updateListener;
+  final int? questionId;
   late final Random _random;
 
+  @factoryMethod
   CreateQuestionCubit(
+    @factoryParam this.questionId,
     this._quizRepository,
     this._appMessageHandler,
     @Named.from(ProfileQuestionsUpdater) this._updateListener,
   ) : super(CreateQuestionState()) {
     _random = Random();
     selectQuestionType(0);
+    fetchData();
   }
 
   Future<void> fetchData() async {
@@ -39,8 +43,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       _quizRepository.getMyBlocks(),
     ]);
 
-    final categoriesResult =
-        results[0] as Either<AppException, List<CategoryModel>>;
+    final categoriesResult = results[0] as Either<AppException, List<CategoryModel>>;
     final blocksResult = results[1] as Either<AppException, List<MyBlockModel>>;
 
     List<CategoryModel>? categories;

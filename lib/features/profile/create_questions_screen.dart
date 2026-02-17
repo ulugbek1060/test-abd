@@ -9,11 +9,13 @@ import 'package:testabd/features/profile/create_question_cubit.dart';
 import 'package:testabd/features/profile/create_question_state.dart';
 
 class CreateQuestionsScreen extends StatelessWidget {
-  const CreateQuestionsScreen({super.key});
+  final int? questionId;
+
+  const CreateQuestionsScreen({super.key, this.questionId});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => locator<CreateQuestionCubit>()..fetchData(),
+    create: (_) => locator<CreateQuestionCubit>(param1: questionId),
     child: const _View(),
   );
 }
@@ -270,7 +272,6 @@ class _ViewState extends State<_View> {
       );
     }).toList();
   }
-
 }
 
 /// ================= ANSWER INPUTS =================

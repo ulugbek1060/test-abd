@@ -147,6 +147,16 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
+    gh.factoryParam<_i84.CreateQuestionCubit, int?, dynamic>((
+      questionId,
+      _,
+    ) =>
+        _i84.CreateQuestionCubit(
+          questionId,
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
+        ));
     gh.factory<_i137.BookmarkQuestionsCubit>(() => _i137.BookmarkQuestionsCubit(
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
@@ -170,11 +180,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i36.ForgotPswdCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
-    gh.factory<_i84.CreateQuestionCubit>(() => _i84.CreateQuestionCubit(
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-          gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
-        ));
     gh.factory<_i163.RegisterCubit>(
         () => _i163.RegisterCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i958.LoginCubit>(

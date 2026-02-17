@@ -49,14 +49,20 @@ abstract class AppRouter {
   static const personalInfo = '/personal_info';
   static const regionalInfo = '/regional_info';
   static const changePassword = '/change_password';
-  static const createQuestions = '/create_questions';
+
+  static const createQuestions = '/create_question/:question_id';
+  static String createQuestionWithArgs(int? questionId) =>
+      '/create_question/:$questionId';
+
   static const createBlock = '/create_block';
   static const blockDetail = '/block_detail/:block_id';
+
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
 
   static const myQuestionDetail = '/my_question_detail/:question_id';
 
-  static String myQuestionDetailWithArgs(int? questionId) => '/my_question_detail/$questionId';
+  static String myQuestionDetailWithArgs(int? questionId) =>
+      '/my_question_detail/$questionId';
 
   static String userProfileWithUsername(String username) => '/users/$username';
 
@@ -140,9 +146,7 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) {
         final questionId = state.pathParameters['questionId'] ?? "";
         return CupertinoPage(
-          child: QuestionDetailScreen(
-            questionId: int.tryParse(questionId),
-          ),
+          child: QuestionDetailScreen(questionId: int.tryParse(questionId)),
         );
       },
     ),
@@ -238,8 +242,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.createQuestions,
       pageBuilder: (context, state) {
-        // final connectionType = state.pathParameters['connection_type']!;
-        return CupertinoPage(child: CreateQuestionsScreen());
+        final questionId = state.pathParameters['question_id'];
+        return CupertinoPage(
+          child: CreateQuestionsScreen(
+            questionId: int.tryParse(questionId ?? ""),
+          ),
+        );
       },
     ),
 

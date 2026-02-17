@@ -361,29 +361,27 @@ class _Header extends StatelessWidget {
     String title,
     String value,
     VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+  ) => GestureDetector(
+    onTap: onTap,
+    child: Column(
+      children: [
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-            ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }
 
 class _SubHeader extends StatelessWidget {
@@ -705,7 +703,7 @@ class _QuestionsSection extends StatelessWidget {
               ),
               child: ListTile(
                 onTap: () => context.push(
-                  AppRouter.questionDetailWithQuestionId(
+                  AppRouter.myQuestionDetailWithArgs(
                     state.questions[index].id,
                   ),
                 ),
