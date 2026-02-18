@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/core/enums/access_enum.dart';
+import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/create_block_state.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
@@ -22,11 +24,12 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
     this._messageHandler,
     @Named.from(ProfileBlockUpdater) this._updateListener,
   ) : super(CreateBlockState()) {
-    fetchCategories();
     fetchBlockById();
   }
 
   Future<void> fetchBlockById() async {
+    await fetchCategories();
+
     if (blockId == null) return;
     if (state.isLoading) return;
 
@@ -44,7 +47,9 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
             isLoading: false,
             block: value,
             selectedAccessType: value.visibility,
-            selectedCategory: value.category,
+            selectedCategory: state.categories.firstWhereOrNull(
+              (e) => e.id == value.category?.id,
+            ),
           ),
         );
       },
@@ -77,10 +82,11 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
     if (state.isLoading) return;
 
     if (state.selectedAccessType == null) {
-      _messageHandler.handleDialog(UnknownException("Visibility type is required"));
+      _messageHandler.handleDialog(
+        UnknownException("Visibility type is required"),
+      );
       return;
     }
-
     if (state.selectedCategory?.id == null) {
       _messageHandler.handleDialog(UnknownException("Category is required"));
       return;
@@ -96,12 +102,26 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
     emit(state.copyWith(isLoading: true));
 
-    final result = await _quizRepository.createBlock(
-      title: title,
-      description: description,
-      categoryId: state.selectedCategory!.id!,
-      accessType: state.selectedAccessType!,
-    );
+    Either<AppException, BlockDetailModel> result;
+
+    if (blockId != null) {
+      /// update existing block option
+      result = await _quizRepository.updateBlock(
+        blockId: blockId!,
+        title: title,
+        description: description,
+        categoryId: state.selectedCategory!.id!,
+        accessType: state.selectedAccessType!,
+      );
+    } else {
+      /// create new block option
+      result = await _quizRepository.createBlock(
+        title: title,
+        description: description,
+        categoryId: state.selectedCategory!.id!,
+        accessType: state.selectedAccessType!,
+      );
+    }
 
     result.fold(
       (e) {

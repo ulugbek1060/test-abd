@@ -159,9 +159,7 @@ class _QuestionsGrid extends StatelessWidget {
 
         return InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            context.push(AppRouter.myQuestionDetail);
-          },
+          onTap: () => context.push(AppRouter.myQuestionDetailWithArgs(q.id)),
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -175,14 +173,17 @@ class _QuestionsGrid extends StatelessWidget {
                 /// HEADER: Question index + Level
                 Row(
                   children: [
-                    Text(
-                      q.testTitle ?? "",
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: scheme.onSurface,
+                    Expanded(
+                      child: Text(
+                        q.questionText ?? "",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: scheme.onSurface,
+                        ),
                       ),
                     ),
-                    const Spacer(),
                     _LevelBadge(level: Difficulty.easy),
                   ],
                 ),

@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/core/enums/access_enum.dart';
-import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
@@ -46,14 +44,24 @@ abstract class QuizRepository {
     required AccessType accessType,
   });
 
+  Future<Either<AppException, BlockDetailModel>> updateBlock({
+    required int blockId,
+    required String title,
+    required String description,
+    required int categoryId,
+    required AccessType accessType,
+  });
+
   Future<Either<AppException, QuestionModel>> createQuestion({
     required CreateQuestionModel model,
   });
-
+  Future<Either<AppException, QuestionModel>> updateQuestion({
+    required int questionId,
+    required CreateQuestionModel model,
+  });
   Future<Either<AppException, PagedData<String, QuestionModel>>>
   getMyQuestions({required String page, required int pageSize});
-
   Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
-
   Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
+
 }

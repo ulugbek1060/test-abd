@@ -18,38 +18,65 @@ import 'models/block_questions_response.dart';
 
 abstract class QuizSource {
   Future<List<UserQuestionResponse>> getUserQuestions(int userId);
+
   Future<BlockQuestionsResponse> getBlockTests(int blockId);
+
   Future<dynamic> bookmarkQuestions(int questionId);
+
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
+
   Future<List<CategoryResponse>> getCategories();
+
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
+
   Future<List<MyBlockResponse>> getMyBlocks();
+
   Future<QuestionsResponse> getMyQuestions({
     required String page,
     required int pageSize,
   });
+
   Future<FollowedQuestionsResponse> getFollowedQuestions(
     int page,
     int pageSize,
   );
+
   Future<AnswerResponse> submitAnswer(
     int questionId,
     List<int> selectedAnswers,
     int? duration,
   );
+
   Future<UserBlocksResponse> getBlocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
   });
+
   Future<BlockDetailResponse> createBlock(
     String title,
     String description,
     int categoryId,
     AccessType accessType,
   );
+
+  Future<BlockDetailResponse> updateBlock(
+    int blockId,
+    String title,
+    String description,
+    int categoryId,
+    AccessType accessType,
+  );
+
   Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
+
+  Future<QuestionResponse> updateQuestion(
+    int questionId,
+    CreateQuestionDataRequest data,
+  );
+
   Future<BlockDetailResponse> getBlockById(int id);
+
   Future<QuestionResponse> getQuestionById(int questionId);
 }
 
@@ -251,12 +278,53 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
+  Future<BlockDetailResponse> updateBlock(
+    int blockId,
+    String title,
+    String description,
+    int categoryId,
+    AccessType accessType,
+  ) async {
+    try {
+      final response = await _dio.put(
+        '/quiz/tests/$blockId/',
+        data: {
+          "title": title,
+          "description": description,
+          "visibility": accessType.name,
+          "category_id": categoryId,
+        },
+      );
+      return BlockDetailResponse.fromJson(response.data);
+    } on DioException catch (error) {
+      throw error.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
   Future<QuestionResponse> createQuestion(
     CreateQuestionDataRequest data,
   ) async {
     try {
-      final response = await _dio.post(
-        '/quiz/questions/',
+      final response = await _dio.post('/quiz/questions/', data: data.toJson());
+      return QuestionResponse.fromJson(response.data);
+    } on DioException catch (error) {
+      throw error.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<QuestionResponse> updateQuestion(
+    int questionId,
+    CreateQuestionDataRequest data,
+  ) async {
+    try {
+      final response = await _dio.put(
+        '/quiz/questions/$questionId/',
         data: data.toJson(),
       );
       return QuestionResponse.fromJson(response.data);

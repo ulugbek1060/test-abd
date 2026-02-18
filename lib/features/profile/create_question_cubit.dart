@@ -10,6 +10,7 @@ import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/create_question_data_arg.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/create_question_state.dart';
@@ -131,7 +132,20 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       questionType: state.questionType,
       answers: state.answers,
     );
-    final result = await _quizRepository.createQuestion(model: model);
+
+    Either<AppException, QuestionModel> result;
+
+    if (questionId != null) {
+      /// update a existing question
+      result = await _quizRepository.updateQuestion(
+        questionId: questionId!,
+        model: model,
+      );
+    } else {
+      /// create new question
+      result = await _quizRepository.createQuestion(model: model);
+    }
+
     result.fold(
       (e) {
         emit(state.copyWith(error: e.message, isLoading: false));

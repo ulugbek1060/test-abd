@@ -163,6 +163,30 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
+  Future<Either<AppException, BlockDetailModel>> updateBlock({
+    required int blockId,
+    required String title,
+    required String description,
+    required int categoryId,
+    required AccessType accessType,
+  }) async {
+    try {
+      final result = await _quizSource.updateBlock(
+        blockId,
+        title,
+        description,
+        categoryId,
+        accessType,
+      );
+      return Right(BlockDetailModel.fromResponse(result));
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
   Future<Either<AppException, QuestionModel>> createQuestion({
     required CreateQuestionModel model,
   }) async {
@@ -184,6 +208,37 @@ class QuizRepositoryImpl extends QuizRepository {
             .toList(),
       );
       final result = await _quizSource.createQuestion(data);
+      return Right(QuestionModel.fromResponse(result));
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, QuestionModel>> updateQuestion({
+    required int questionId,
+    required CreateQuestionModel model,
+  }) async {
+    try {
+      final data = CreateQuestionDataRequest(
+        test: model.test,
+        questionText: model.questionText,
+        questionType: QuestionType.fromEnum(model.questionType),
+        orderIndex: model.orderIndex,
+        categoryId: model.categoryId,
+        answers: model.answers
+            ?.map(
+              (e) => CreateAnswerRequest(
+            letter: e.letter,
+            answerText: e.answerText,
+            isCorrect: e.isCorrect,
+          ),
+        )
+            .toList(),
+      );
+      final result = await _quizSource.updateQuestion(questionId, data);
       return Right(QuestionModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);
@@ -229,7 +284,9 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, QuestionModel>> getQuestionById(int questionId) async {
+  Future<Either<AppException, QuestionModel>> getQuestionById(
+    int questionId,
+  ) async {
     try {
       final result = await _quizSource.getQuestionById(questionId);
       return Right(QuestionModel.fromResponse(result));

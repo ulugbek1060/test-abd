@@ -78,17 +78,7 @@ class _ViewState extends State<_View> {
         ),
       ),
 
-      body: BlocConsumer<CreateBlockCubit, CreateBlockState>(
-        listener: (_, state) {
-          if (state.block != null) {
-            _blockTitleController.clear();
-            _blockDescriptionController.clear();
-            randomSeed = Random().nextInt(100);
-            context.read<CreateBlockCubit>().reset();
-            context.read<CreateBlockCubit>().successMessage();
-            // TODO: Navigator.pop(context);
-          }
-        },
+      body: BlocBuilder<CreateBlockCubit, CreateBlockState>(
         builder: (context, state) {
           return state.isLoading
               ? ProgressView()
@@ -108,7 +98,8 @@ class _ViewState extends State<_View> {
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
-                          controller: _blockTitleController,
+                          controller: _blockTitleController
+                            ..text = state.block?.title ?? "",
                           enabled: true,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface,
@@ -136,7 +127,8 @@ class _ViewState extends State<_View> {
                         SizedBox(
                           height: 150,
                           child: TextFormField(
-                            controller: _blockDescriptionController,
+                            controller: _blockDescriptionController
+                              ..text = state.block?.description ?? "",
                             expands: true,
                             maxLines: null,
                             textAlignVertical: TextAlignVertical.top,
@@ -319,6 +311,7 @@ Widget _accessTile({
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
+      selected: value == groupValue,
       activeColor: Theme.of(context).colorScheme.primary,
       title: Text(
         title,
