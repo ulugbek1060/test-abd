@@ -184,6 +184,16 @@ class QuestionModel extends Equatable {
       wrongCount: response.wrongCount,
       difficultyPercentage: response.difficultyPercentage?.toDouble(),
       userAttemptCount: response.userAttemptCount,
+      category: CategoryModel(
+        id: response.category?.id,
+        totalQuestions: response.category?.totalQuestions,
+        totalTests: response.category?.totalTests,
+        title: response.category?.title,
+        slug: response.category?.slug,
+        description: response.category?.description,
+        emoji: response.category?.emoji,
+        image: response.category?.image,
+      ),
       user: UserItemModel(
         id: response.user?.id,
         username: response.user?.username,

@@ -306,7 +306,7 @@ class QuizSourceImpl implements QuizSource {
   @override
   Future<QuestionResponse> getQuestionById(int questionId) async {
     try {
-      final response = await _dio.get('/quiz/tests/$questionId/');
+      final response = await _dio.get('/quiz/questions/$questionId/');
       return QuestionResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();

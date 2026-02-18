@@ -55,5 +55,5 @@ abstract class QuizRepository {
 
   Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
 
-  Future<dynamic> getQuestionById(int questionId);
+  Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
 }

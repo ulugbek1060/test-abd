@@ -19,7 +19,7 @@ abstract class CreateQuestionState with _$CreateQuestionState {
     MyBlockModel? selectedBlock,
     QuestionModel? question,
     CategoryModel? selectedCategory,
-    @Default(QuestionType.singleSelect) QuestionType questionType,
+    @Default(QuestionType.singleSelect) QuestionType? questionType,
   }) = _CreateQuestionState;
 
 }

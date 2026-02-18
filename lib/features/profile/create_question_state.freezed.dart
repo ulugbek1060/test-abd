@@ -24,7 +24,7 @@ mixin _$CreateQuestionState {
   MyBlockModel? get selectedBlock => throw _privateConstructorUsedError;
   QuestionModel? get question => throw _privateConstructorUsedError;
   CategoryModel? get selectedCategory => throw _privateConstructorUsedError;
-  QuestionType get questionType => throw _privateConstructorUsedError;
+  QuestionType? get questionType => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CreateQuestionStateCopyWith<CreateQuestionState> get copyWith =>
@@ -46,7 +46,7 @@ abstract class $CreateQuestionStateCopyWith<$Res> {
       MyBlockModel? selectedBlock,
       QuestionModel? question,
       CategoryModel? selectedCategory,
-      QuestionType questionType});
+      QuestionType? questionType});
 }
 
 /// @nodoc
@@ -70,7 +70,7 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
     Object? selectedBlock = freezed,
     Object? question = freezed,
     Object? selectedCategory = freezed,
-    Object? questionType = null,
+    Object? questionType = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -105,10 +105,10 @@ class _$CreateQuestionStateCopyWithImpl<$Res, $Val extends CreateQuestionState>
           ? _value.selectedCategory
           : selectedCategory // ignore: cast_nullable_to_non_nullable
               as CategoryModel?,
-      questionType: null == questionType
+      questionType: freezed == questionType
           ? _value.questionType
           : questionType // ignore: cast_nullable_to_non_nullable
-              as QuestionType,
+              as QuestionType?,
     ) as $Val);
   }
 }
@@ -130,7 +130,7 @@ abstract class _$$CreateQuestionStateImplCopyWith<$Res>
       MyBlockModel? selectedBlock,
       QuestionModel? question,
       CategoryModel? selectedCategory,
-      QuestionType questionType});
+      QuestionType? questionType});
 }
 
 /// @nodoc
@@ -152,7 +152,7 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
     Object? selectedBlock = freezed,
     Object? question = freezed,
     Object? selectedCategory = freezed,
-    Object? questionType = null,
+    Object? questionType = freezed,
   }) {
     return _then(_$CreateQuestionStateImpl(
       isLoading: null == isLoading
@@ -187,10 +187,10 @@ class __$$CreateQuestionStateImplCopyWithImpl<$Res>
           ? _value.selectedCategory
           : selectedCategory // ignore: cast_nullable_to_non_nullable
               as CategoryModel?,
-      questionType: null == questionType
+      questionType: freezed == questionType
           ? _value.questionType
           : questionType // ignore: cast_nullable_to_non_nullable
-              as QuestionType,
+              as QuestionType?,
     ));
   }
 }
@@ -252,7 +252,7 @@ class _$CreateQuestionStateImpl implements _CreateQuestionState {
   final CategoryModel? selectedCategory;
   @override
   @JsonKey()
-  final QuestionType questionType;
+  final QuestionType? questionType;
 
   @override
   String toString() {
@@ -312,7 +312,7 @@ abstract class _CreateQuestionState implements CreateQuestionState {
       final MyBlockModel? selectedBlock,
       final QuestionModel? question,
       final CategoryModel? selectedCategory,
-      final QuestionType questionType}) = _$CreateQuestionStateImpl;
+      final QuestionType? questionType}) = _$CreateQuestionStateImpl;
 
   @override
   bool get isLoading;
@@ -331,7 +331,7 @@ abstract class _CreateQuestionState implements CreateQuestionState {
   @override
   CategoryModel? get selectedCategory;
   @override
-  QuestionType get questionType;
+  QuestionType? get questionType;
   @override
   @JsonKey(ignore: true)
   _$$CreateQuestionStateImplCopyWith<_$CreateQuestionStateImpl> get copyWith =>

@@ -6,19 +6,19 @@ import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/entity/question_model.dart';
-import 'package:testabd/features/profile/block_detail_cubit.dart';
-import 'package:testabd/features/profile/block_detail_state.dart';
+import 'package:testabd/features/profile/my_block_detail_cubit.dart';
+import 'package:testabd/features/profile/my_block_detail_state.dart';
 import 'package:testabd/router/app_router.dart';
 
-class BlockDetailScreen extends StatelessWidget {
+class MyBlockDetailScreen extends StatelessWidget {
   final int blockId;
 
-  const BlockDetailScreen({super.key, required this.blockId});
+  const MyBlockDetailScreen({super.key, required this.blockId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => locator<BlockDetailCubit>(param1: blockId),
+      create: (context) => locator<MyBlockDetailCubit>(param1: blockId),
       child: const _View(),
     );
   }
@@ -34,7 +34,7 @@ class _View extends StatefulWidget {
 class _ViewState extends State<_View> {
   @override
   void initState() {
-    BlocProvider.of<BlockDetailCubit>(context).fetchBlock();
+    BlocProvider.of<MyBlockDetailCubit>(context).fetchBlock();
     super.initState();
   }
 
@@ -42,13 +42,20 @@ class _ViewState extends State<_View> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<BlockDetailCubit, BlockDetailState>(
+    return BlocBuilder<MyBlockDetailCubit, MyBlockDetailState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
             title: Text(state.blockDetail?.title ?? "Detail"),
             centerTitle: true,
-            actions: [IconButton(onPressed: () {}, icon: Icon(Icons.edit))],
+            actions: [
+              IconButton(
+                onPressed: () => context.push(
+                  AppRouter.createBlockWithArg(state.blockDetail?.id),
+                ),
+                icon: Icon(Icons.edit),
+              ),
+            ],
           ),
           body: state.isLoading
               ? ProgressView()

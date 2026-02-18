@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,11 +28,9 @@ class _View extends StatefulWidget {
 
 class _ViewState extends State<_View> {
   late final TextEditingController _questionDescription;
-  int randomSeed = 0;
 
   @override
   void initState() {
-    randomSeed = Random().nextInt(100);
     _questionDescription = TextEditingController();
     super.initState();
   }
@@ -83,6 +80,7 @@ class _ViewState extends State<_View> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
                       /// Category
                       _DropdownField(
                         label: "Category",
@@ -123,7 +121,7 @@ class _ViewState extends State<_View> {
                       _DropdownField(
                         label: "Question type",
                         hint: "Select category",
-                        value: 0,
+                        value: state.questionType?.index,
                         items: QuestionType.values
                             .mapIndexed(
                               (i, e) => _DropdownItem(
@@ -149,7 +147,8 @@ class _ViewState extends State<_View> {
                       SizedBox(
                         height: 150,
                         child: TextFormField(
-                          controller: _questionDescription,
+                          controller: _questionDescription
+                            ..text = state.question?.questionText ?? "",
                           expands: true,
                           maxLines: null,
                           textAlignVertical: TextAlignVertical.top,
@@ -198,6 +197,7 @@ class _ViewState extends State<_View> {
     return state.answers.mapIndexed((index, element) {
       if (state.questionType == QuestionType.singleSelect) {
         return _AnswerInputTile(
+          text: element.answerText ?? "",
           index: index,
           onDismissed: (v) =>
               context.read<CreateQuestionCubit>().removeAnswer(index),
@@ -214,6 +214,7 @@ class _ViewState extends State<_View> {
 
       if (state.questionType == QuestionType.multipleSelect) {
         return _MultipleAnswerTile(
+          text: element.answerText ?? "",
           index: index,
           letter: element.letter ?? "",
           onDismissed: (v) {
@@ -234,7 +235,7 @@ class _ViewState extends State<_View> {
 
       if (state.questionType == QuestionType.trueFalse) {
         return _TrueFalseCard(
-          text: "",
+          text: element.answerText ?? "",
           isSelected: element.isCorrect,
           onTap: () {},
         );
@@ -252,6 +253,8 @@ class _ViewState extends State<_View> {
             Text('Text answer'),
             const SizedBox(height: 8),
             TextField(
+              controller: TextEditingController()
+                ..text = element.answerText ?? "",
               maxLines: null,
               decoration: InputDecoration(
                 hintText: "Answer",
@@ -276,6 +279,7 @@ class _ViewState extends State<_View> {
 
 /// ================= ANSWER INPUTS =================
 class _AnswerInputTile extends StatelessWidget {
+  final String text;
   final int index;
   final ValueChanged<DismissDirection> onDismissed;
   final bool isSelected;
@@ -285,7 +289,7 @@ class _AnswerInputTile extends StatelessWidget {
   final String hintText;
 
   const _AnswerInputTile({
-    super.key,
+    required this.text,
     required this.index,
     required this.onDismissed,
     required this.isSelected,
@@ -313,6 +317,7 @@ class _AnswerInputTile extends StatelessWidget {
           textTheme: textTheme,
         ),
         title: TextField(
+          controller: TextEditingController()..text = text,
           onChanged: onChange,
           maxLines: null,
           decoration: InputDecoration(
@@ -393,6 +398,7 @@ class _LetterCircle extends StatelessWidget {
 class _MultipleAnswerTile extends StatelessWidget {
   final int index;
   final String letter;
+  final String text;
   final bool isSelected;
   final ValueChanged<DismissDirection> onDismissed;
   final ValueChanged<bool?> onSelectItem;
@@ -402,6 +408,7 @@ class _MultipleAnswerTile extends StatelessWidget {
   const _MultipleAnswerTile({
     super.key,
     required this.index,
+    required this.text,
     required this.onDismissed,
     required this.letter,
     required this.isSelected,
@@ -433,6 +440,7 @@ class _MultipleAnswerTile extends StatelessWidget {
           ),
         ),
         title: TextField(
+          controller: TextEditingController()..text = text,
           onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hintText,
@@ -506,7 +514,12 @@ class _TrueFalseCard extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Text(text, style: Theme.of(context).textTheme.titleMedium),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
         ),
       ),
     );

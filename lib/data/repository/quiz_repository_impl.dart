@@ -229,7 +229,7 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<dynamic> getQuestionById(int questionId) async {
+  Future<Either<AppException, QuestionModel>> getQuestionById(int questionId) async {
     try {
       final result = await _quizSource.getQuestionById(questionId);
       return Right(QuestionModel.fromResponse(result));

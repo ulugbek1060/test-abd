@@ -10,7 +10,7 @@ import 'package:testabd/features/home/leaderboard_screen.dart';
 import 'package:testabd/features/home/notifications_screen.dart';
 import 'package:testabd/features/init/init_screen.dart';
 import 'package:testabd/features/library/library_screen.dart';
-import 'package:testabd/features/profile/block_detail_screen.dart';
+import 'package:testabd/features/profile/my_block_detail_screen.dart';
 import 'package:testabd/features/profile/bookmark_questions_screen.dart';
 import 'package:testabd/features/profile/create_block_screen.dart';
 import 'package:testabd/features/profile/create_questions_screen.dart';
@@ -51,10 +51,14 @@ abstract class AppRouter {
   static const changePassword = '/change_password';
 
   static const createQuestions = '/create_question/:question_id';
-  static String createQuestionWithArgs(int? questionId) =>
-      '/create_question/:$questionId';
 
-  static const createBlock = '/create_block';
+  static String createQuestionWithArgs(int? questionId) =>
+      '/create_question/$questionId';
+
+  static const createBlock = '/create_block/:block_id';
+
+  static String createBlockWithArg(int? blockId) => '/create_block/$blockId';
+
   static const blockDetail = '/block_detail/:block_id';
 
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
@@ -193,7 +197,7 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) {
         final blockId = state.pathParameters['block_id']!;
         return CupertinoPage(
-          child: BlockDetailScreen(blockId: int.tryParse(blockId) ?? -1),
+          child: MyBlockDetailScreen(blockId: int.tryParse(blockId) ?? -1),
         );
       },
     ),
@@ -254,28 +258,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.createBlock,
       pageBuilder: (context, state) {
-        // final connectionType = state.pathParameters['connection_type']!;
-        return CupertinoPage(child: CreateBlockScreen());
+        final blockId = state.pathParameters['block_id'];
+        return CupertinoPage(
+          child: CreateBlockScreen(blockId: int.tryParse(blockId ?? "")),
+        );
       },
     ),
-    // GoRoute(
-    //   path: AppRouter.langBottomSheet,
-    //   pageBuilder: (context, state) {
-    //     // final connectionType = state.pathParameters['connection_type']!;
-    //     return ModalBottomSheetPage(
-    //       draggableScrollSheetBuilder: (_, __) => DraggableScrollableSheet(
-    //         // initialChildSize: 0.5,
-    //         minChildSize: 0.25,
-    //         maxChildSize: 0.9,
-    //         expand: true,
-    //         builder: (_, __) => LanguageBottomSheet(),
-    //       ),
-    //       // builder: (context) => LanguageBottomSheet(),
-    //       enableDrag: false,
-    //       isScrollControlled: false,
-    //     );
-    //   },
-    // ),
     StatefulShellRoute(
       parentNavigatorKey: navigatorKey,
       navigatorContainerBuilder: (_, navShell, children) =>

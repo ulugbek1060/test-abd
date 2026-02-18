@@ -14,6 +14,7 @@ import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/profile/create_question_state.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
+import 'package:testabd/main.dart';
 
 @injectable
 class CreateQuestionCubit extends Cubit<CreateQuestionState> {
@@ -31,8 +32,46 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     @Named.from(ProfileQuestionsUpdater) this._updateListener,
   ) : super(CreateQuestionState()) {
     _random = Random();
+
     selectQuestionType(0);
-    fetchData();
+
+    if (questionId != null) {
+      fetchDataWithId();
+    } else {
+      fetchData();
+    }
+  }
+
+  Future<void> fetchDataWithId() async {
+    // fetch all data
+    await fetchData();
+
+    emit(state.copyWith(isLoading: true));
+
+    final result = await _quizRepository.getQuestionById(questionId!);
+
+    result.fold(
+      (error) {
+        _appMessageHandler.handleDialog(error);
+        emit(state.copyWith(error: error.message));
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            selectedBlock: state.blocks.firstWhereOrNull(
+              (e) => e.id == value.test,
+            ),
+            question: value,
+            selectedCategory: state.categories.firstWhereOrNull(
+              (e) => e.id == value.category?.id,
+            ),
+            questionType: value.questionType,
+            answers: value.answers,
+          ),
+        );
+      },
+    );
   }
 
   Future<void> fetchData() async {
@@ -43,7 +82,8 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       _quizRepository.getMyBlocks(),
     ]);
 
-    final categoriesResult = results[0] as Either<AppException, List<CategoryModel>>;
+    final categoriesResult =
+        results[0] as Either<AppException, List<CategoryModel>>;
     final blocksResult = results[1] as Either<AppException, List<MyBlockModel>>;
 
     List<CategoryModel>? categories;
@@ -87,7 +127,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       test: blockId,
       questionText: question,
       categoryId: categoryId,
-      orderIndex: _random.nextInt(100),
+      orderIndex: state.question?.orderIndex ?? _random.nextInt(100),
       questionType: state.questionType,
       answers: state.answers,
     );
@@ -181,6 +221,8 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
         break;
       case QuestionType.textQuestion:
         break;
+      default:
+        break;
     }
 
     emit(state.copyWith(answers: answers));
@@ -198,6 +240,8 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       case QuestionType.trueFalse:
         break;
       case QuestionType.textQuestion:
+        break;
+      default:
         break;
     }
     emit(state.copyWith(answers: answers));

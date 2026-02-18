@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'block_detail_state.dart';
+part of 'my_block_detail_state.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,29 +15,29 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$BlockDetailState {
+mixin _$MyBlockDetailState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   BlockDetailModel? get blockDetail => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $BlockDetailStateCopyWith<BlockDetailState> get copyWith =>
+  $MyBlockDetailStateCopyWith<MyBlockDetailState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $BlockDetailStateCopyWith<$Res> {
-  factory $BlockDetailStateCopyWith(
-          BlockDetailState value, $Res Function(BlockDetailState) then) =
-      _$BlockDetailStateCopyWithImpl<$Res, BlockDetailState>;
+abstract class $MyBlockDetailStateCopyWith<$Res> {
+  factory $MyBlockDetailStateCopyWith(
+          MyBlockDetailState value, $Res Function(MyBlockDetailState) then) =
+      _$MyBlockDetailStateCopyWithImpl<$Res, MyBlockDetailState>;
   @useResult
   $Res call({bool isLoading, String? error, BlockDetailModel? blockDetail});
 }
 
 /// @nodoc
-class _$BlockDetailStateCopyWithImpl<$Res, $Val extends BlockDetailState>
-    implements $BlockDetailStateCopyWith<$Res> {
-  _$BlockDetailStateCopyWithImpl(this._value, this._then);
+class _$MyBlockDetailStateCopyWithImpl<$Res, $Val extends MyBlockDetailState>
+    implements $MyBlockDetailStateCopyWith<$Res> {
+  _$MyBlockDetailStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -69,22 +69,22 @@ class _$BlockDetailStateCopyWithImpl<$Res, $Val extends BlockDetailState>
 }
 
 /// @nodoc
-abstract class _$$BlockDetailStateImplCopyWith<$Res>
-    implements $BlockDetailStateCopyWith<$Res> {
-  factory _$$BlockDetailStateImplCopyWith(_$BlockDetailStateImpl value,
-          $Res Function(_$BlockDetailStateImpl) then) =
-      __$$BlockDetailStateImplCopyWithImpl<$Res>;
+abstract class _$$MyBlockDetailStateImplCopyWith<$Res>
+    implements $MyBlockDetailStateCopyWith<$Res> {
+  factory _$$MyBlockDetailStateImplCopyWith(_$MyBlockDetailStateImpl value,
+          $Res Function(_$MyBlockDetailStateImpl) then) =
+      __$$MyBlockDetailStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isLoading, String? error, BlockDetailModel? blockDetail});
 }
 
 /// @nodoc
-class __$$BlockDetailStateImplCopyWithImpl<$Res>
-    extends _$BlockDetailStateCopyWithImpl<$Res, _$BlockDetailStateImpl>
-    implements _$$BlockDetailStateImplCopyWith<$Res> {
-  __$$BlockDetailStateImplCopyWithImpl(_$BlockDetailStateImpl _value,
-      $Res Function(_$BlockDetailStateImpl) _then)
+class __$$MyBlockDetailStateImplCopyWithImpl<$Res>
+    extends _$MyBlockDetailStateCopyWithImpl<$Res, _$MyBlockDetailStateImpl>
+    implements _$$MyBlockDetailStateImplCopyWith<$Res> {
+  __$$MyBlockDetailStateImplCopyWithImpl(_$MyBlockDetailStateImpl _value,
+      $Res Function(_$MyBlockDetailStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -94,7 +94,7 @@ class __$$BlockDetailStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? blockDetail = freezed,
   }) {
-    return _then(_$BlockDetailStateImpl(
+    return _then(_$MyBlockDetailStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -113,8 +113,8 @@ class __$$BlockDetailStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BlockDetailStateImpl implements _BlockDetailState {
-  const _$BlockDetailStateImpl(
+class _$MyBlockDetailStateImpl implements _MyBlockDetailState {
+  const _$MyBlockDetailStateImpl(
       {this.isLoading = false, this.error, this.blockDetail});
 
   @override
@@ -127,14 +127,14 @@ class _$BlockDetailStateImpl implements _BlockDetailState {
 
   @override
   String toString() {
-    return 'BlockDetailState(isLoading: $isLoading, error: $error, blockDetail: $blockDetail)';
+    return 'MyBlockDetailState(isLoading: $isLoading, error: $error, blockDetail: $blockDetail)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BlockDetailStateImpl &&
+            other is _$MyBlockDetailStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
@@ -148,16 +148,16 @@ class _$BlockDetailStateImpl implements _BlockDetailState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BlockDetailStateImplCopyWith<_$BlockDetailStateImpl> get copyWith =>
-      __$$BlockDetailStateImplCopyWithImpl<_$BlockDetailStateImpl>(
+  _$$MyBlockDetailStateImplCopyWith<_$MyBlockDetailStateImpl> get copyWith =>
+      __$$MyBlockDetailStateImplCopyWithImpl<_$MyBlockDetailStateImpl>(
           this, _$identity);
 }
 
-abstract class _BlockDetailState implements BlockDetailState {
-  const factory _BlockDetailState(
+abstract class _MyBlockDetailState implements MyBlockDetailState {
+  const factory _MyBlockDetailState(
       {final bool isLoading,
       final String? error,
-      final BlockDetailModel? blockDetail}) = _$BlockDetailStateImpl;
+      final BlockDetailModel? blockDetail}) = _$MyBlockDetailStateImpl;
 
   @override
   bool get isLoading;
@@ -167,6 +167,6 @@ abstract class _BlockDetailState implements BlockDetailState {
   BlockDetailModel? get blockDetail;
   @override
   @JsonKey(ignore: true)
-  _$$BlockDetailStateImplCopyWith<_$BlockDetailStateImpl> get copyWith =>
+  _$$MyBlockDetailStateImplCopyWith<_$MyBlockDetailStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -38,10 +38,10 @@ import '../features/auth/login/login_cubit.dart' as _i958;
 import '../features/auth/register/register_cubit.dart' as _i163;
 import '../features/home/home_cubit.dart' as _i639;
 import '../features/home/leaderboard_cubit.dart' as _i279;
-import '../features/profile/block_detail_cubit.dart' as _i952;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
+import '../features/profile/my_block_detail_cubit.dart' as _i296;
 import '../features/profile/my_question_detail_cubit.dart' as _i537;
 import '../features/profile/profile_connection_cubit.dart' as _i570;
 import '../features/profile/profile_cubit.dart' as _i760;
@@ -138,11 +138,11 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i575.LeaderboardRepository>(() =>
         _i317.LeaderboardRepositoryImpl(gh<_i259.LeaderboardSocketService>()));
-    gh.factoryParam<_i952.BlockDetailCubit, int, dynamic>((
+    gh.factoryParam<_i296.MyBlockDetailCubit, int, dynamic>((
       id,
       _,
     ) =>
-        _i952.BlockDetailCubit.create(
+        _i296.MyBlockDetailCubit.create(
           id,
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),
