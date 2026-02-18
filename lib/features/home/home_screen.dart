@@ -87,7 +87,7 @@ class _ViewState extends State<_View> {
                 ),
                 IconButton(
                   onPressed: () => context.push(AppRouter.notifications),
-                  icon: Icon(Icons.notifications_none_rounded),
+                  icon: Icon(Icons.notifications_rounded),
                 ),
               ],
             ),
