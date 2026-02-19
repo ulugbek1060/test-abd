@@ -320,7 +320,6 @@ class _QuestionCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   e.answerText ?? "",
-                  // "klasdmklasmdakslndaksndjkasdnakjdnsakjdnaskjdnaskjdnaskjdnsakjdnsakjdnsakdnjkas",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

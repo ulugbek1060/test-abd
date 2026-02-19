@@ -15,7 +15,28 @@ import 'package:testabd/features/users/user_profile_state.dart';
 import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
-enum PageType { block, questions, books }
+enum PageType {
+  block,
+  questions,
+  books;
+
+  static Iterable<Widget> getTabs(BuildContext context) {
+    return [
+      Tab(
+        text: context.l10n.blockTest,
+        icon: Icon(Icons.library_add_check, size: 20),
+      ),
+      Tab(
+        text: context.l10n.questions,
+        icon: Icon(Icons.question_mark_rounded, size: 20),
+      ),
+      Tab(
+        text: context.l10n.books,
+        icon: Icon(Icons.menu_book_rounded, size: 20),
+      ),
+    ];
+  }
+}
 
 class UserProfileScreen extends StatelessWidget {
   final String username;
@@ -115,111 +136,25 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                       ),
 
                       /// Statistics section
-                      SliverMainAxisGroup(
-                        slivers: [
-                          SliverPadding(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            sliver: SliverToBoxAdapter(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.analytics_rounded,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurface.withAlpha(120),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        context.l10n.quizPerformance,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface
-                                              .withAlpha(120),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          SliverPadding(
-                            padding: const EdgeInsets.only(
-                              top: 6,
-                              left: 16,
-                              right: 16,
-                            ),
-                            sliver: SliverGrid(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 12,
-                                    mainAxisSpacing: 12,
-                                    childAspectRatio: 1.4,
-                                  ),
-                              delegate: SliverChildListDelegate([
-                                _PerformanceItem(
-                                  title: context.l10n.totalTests,
-                                  value:
-                                      state.profile?.stats?.totalTests
-                                          ?.toString() ??
-                                      '0',
-                                  icon: Icons.assessment_outlined,
-                                  color: Colors.blue,
-                                ),
-                                _PerformanceItem(
-                                  title: context.l10n.correctAnswers,
-                                  value:
-                                      state.profile?.stats?.correctAnswers
-                                          ?.toString() ??
-                                      '0',
-                                  icon: Icons.check_circle_outline,
-                                  color: Colors.green,
-                                ),
-                                _PerformanceItem(
-                                  title: context.l10n.wrongAnswers,
-                                  value:
-                                      state.profile?.stats?.wrongAnswers
-                                          ?.toString() ??
-                                      '0',
-                                  icon: Icons.cancel_outlined,
-                                  color: Colors.red,
-                                ),
-                                _PerformanceItem(
-                                  title: context.l10n.accuracy,
-                                  value:
-                                      state.profile?.stats?.accuracy
-                                          ?.toString() ??
-                                      '0',
-                                  icon: Icons.balance,
-                                  color: Colors.green,
-                                  progress: state.profile?.stats?.accuracy ?? 0,
-                                ),
-                              ]),
-                            ),
-                          ),
-                        ],
+                      _Statistics(
+                        totalTests:
+                            state.profile?.stats?.totalTests?.toString() ?? '0',
+                        correctCount:
+                            state.profile?.stats?.correctAnswers?.toString() ??
+                            '0',
+                        wrongCount:
+                            state.profile?.stats?.wrongAnswers?.toString() ??
+                            '0',
+                        accuracy:
+                            state.profile?.stats?.accuracy?.toString() ?? '0',
+                        accuracyPer: state.profile?.stats?.accuracy ?? 0,
                       ),
 
                       /// tabs
                       _TabsSection(
                         pageTye: pageTye,
                         onTabChange: (index) => setState(() {
-                          switch (index) {
-                            case 0:
-                              pageTye = PageType.questions;
-                            case 1:
-                              pageTye = PageType.block;
-                            case 2:
-                              pageTye = PageType.books;
-                          }
+                          pageTye = PageType.values[index];
                         }),
                         controller: _tabController,
                       ),
@@ -453,6 +388,7 @@ class _FollowAndShareButtons extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    padding: EdgeInsets.all(6),
                   ),
                   onPressed: isLoading ? null : onFollow,
                   child: isLoading
@@ -470,7 +406,7 @@ class _FollowAndShareButtons extends StatelessWidget {
                                 ? Theme.of(context).colorScheme.onSurface
                                 : Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
                 ),
@@ -484,12 +420,18 @@ class _FollowAndShareButtons extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
+                  padding: EdgeInsets.all(6),
                 ),
                 onPressed: onShare,
                 child: Text(
                   context.l10n.shareProfile,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: isFollowing
+                        ? Theme.of(context).colorScheme.onSurface
+                        : Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -501,13 +443,102 @@ class _FollowAndShareButtons extends StatelessWidget {
   }
 }
 
+class _Statistics extends StatelessWidget {
+  final String totalTests;
+  final String correctCount;
+  final String wrongCount;
+  final String accuracy;
+  final double accuracyPer;
+
+  const _Statistics({
+    super.key,
+    required this.totalTests,
+    required this.correctCount,
+    required this.wrongCount,
+    required this.accuracy,
+    required this.accuracyPer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.analytics_rounded, color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.quizPerformance,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withAlpha(120),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+        ),
+
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 6, left: 16, right: 16),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.5,
+            ),
+            delegate: SliverChildListDelegate([
+              _PerformanceItem(
+                title: context.l10n.totalTests,
+                value: totalTests,
+                icon: Icons.library_add_check_rounded,
+                color: Colors.blue,
+              ),
+              _PerformanceItem(
+                title: context.l10n.correctAnswers,
+                value: correctCount,
+                icon: Icons.check_circle,
+                color: Colors.green,
+              ),
+              _PerformanceItem(
+                title: context.l10n.wrongAnswers,
+                value: wrongCount,
+                icon: Icons.cancel,
+                color: Colors.red,
+              ),
+              _PerformanceItem(
+                title: context.l10n.accuracy,
+                value: accuracy,
+                icon: Icons.balance,
+                color: Colors.orange,
+                progress: accuracyPer,
+              ),
+            ]),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _TabsSection extends StatelessWidget {
   final PageType pageTye;
   final void Function(int index) onTabChange;
   final TabController controller;
 
   const _TabsSection({
-    super.key,
     required this.pageTye,
     required this.onTabChange,
     required this.controller,
@@ -531,20 +562,7 @@ class _TabsSection extends StatelessWidget {
           ),
           onTap: onTabChange,
           controller: controller,
-          tabs: [
-            Tab(
-              text: context.l10n.questions,
-              icon: Icon(Icons.question_mark_rounded, size: 20),
-            ),
-            Tab(
-              text: context.l10n.blockTest,
-              icon: Icon(Icons.library_add_check, size: 20),
-            ),
-            Tab(
-              text: context.l10n.books,
-              icon: Icon(Icons.menu_book_rounded, size: 20),
-            ),
-          ],
+          tabs: PageType.getTabs(context).toList(),
         ),
       ),
     );
@@ -1317,7 +1335,7 @@ class _PerformanceItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: color,
         borderRadius: BorderRadius.circular(16),
       ),
       padding: const EdgeInsets.all(16),
@@ -1334,7 +1352,11 @@ class _PerformanceItem extends StatelessWidget {
                   color: color.withAlpha(50),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 18),
+                child: Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 30,
+                ),
               ),
               const Spacer(),
               Text(
@@ -1347,7 +1369,13 @@ class _PerformanceItem extends StatelessWidget {
               ),
             ],
           ),
-          Text(title, style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(
+            title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 14,
+            ),
+          ),
           if (progress != null)
             LinearProgressIndicator(
               value: (progress ?? 1) / 100,

@@ -10,6 +10,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/account/entities/user_connections_model.dart';
 import 'package:testabd/features/users/user_connection_cubit.dart';
 import 'package:testabd/features/users/user_connection_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 class UserConnectionScreen extends StatelessWidget {
@@ -59,14 +60,14 @@ class _ViewState extends State<_View> {
       initialIndex: widget.connectionType == ConnectionsEnum.following ? 1 : 0,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Connections'),
+          title: Text('Connections'),
           centerTitle: true,
           bottom: TabBar(
             unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
             labelColor: Theme.of(context).colorScheme.onSurface,
             tabs: [
-              Tab(text: 'Followers'),
-              Tab(text: 'Following'),
+              Tab(text: context.l10n.followers),
+              Tab(text: context.l10n.following),
             ],
           ),
         ),
@@ -173,7 +174,7 @@ class UserTile extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: user.isFollowing
-                      ? Theme.of(context).colorScheme.onSurface.withAlpha(150)
+                      ? Theme.of(context).colorScheme.surface
                       : Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -187,7 +188,9 @@ class UserTile extends StatelessWidget {
                         child: const ProgressView(),
                       )
                     : Text(
-                        user.isFollowing ? 'Unfollow' : 'Follow',
+                        user.isFollowing
+                            ? context.l10n.followed
+                            : context.l10n.follow,
                         style: TextStyle(color: Colors.white),
                       ),
               ),
