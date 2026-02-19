@@ -79,4 +79,146 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get textQuestion => 'Text answer';
+
+  @override
+  String get followed => 'Followed';
+
+  @override
+  String get follow => 'Follow';
+
+  @override
+  String get shareProfile => 'Share profile';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get coins => 'Coins';
+
+  @override
+  String get bookmarkedQuestions => 'Bookmarked Questions';
+
+  @override
+  String get addQuestion => 'Add Question';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get library => 'Library';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get questions => 'Questions';
+
+  @override
+  String get blockTest => 'Block test';
+
+  @override
+  String get books => 'Books';
+
+  @override
+  String get followers => 'Followers';
+
+  @override
+  String get following => 'Following';
+
+  @override
+  String get totalTests => 'Total Tests';
+
+  @override
+  String get correctAnswers => 'Correct Answers';
+
+  @override
+  String get wrongAnswers => 'Wrong Answers';
+
+  @override
+  String get accuracy => 'Accuracy';
+
+  @override
+  String get quizPerformance => 'Quiz Performance';
+
+  @override
+  String get profileInformation => 'Profile Information';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get updatePersonalInfoDescription =>
+      'Update your name, email address, phone number, and biographical details.';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get regionalSettings => 'Regional Settings';
+
+  @override
+  String get regionalSettingsDescription =>
+      'Manage your country, state, and city for localized content and time zones.';
+
+  @override
+  String get privacy => 'Privacy';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get changePasswordDescription =>
+      'Update your account password to keep your profile secure.';
+
+  @override
+  String get appPreferences => 'App Preferences';
+
+  @override
+  String get themeSettings => 'Theme Settings';
+
+  @override
+  String get themeSettingsDescription =>
+      'Switch between light and dark modes or sync with your system preferences.';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get languageDescription =>
+      'Select your preferred language for this application, independent of your device\'s global settings.';
+
+  @override
+  String get referral => 'Referral';
+
+  @override
+  String get referAndEarn => 'Refer & Earn';
+
+  @override
+  String get referDescription =>
+      'Invite your network and stack up credits for your next purchase.';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get editAndSettings => 'Edit & Settings';
+
+  @override
+  String get logoutQuestion => 'Log out of account?';
+
+  @override
+  String get logoutDescription =>
+      'You will be signed out from this device. You can log back in at any time using your credentials.';
+
+  @override
+  String get stayLoggedIn => 'Stay Logged In';
+
+  @override
+  String get logOut => 'Log Out';
 }

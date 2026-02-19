@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testabd/core/theme/app_images.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 
 class ShellScreen extends StatelessWidget {
   final StatefulNavigationShell navShell;
@@ -36,13 +37,13 @@ class ShellScreen extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home_rounded),
-            label: "Home",
+            label: context.l10n.home,
             tooltip: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search_rounded),
             activeIcon: Icon(Icons.search_rounded),
-            label: "Search",
+            label: context.l10n.search,
             tooltip: 'Search',
           ),
           BottomNavigationBarItem(
@@ -59,13 +60,13 @@ class ShellScreen extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.local_library_outlined),
             activeIcon: Icon(Icons.local_library_rounded),
-            label: "Library",
+            label: context.l10n.library,
             tooltip: 'Library',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline_rounded),
             activeIcon: Icon(Icons.person_rounded),
-            label: "Profile",
+            label: context.l10n.profile,
             tooltip: 'Profile',
           ),
         ],

@@ -223,4 +223,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       );
     });
   }
+
+  void onShareAction() {
+    // TODO implement onShare function
+  }
 }

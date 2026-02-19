@@ -11,6 +11,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 class NewProfileScreen extends StatelessWidget {
@@ -302,8 +303,18 @@ class _Header extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      countItem(context, "Followers", followers, onFollowers),
-                      countItem(context, "Following", following, onFollowing),
+                      countItem(
+                        context,
+                        context.l10n.followers,
+                        followers,
+                        onFollowers,
+                      ),
+                      countItem(
+                        context,
+                        context.l10n.following,
+                        following,
+                        onFollowing,
+                      ),
                     ],
                   ),
                 ),
@@ -345,7 +356,7 @@ class _Header extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text("Edit Profile"),
+                    child: Text(context.l10n.editProfile),
                   ),
                 ),
               ],
@@ -414,7 +425,7 @@ class _SubHeader extends StatelessWidget {
                 SizedBox(width: 12),
                 _SubheaderItem(
                   backgroundColor: Colors.orange,
-                  title: "Coins",
+                  title: context.l10n.coins,
                   value: coins,
                   leading: Icon(
                     Icons.monetization_on_rounded,
@@ -425,7 +436,7 @@ class _SubHeader extends StatelessWidget {
                 SizedBox(width: 12),
                 _SubheaderItem(
                   backgroundColor: Colors.green,
-                  title: "Correct",
+                  title: context.l10n.correctAnswers,
                   value: correct,
                   leading: Icon(
                     Icons.check_circle_rounded,
@@ -436,7 +447,7 @@ class _SubHeader extends StatelessWidget {
                 SizedBox(width: 12),
                 _SubheaderItem(
                   backgroundColor: Colors.red,
-                  title: "Wrong",
+                  title: context.l10n.wrongAnswers,
                   value: wrong,
                   leading: Icon(
                     Icons.error_rounded,
@@ -447,7 +458,7 @@ class _SubHeader extends StatelessWidget {
                 SizedBox(width: 12),
                 _SubheaderItem(
                   backgroundColor: Colors.blue,
-                  title: "Accuracy",
+                  title: context.l10n.accuracy,
                   value: accuracy,
                   leading: Icon(
                     Icons.error_rounded,
@@ -464,7 +475,7 @@ class _SubHeader extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onBookmark,
               icon: const Icon(Icons.bookmark),
-              label: const Text("Bookmarked Questions"),
+              label: Text(context.l10n.bookmarkedQuestions),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -513,12 +524,15 @@ class _TabsSection extends StatelessWidget {
           controller: controller,
           tabs: [
             Tab(
-              text: 'Savollar',
+              text: context.l10n.questions,
               icon: Icon(Icons.question_mark_rounded, size: 20),
             ),
-            Tab(text: 'Bloklar', icon: Icon(Icons.library_add_check, size: 20)),
             Tab(
-              text: 'Kitoblar',
+              text: context.l10n.blockTest,
+              icon: Icon(Icons.library_add_check, size: 20),
+            ),
+            Tab(
+              text: context.l10n.books,
               icon: Icon(Icons.menu_book_rounded, size: 20),
             ),
           ],
@@ -607,7 +621,7 @@ class _BlocksSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Add question',
+                        context.l10n.addQuestion,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -681,7 +695,7 @@ class _QuestionsSection extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        "Add question",
+                        context.l10n.addQuestion,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -703,9 +717,7 @@ class _QuestionsSection extends StatelessWidget {
               ),
               child: ListTile(
                 onTap: () => context.push(
-                  AppRouter.myQuestionDetailWithArgs(
-                    state.questions[index].id,
-                  ),
+                  AppRouter.myQuestionDetailWithArgs(state.questions[index].id),
                 ),
                 tileColor: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(

@@ -20,4 +20,6 @@ class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
 
 
   Future<void> fetchQuestion() async {}
+
+  void toggleBookmark() {}
 }

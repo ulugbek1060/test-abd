@@ -243,6 +243,276 @@ abstract class AppLocalizations {
   /// In uz, this message translates to:
   /// **'Matnli javob'**
   String get textQuestion;
+
+  /// No description provided for @followed.
+  ///
+  /// In uz, this message translates to:
+  /// **'Obuna bo‘lingan'**
+  String get followed;
+
+  /// No description provided for @follow.
+  ///
+  /// In uz, this message translates to:
+  /// **'Obuna bo‘lish'**
+  String get follow;
+
+  /// No description provided for @shareProfile.
+  ///
+  /// In uz, this message translates to:
+  /// **'Profilni ulashish'**
+  String get shareProfile;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In uz, this message translates to:
+  /// **'Profilni tahrirlash'**
+  String get editProfile;
+
+  /// No description provided for @coins.
+  ///
+  /// In uz, this message translates to:
+  /// **'Tangalar'**
+  String get coins;
+
+  /// No description provided for @bookmarkedQuestions.
+  ///
+  /// In uz, this message translates to:
+  /// **'Saqlangan savollar'**
+  String get bookmarkedQuestions;
+
+  /// No description provided for @addQuestion.
+  ///
+  /// In uz, this message translates to:
+  /// **'Savol qo‘shish'**
+  String get addQuestion;
+
+  /// No description provided for @home.
+  ///
+  /// In uz, this message translates to:
+  /// **'Bosh sahifa'**
+  String get home;
+
+  /// No description provided for @search.
+  ///
+  /// In uz, this message translates to:
+  /// **'Qidirish'**
+  String get search;
+
+  /// No description provided for @library.
+  ///
+  /// In uz, this message translates to:
+  /// **'Kutubxona'**
+  String get library;
+
+  /// No description provided for @profile.
+  ///
+  /// In uz, this message translates to:
+  /// **'Profil'**
+  String get profile;
+
+  /// No description provided for @questions.
+  ///
+  /// In uz, this message translates to:
+  /// **'Savollar'**
+  String get questions;
+
+  /// No description provided for @blockTest.
+  ///
+  /// In uz, this message translates to:
+  /// **'Testni bloklash'**
+  String get blockTest;
+
+  /// No description provided for @books.
+  ///
+  /// In uz, this message translates to:
+  /// **'Kitoblar'**
+  String get books;
+
+  /// No description provided for @followers.
+  ///
+  /// In uz, this message translates to:
+  /// **'Obunachilar'**
+  String get followers;
+
+  /// No description provided for @following.
+  ///
+  /// In uz, this message translates to:
+  /// **'Obuna bo‘linganlar'**
+  String get following;
+
+  /// No description provided for @totalTests.
+  ///
+  /// In uz, this message translates to:
+  /// **'Jami testlar'**
+  String get totalTests;
+
+  /// No description provided for @correctAnswers.
+  ///
+  /// In uz, this message translates to:
+  /// **'To‘g‘ri javoblar'**
+  String get correctAnswers;
+
+  /// No description provided for @wrongAnswers.
+  ///
+  /// In uz, this message translates to:
+  /// **'Noto‘g‘ri javoblar'**
+  String get wrongAnswers;
+
+  /// No description provided for @accuracy.
+  ///
+  /// In uz, this message translates to:
+  /// **'Aniqlik'**
+  String get accuracy;
+
+  /// No description provided for @quizPerformance.
+  ///
+  /// In uz, this message translates to:
+  /// **'Test natijalari'**
+  String get quizPerformance;
+
+  /// No description provided for @profileInformation.
+  ///
+  /// In uz, this message translates to:
+  /// **'Profil ma\'lumotlari'**
+  String get profileInformation;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In uz, this message translates to:
+  /// **'Shaxsiy ma\'lumotlar'**
+  String get personalInformation;
+
+  /// No description provided for @updatePersonalInfoDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Ismingiz, email manzilingiz, telefon raqamingiz va biografik ma\'lumotlaringizni yangilang.'**
+  String get updatePersonalInfoDescription;
+
+  /// No description provided for @location.
+  ///
+  /// In uz, this message translates to:
+  /// **'Joylashuv'**
+  String get location;
+
+  /// No description provided for @regionalSettings.
+  ///
+  /// In uz, this message translates to:
+  /// **'Hududiy sozlamalar'**
+  String get regionalSettings;
+
+  /// No description provided for @regionalSettingsDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Mahalliy kontent va vaqt zonalari uchun mamlakat, viloyat va shaharingizni boshqaring.'**
+  String get regionalSettingsDescription;
+
+  /// No description provided for @privacy.
+  ///
+  /// In uz, this message translates to:
+  /// **'Maxfiylik'**
+  String get privacy;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In uz, this message translates to:
+  /// **'Parolni o‘zgartirish'**
+  String get changePassword;
+
+  /// No description provided for @changePasswordDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Profilingiz xavfsizligini ta\'minlash uchun hisob parolingizni yangilang.'**
+  String get changePasswordDescription;
+
+  /// No description provided for @appPreferences.
+  ///
+  /// In uz, this message translates to:
+  /// **'Ilova sozlamalari'**
+  String get appPreferences;
+
+  /// No description provided for @themeSettings.
+  ///
+  /// In uz, this message translates to:
+  /// **'Mavzu sozlamalari'**
+  String get themeSettings;
+
+  /// No description provided for @themeSettingsDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Yorug‘ va qorong‘i rejimlar o‘rtasida almashing yoki tizim sozlamalari bilan sinxronlang.'**
+  String get themeSettingsDescription;
+
+  /// No description provided for @language.
+  ///
+  /// In uz, this message translates to:
+  /// **'Til'**
+  String get language;
+
+  /// No description provided for @languageDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Qurilmangizning umumiy sozlamalaridan mustaqil ravishda ushbu ilova uchun tilni tanlang.'**
+  String get languageDescription;
+
+  /// No description provided for @referral.
+  ///
+  /// In uz, this message translates to:
+  /// **'Tavsiya'**
+  String get referral;
+
+  /// No description provided for @referAndEarn.
+  ///
+  /// In uz, this message translates to:
+  /// **'Taklif qiling va bonus oling'**
+  String get referAndEarn;
+
+  /// No description provided for @referDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Tarmog‘ingizni taklif qiling va keyingi xaridingiz uchun bonuslar to‘plang.'**
+  String get referDescription;
+
+  /// No description provided for @account.
+  ///
+  /// In uz, this message translates to:
+  /// **'Hisob'**
+  String get account;
+
+  /// No description provided for @logout.
+  ///
+  /// In uz, this message translates to:
+  /// **'Chiqish'**
+  String get logout;
+
+  /// No description provided for @editAndSettings.
+  ///
+  /// In uz, this message translates to:
+  /// **'Tahrirlash va sozlamalar'**
+  String get editAndSettings;
+
+  /// No description provided for @logoutQuestion.
+  ///
+  /// In uz, this message translates to:
+  /// **'Hisobdan chiqilsinmi?'**
+  String get logoutQuestion;
+
+  /// No description provided for @logoutDescription.
+  ///
+  /// In uz, this message translates to:
+  /// **'Siz ushbu qurilmadan hisobingizdan chiqarilasiz. Istalgan vaqtda login ma\'lumotlaringiz orqali qayta kirishingiz mumkin.'**
+  String get logoutDescription;
+
+  /// No description provided for @stayLoggedIn.
+  ///
+  /// In uz, this message translates to:
+  /// **'Hisobda qolish'**
+  String get stayLoggedIn;
+
+  /// No description provided for @logOut.
+  ///
+  /// In uz, this message translates to:
+  /// **'Chiqish'**
+  String get logOut;
 }
 
 class _AppLocalizationsDelegate

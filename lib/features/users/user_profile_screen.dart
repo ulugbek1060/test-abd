@@ -12,6 +12,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/features/users/user_profile_cubit.dart';
 import 'package:testabd/features/users/user_profile_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 enum PageType { block, questions, books }
@@ -73,9 +74,9 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
             /// appBar
             appBar: AppBar(
               elevation: 0,
-              centerTitle: false,
+              centerTitle: true,
               title: Text(
-                cubit.username,
+                "@${cubit.username}",
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -84,269 +85,33 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
 
             /// body
             body: state.isLoading
-                ? Center(child: ProgressView())
+                ? ProgressView()
                 : CustomScrollView(
                     slivers: [
                       /// Profile Header Section Profile image and following and followers
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              // Profile Picture
-                              SizedBox(
-                                width: 90,
-                                height: 90,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      top: 0,
-                                      bottom: 0,
-                                      left: 0,
-                                      right: 0,
-
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: Colors.purple,
-                                            width: 3,
-                                          ),
-                                          gradient: const LinearGradient(
-                                            colors: [
-                                              Colors.purple,
-                                              Colors.blue,
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
-                                        ),
-                                        child: ClipOval(
-                                          child: CachedNetworkImage(
-                                            width: 46,
-                                            height: 46,
-                                            imageUrl:
-                                                state
-                                                    .profile
-                                                    ?.user
-                                                    ?.profileImage ??
-                                                "",
-                                            fit: BoxFit.cover,
-                                            placeholder: (_, __) => Image.asset(
-                                              AppImages.defaultAvatar,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            errorWidget: (_, __, ___) =>
-                                                Image.asset(
-                                                  AppImages.defaultAvatar,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      left: 0,
-                                      child: Container(
-                                        width: 80,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(12),
-                                          ),
-                                          gradient: const LinearGradient(
-                                            colors: [
-                                              Colors.purple,
-                                              Colors.blue,
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            state.profile?.user?.level?.getText(
-                                                  context,
-                                                ) ??
-                                                "",
-                                            maxLines: 1,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.copyWith(
-                                                  color: Theme.of(
-                                                    context,
-                                                  ).colorScheme.onPrimary,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(width: 20),
-
-                              // Following and Followers
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    // followers
-                                    _StatItem(
-                                      onTap: () => context.push(
-                                        AppRouter.userConnectionWithUserId(
-                                          userId: state.profile?.user?.id ?? 0,
-                                          connectionType:
-                                              ConnectionsEnum.followers.name,
-                                        ),
-                                      ),
-                                      title: 'Followers',
-                                      value:
-                                          '${state.profile?.user?.followersCount ?? 0}',
-                                    ),
-
-                                    _StatItem(
-                                      onTap: () => context.push(
-                                        AppRouter.userConnectionWithUserId(
-                                          userId: state.profile?.user?.id ?? 0,
-                                          connectionType:
-                                              ConnectionsEnum.following.name,
-                                        ),
-                                      ),
-                                      title: 'Following',
-                                      value:
-                                          '${state.profile?.user?.followingCount ?? 0}',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      _Header(
+                        userId: state.profile?.user?.id ?? -1,
+                        followersCount:
+                            '${state.profile?.user?.followersCount ?? 0}',
+                        followingCount:
+                            '${state.profile?.user?.followingCount ?? 0}',
+                        imgUrl: state.profile?.user?.profileImage ?? "",
+                        level: state.profile?.user?.level,
                       ),
 
                       /// User bio section
-                      SliverToBoxAdapter(
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Beginner Developer 👨‍💻",
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-
-                              SizedBox(height: 4),
-
-                              Text(
-                                "Learning • Practicing • Growing",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
+                      _Subheader(
+                        bio: state.profile?.user?.bio ?? "",
+                        fullname: state.profile?.user?.getFullName ?? "",
                       ),
 
                       /// Action Buttons Follow and Message
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 6,
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          child: Row(
-                            children: [
-                              if (!(state.profile?.user?.isMe == true))
-                                Expanded(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          state.profile?.user?.isFollowing ??
-                                              false
-                                          ? Theme.of(
-                                              context,
-                                            ).colorScheme.surface
-                                          : Colors.blueAccent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    onPressed: state.followState.isLoading
-                                        ? null
-                                        : cubit.followAction,
-                                    child: state.followState.isLoading
-                                        ? SizedBox(
-                                            width: 18,
-                                            height: 18,
-                                            child: ProgressView(strokeWidth: 3),
-                                          )
-                                        : Text(
-                                            state.profile?.user?.isFollowing ??
-                                                    false
-                                                ? "Followed"
-                                                : "Follow",
-                                            style: TextStyle(
-                                              color:
-                                                  state
-                                                          .profile
-                                                          ?.user
-                                                          ?.isFollowing ??
-                                                      false
-                                                  ? Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface
-                                                  : Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                  ),
-                                ),
-
-                              if (!(state.profile?.user?.isMe == true))
-                                const SizedBox(width: 8),
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.surface,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    'Share profile',
-                                    style: TextStyle(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      _FollowAndShareButtons(
+                        onFollow: cubit.followAction,
+                        onShare: cubit.onShareAction,
+                        isMe: state.profile?.user?.isMe == true,
+                        isFollowing: state.profile?.user?.isFollowing ?? false,
+                        isLoading: state.followState.isLoading,
                       ),
 
                       /// Statistics section
@@ -367,7 +132,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
-                                        'Quiz Performance',
+                                        context.l10n.quizPerformance,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -401,7 +166,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                                   ),
                               delegate: SliverChildListDelegate([
                                 _PerformanceItem(
-                                  title: 'Total Tests',
+                                  title: context.l10n.totalTests,
                                   value:
                                       state.profile?.stats?.totalTests
                                           ?.toString() ??
@@ -410,7 +175,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                                   color: Colors.blue,
                                 ),
                                 _PerformanceItem(
-                                  title: 'Correct Answers',
+                                  title: context.l10n.correctAnswers,
                                   value:
                                       state.profile?.stats?.correctAnswers
                                           ?.toString() ??
@@ -419,7 +184,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                                   color: Colors.green,
                                 ),
                                 _PerformanceItem(
-                                  title: 'Wrong Answers',
+                                  title: context.l10n.wrongAnswers,
                                   value:
                                       state.profile?.stats?.wrongAnswers
                                           ?.toString() ??
@@ -428,7 +193,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                                   color: Colors.red,
                                 ),
                                 _PerformanceItem(
-                                  title: 'Accuracy',
+                                  title: context.l10n.accuracy,
                                   value:
                                       state.profile?.stats?.accuracy
                                           ?.toString() ??
@@ -444,37 +209,19 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                       ),
 
                       /// tabs
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _SliverAppBarDelegate(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).scaffoldBackgroundColor,
-                          TabBar(
-                            unselectedLabelColor: Theme.of(
-                              context,
-                            ).colorScheme.onSurface,
-                            labelColor: Theme.of(context).colorScheme.onSurface,
-                            onTap: (index) {
-                              setState(() {
-                                switch (index) {
-                                  case 0:
-                                    pageTye = PageType.block;
-                                  case 1:
-                                    pageTye = PageType.questions;
-                                  case 2:
-                                    pageTye = PageType.books;
-                                }
-                              });
-                            },
-                            controller: _tabController,
-                            tabs: [
-                              Tab(text: 'Bloklar'),
-                              Tab(text: 'Savollar'),
-                              Tab(text: 'Kitoblar'),
-                            ],
-                          ),
-                        ),
+                      _TabsSection(
+                        pageTye: pageTye,
+                        onTabChange: (index) => setState(() {
+                          switch (index) {
+                            case 0:
+                              pageTye = PageType.questions;
+                            case 1:
+                              pageTye = PageType.block;
+                            case 2:
+                              pageTye = PageType.books;
+                          }
+                        }),
+                        controller: _tabController,
                       ),
 
                       /// ViewBlock
@@ -502,6 +249,304 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
           ),
         );
       },
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  final String imgUrl;
+  final KnowledgeLevel? level;
+  final int userId;
+  final String followingCount;
+  final String followersCount;
+
+  const _Header({
+    super.key,
+    required this.imgUrl,
+    required this.level,
+    required this.userId,
+    required this.followersCount,
+    required this.followingCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverToBoxAdapter(
+        child: Row(
+          children: [
+            // Profile Picture
+            SizedBox(
+              width: 90,
+              height: 90,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.purple, width: 3),
+                        gradient: const LinearGradient(
+                          colors: [Colors.purple, Colors.blue],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          width: 46,
+                          height: 46,
+                          imageUrl: imgUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Image.asset(
+                            AppImages.defaultAvatar,
+                            fit: BoxFit.cover,
+                          ),
+                          errorWidget: (_, __, ___) => Image.asset(
+                            AppImages.defaultAvatar,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    child: Container(
+                      width: 80,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        gradient: const LinearGradient(
+                          colors: [Colors.purple, Colors.blue],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          level?.getText(context) ?? "",
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 20),
+
+            // Following and Followers
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // followers
+                  _StatItem(
+                    onTap: () => context.push(
+                      AppRouter.userConnectionWithUserId(
+                        userId: userId,
+                        connectionType: ConnectionsEnum.followers.name,
+                      ),
+                    ),
+                    title: context.l10n.followers,
+                    value: followersCount,
+                  ),
+
+                  _StatItem(
+                    onTap: () => context.push(
+                      AppRouter.userConnectionWithUserId(
+                        userId: userId,
+                        connectionType: ConnectionsEnum.following.name,
+                      ),
+                    ),
+                    title: context.l10n.following,
+                    value: followingCount,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Subheader extends StatelessWidget {
+  final String fullname;
+  final String bio;
+
+  const _Subheader({super.key, required this.fullname, required this.bio});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              fullname,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            SizedBox(height: 4),
+
+            Text(bio, style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FollowAndShareButtons extends StatelessWidget {
+  final VoidCallback onFollow;
+  final VoidCallback onShare;
+  final bool isLoading;
+  final bool isFollowing;
+  final bool isMe;
+
+  const _FollowAndShareButtons({
+    super.key,
+    required this.isMe,
+    required this.isLoading,
+    required this.isFollowing,
+    required this.onFollow,
+    required this.onShare,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 6, left: 16, right: 16, bottom: 16),
+      sliver: SliverToBoxAdapter(
+        child: Row(
+          children: [
+            if (!isMe)
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isFollowing
+                        ? Theme.of(context).colorScheme.surface
+                        : Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: isLoading ? null : onFollow,
+                  child: isLoading
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: ProgressView(strokeWidth: 3),
+                        )
+                      : Text(
+                          isFollowing
+                              ? context.l10n.followed
+                              : context.l10n.follow,
+                          style: TextStyle(
+                            color: isFollowing
+                                ? Theme.of(context).colorScheme.onSurface
+                                : Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                ),
+              ),
+
+            if (!isMe) const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: onShare,
+                child: Text(
+                  context.l10n.shareProfile,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TabsSection extends StatelessWidget {
+  final PageType pageTye;
+  final void Function(int index) onTabChange;
+  final TabController controller;
+
+  const _TabsSection({
+    super.key,
+    required this.pageTye,
+    required this.onTabChange,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        TabBar(
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.6),
+          labelColor: Theme.of(context).colorScheme.onSurface,
+          labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+          onTap: onTabChange,
+          controller: controller,
+          tabs: [
+            Tab(
+              text: context.l10n.questions,
+              icon: Icon(Icons.question_mark_rounded, size: 20),
+            ),
+            Tab(
+              text: context.l10n.blockTest,
+              icon: Icon(Icons.library_add_check, size: 20),
+            ),
+            Tab(
+              text: context.l10n.books,
+              icon: Icon(Icons.menu_book_rounded, size: 20),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

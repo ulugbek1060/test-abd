@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/number_symbols_data.dart';
 import 'package:testabd/core/utils/app_mode_service.dart';
 import 'package:testabd/core/utils/language_service.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/features/profile/settings/edit_profile_cubit.dart';
 import 'package:testabd/features/profile/settings/language_bottom_sheet.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 class EditProfileScreen extends StatelessWidget {
@@ -61,7 +63,7 @@ class _View extends StatelessWidget {
 
               /// Title
               Text(
-                "Log out of account?",
+                context.l10n.logoutQuestion,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
@@ -73,8 +75,7 @@ class _View extends StatelessWidget {
 
               /// Message
               Text(
-                "You will be signed out from this device. "
-                "You can log back in at any time using your credentials.",
+                context.l10n.logoutDescription,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -90,7 +91,7 @@ class _View extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context, false),
-                      child: const Text("Stay Logged In"),
+                      child: Text(context.l10n.stayLoggedIn),
                     ),
                   ),
 
@@ -104,7 +105,7 @@ class _View extends StatelessWidget {
                         foregroundColor: theme.colorScheme.onError,
                       ),
                       onPressed: () => Navigator.pop(context, true),
-                      child: const Text("Log Out"),
+                      child: Text(context.l10n.logOut),
                     ),
                   ),
                 ],
@@ -123,49 +124,48 @@ class _View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit & Settings"), centerTitle: true),
+      appBar: AppBar(
+        title: Text(context.l10n.editAndSettings),
+        centerTitle: true,
+      ),
 
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // TelegramBotCard(),
           // SizedBox(height: 24),
-          _Section(title: "Profile Information"),
+          _Section(title: context.l10n.profileInformation),
           _ProfileTile(
-            title: "Personal Information",
-            description:
-                "Update your name, email address, phone number, and biographical details.",
+            title: context.l10n.personalInformation,
+            description: context.l10n.updatePersonalInfoDescription,
             onTap: () => context.push(AppRouter.personalInfo),
           ),
 
           const SizedBox(height: 24),
 
-          _Section(title: "Location"),
+          _Section(title: context.l10n.location),
           _ProfileTile(
-            title: "Regional Settings",
-            description:
-                "Manage your country, state, and city for localized content and time zones.",
+            title: context.l10n.regionalSettings,
+            description: context.l10n.regionalSettingsDescription,
             onTap: () => context.push(AppRouter.regionalInfo),
           ),
 
           const SizedBox(height: 24),
 
-          const _Section(title: "Privacy"),
+          _Section(title: context.l10n.privacy),
           _ProfileTile(
-            title: "Change Password",
-            description:
-                "Update your account password to keep your profile secure.",
+            title: context.l10n.changePassword,
+            description: context.l10n.changePasswordDescription,
             trailing: const Icon(Icons.lock),
             onTap: () => context.push(AppRouter.changePassword),
           ),
 
           const SizedBox(height: 24),
 
-          _Section(title: "App Preferences"),
+          _Section(title: context.l10n.appPreferences),
           _ProfileTile(
-            title: "Theme Settings",
-            description:
-                "Switch between light and dark modes or sync with your system preferences.",
+            title: context.l10n.themeSettings,
+            description: context.l10n.themeSettingsDescription,
             onTap: locator<AppSettingsService>().toggleDarkAndLight,
             trailing: StreamBuilder(
               stream: locator<AppSettingsService>().stream,
@@ -178,9 +178,8 @@ class _View extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _ProfileTile(
-            title: "Language",
-            description:
-                "Select your preferred language for this application, independent of your device's global settings.",
+            title: context.l10n.language,
+            description: context.l10n.languageDescription,
             onTap: () => showModalBottomSheet(
               context: navigatorKey.currentState!.context,
               backgroundColor: Colors.transparent,
@@ -199,21 +198,20 @@ class _View extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          _Section(title: "Referral"),
+          _Section(title: context.l10n.referral),
           _ProfileTile(
-            title: 'Refer & Earn',
-            description:
-                'Invite your network and stack up credits for your next purchase.',
+            title: context.l10n.referAndEarn,
+            description: context.l10n.referDescription,
             onTap: () => context.push(AppRouter.referrals),
             trailing: const Icon(Icons.history),
           ),
 
           const SizedBox(height: 24),
 
-          _Section(title: "Account"),
+          _Section(title: context.l10n.account),
           _ProfileTile(
-            title: 'Logout',
-            description: 'Sign out from your account',
+            title: context.l10n.logout,
+            description: context.l10n.logoutDescription,
             trailing: Icon(Icons.logout, color: Colors.red),
             onTap: () => showLogoutDialog(context),
           ),
@@ -280,151 +278,151 @@ class _ProfileTile extends StatelessWidget {
 }
 
 /// -------------------- Telegram card ----------------------
-class TelegramBotCard extends StatelessWidget {
-  const TelegramBotCard({super.key});
+// class TelegramBotCard extends StatelessWidget {
+//   const TelegramBotCard({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(24),
+//         gradient: const LinearGradient(
+//           begin: Alignment.topLeft,
+//           end: Alignment.bottomRight,
+//           colors: [Color(0xFF3B82F6), Color(0xFF9333EA), Color(0xFFEC4899)],
+//         ),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           // 🔹 HEADER
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Container(
+//                 padding: const EdgeInsets.all(12),
+//                 decoration: BoxDecoration(
+//                   color: Colors.white.withOpacity(0.2),
+//                   borderRadius: BorderRadius.circular(16),
+//                 ),
+//                 child: const Icon(
+//                   Icons.smart_toy,
+//                   color: Colors.white,
+//                   size: 28,
+//                 ),
+//               ),
+//               const SizedBox(width: 12),
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: const [
+//                     Text(
+//                       "🚀 Telegram Bot orqali boshqaring!",
+//                       style: TextStyle(
+//                         fontSize: 18,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                     SizedBox(height: 6),
+//                     Text(
+//                       "Profil ma'lumotlaringizni yanada qulay boshqaring",
+//                       style: TextStyle(color: Colors.white70, fontSize: 14),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//
+//           const SizedBox(height: 20),
+//
+//           // 🔹 FEATURES BOX
+//           Container(
+//             padding: const EdgeInsets.all(16),
+//             decoration: BoxDecoration(
+//               color: Colors.white.withOpacity(0.15),
+//               borderRadius: BorderRadius.circular(18),
+//             ),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: const [
+//                 Text(
+//                   "✨ Telegram botimizning afzalliklari:",
+//                   style: TextStyle(
+//                     color: Colors.white,
+//                     fontWeight: FontWeight.w600,
+//                   ),
+//                 ),
+//                 SizedBox(height: 12),
+//                 _FeatureItem(icon: "🔥", text: "Tezkor profil yangilash"),
+//                 _FeatureItem(
+//                   icon: "📱",
+//                   text: "Mobil qurilmada qulay foydalanish",
+//                 ),
+//                 _FeatureItem(icon: "🔔", text: "Real vaqtda bildirishnomalar"),
+//                 _FeatureItem(icon: "⚡", text: "Bir necha sekundda sozlash"),
+//               ],
+//             ),
+//           ),
+//
+//           const SizedBox(height: 20),
+//
+//           // 🔹 BUTTON
+//           InkWell(
+//             borderRadius: BorderRadius.circular(32),
+//             onTap: () {
+//               // TODO: open telegram link
+//             },
+//             child: Container(
+//               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(32),
+//               ),
+//               child: Row(
+//                 children: const [
+//                   Icon(Icons.smart_toy, color: Color(0xFF2563EB)),
+//                   SizedBox(width: 8),
+//                   Text(
+//                     "@TestAbdUzBot",
+//                     style: TextStyle(
+//                       color: Color(0xFF2563EB),
+//                       fontWeight: FontWeight.w600,
+//                     ),
+//                   ),
+//                   Spacer(),
+//                   Icon(Icons.open_in_new, color: Color(0xFF2563EB)),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF3B82F6), Color(0xFF9333EA), Color(0xFFEC4899)],
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 🔹 HEADER
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.smart_toy,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "🚀 Telegram Bot orqali boshqaring!",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      "Profil ma'lumotlaringizni yanada qulay boshqaring",
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          // 🔹 FEATURES BOX
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "✨ Telegram botimizning afzalliklari:",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 12),
-                _FeatureItem(icon: "🔥", text: "Tezkor profil yangilash"),
-                _FeatureItem(
-                  icon: "📱",
-                  text: "Mobil qurilmada qulay foydalanish",
-                ),
-                _FeatureItem(icon: "🔔", text: "Real vaqtda bildirishnomalar"),
-                _FeatureItem(icon: "⚡", text: "Bir necha sekundda sozlash"),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // 🔹 BUTTON
-          InkWell(
-            borderRadius: BorderRadius.circular(32),
-            onTap: () {
-              // TODO: open telegram link
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(32),
-              ),
-              child: Row(
-                children: const [
-                  Icon(Icons.smart_toy, color: Color(0xFF2563EB)),
-                  SizedBox(width: 8),
-                  Text(
-                    "@TestAbdUzBot",
-                    style: TextStyle(
-                      color: Color(0xFF2563EB),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.open_in_new, color: Color(0xFF2563EB)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FeatureItem extends StatelessWidget {
-  final String icon;
-  final String text;
-
-  const _FeatureItem({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Text(icon, style: const TextStyle(fontSize: 18)),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(text, style: const TextStyle(color: Colors.white70)),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class _FeatureItem extends StatelessWidget {
+//   final String icon;
+//   final String text;
+//
+//   const _FeatureItem({required this.icon, required this.text});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 8),
+//       child: Row(
+//         children: [
+//           Text(icon, style: const TextStyle(fontSize: 18)),
+//           const SizedBox(width: 8),
+//           Expanded(
+//             child: Text(text, style: const TextStyle(color: Colors.white70)),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

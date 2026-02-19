@@ -138,7 +138,7 @@ class _QuestionsGrid extends StatelessWidget {
 
         return InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () => context.push(AppRouter.myQuestionDetailWithArgs(q.id)),
+          onTap: () => context.push(AppRouter.userQuestionDetailWithBlockId(q.id)),
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(

@@ -23,5 +23,62 @@
   "singleSelect": "Single select",
   "multipleSelect": "Multi select",
   "trueFalse" : "True or False",
-  "textQuestion": "Text answer"
+  "textQuestion": "Text answer",
+
+
+  "followed": "Followed",
+  "follow": "Follow",
+  "shareProfile": "Share profile",
+  "editProfile": "Edit Profile",
+  "coins": "Coins",
+  "bookmarkedQuestions": "Bookmarked Questions",
+  "addQuestion": "Add Question",
+  "home": "Home",
+  "search": "Search",
+  "library": "Library",
+  "profile": "Profile",
+  "questions": "Questions",
+  "blockTest": "Block test",
+  "books": "Books",
+  "followers": "Followers",
+  "following": "Following",
+  "totalTests": "Total Tests",
+  "correctAnswers": "Correct Answers",
+  "wrongAnswers": "Wrong Answers",
+  "accuracy": "Accuracy",
+  "quizPerformance": "Quiz Performance",
+
+
+  "profileInformation": "Profile Information",
+  "personalInformation": "Personal Information",
+  "updatePersonalInfoDescription": "Update your name, email address, phone number, and biographical details.",
+
+  "location": "Location",
+  "regionalSettings": "Regional Settings",
+  "regionalSettingsDescription": "Manage your country, state, and city for localized content and time zones.",
+
+  "privacy": "Privacy",
+  "changePassword": "Change Password",
+  "changePasswordDescription": "Update your account password to keep your profile secure.",
+
+  "appPreferences": "App Preferences",
+  "themeSettings": "Theme Settings",
+  "themeSettingsDescription": "Switch between light and dark modes or sync with your system preferences.",
+
+  "language": "Language",
+  "languageDescription": "Select your preferred language for this application, independent of your device's global settings.",
+
+  "referral": "Referral",
+  "referAndEarn": "Refer & Earn",
+  "referDescription": "Invite your network and stack up credits for your next purchase.",
+
+  "account": "Account",
+  "logout": "Logout",
+
+  "editAndSettings": "Edit & Settings",
+  "logoutQuestion": "Log out of account?",
+  "logoutDescription": "You will be signed out from this device. You can log back in at any time using your credentials.",
+  "stayLoggedIn": "Stay Logged In",
+  "logOut": "Log Out"
+
 }

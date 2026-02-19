@@ -79,4 +79,146 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get textQuestion => 'Matnli javob';
+
+  @override
+  String get followed => 'Obuna bo‘lingan';
+
+  @override
+  String get follow => 'Obuna bo‘lish';
+
+  @override
+  String get shareProfile => 'Profilni ulashish';
+
+  @override
+  String get editProfile => 'Profilni tahrirlash';
+
+  @override
+  String get coins => 'Tangalar';
+
+  @override
+  String get bookmarkedQuestions => 'Saqlangan savollar';
+
+  @override
+  String get addQuestion => 'Savol qo‘shish';
+
+  @override
+  String get home => 'Bosh sahifa';
+
+  @override
+  String get search => 'Qidirish';
+
+  @override
+  String get library => 'Kutubxona';
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get questions => 'Savollar';
+
+  @override
+  String get blockTest => 'Testni bloklash';
+
+  @override
+  String get books => 'Kitoblar';
+
+  @override
+  String get followers => 'Obunachilar';
+
+  @override
+  String get following => 'Obuna bo‘linganlar';
+
+  @override
+  String get totalTests => 'Jami testlar';
+
+  @override
+  String get correctAnswers => 'To‘g‘ri javoblar';
+
+  @override
+  String get wrongAnswers => 'Noto‘g‘ri javoblar';
+
+  @override
+  String get accuracy => 'Aniqlik';
+
+  @override
+  String get quizPerformance => 'Test natijalari';
+
+  @override
+  String get profileInformation => 'Profil ma\'lumotlari';
+
+  @override
+  String get personalInformation => 'Shaxsiy ma\'lumotlar';
+
+  @override
+  String get updatePersonalInfoDescription =>
+      'Ismingiz, email manzilingiz, telefon raqamingiz va biografik ma\'lumotlaringizni yangilang.';
+
+  @override
+  String get location => 'Joylashuv';
+
+  @override
+  String get regionalSettings => 'Hududiy sozlamalar';
+
+  @override
+  String get regionalSettingsDescription =>
+      'Mahalliy kontent va vaqt zonalari uchun mamlakat, viloyat va shaharingizni boshqaring.';
+
+  @override
+  String get privacy => 'Maxfiylik';
+
+  @override
+  String get changePassword => 'Parolni o‘zgartirish';
+
+  @override
+  String get changePasswordDescription =>
+      'Profilingiz xavfsizligini ta\'minlash uchun hisob parolingizni yangilang.';
+
+  @override
+  String get appPreferences => 'Ilova sozlamalari';
+
+  @override
+  String get themeSettings => 'Mavzu sozlamalari';
+
+  @override
+  String get themeSettingsDescription =>
+      'Yorug‘ va qorong‘i rejimlar o‘rtasida almashing yoki tizim sozlamalari bilan sinxronlang.';
+
+  @override
+  String get language => 'Til';
+
+  @override
+  String get languageDescription =>
+      'Qurilmangizning umumiy sozlamalaridan mustaqil ravishda ushbu ilova uchun tilni tanlang.';
+
+  @override
+  String get referral => 'Tavsiya';
+
+  @override
+  String get referAndEarn => 'Taklif qiling va bonus oling';
+
+  @override
+  String get referDescription =>
+      'Tarmog‘ingizni taklif qiling va keyingi xaridingiz uchun bonuslar to‘plang.';
+
+  @override
+  String get account => 'Hisob';
+
+  @override
+  String get logout => 'Chiqish';
+
+  @override
+  String get editAndSettings => 'Tahrirlash va sozlamalar';
+
+  @override
+  String get logoutQuestion => 'Hisobdan chiqilsinmi?';
+
+  @override
+  String get logoutDescription =>
+      'Siz ushbu qurilmadan hisobingizdan chiqarilasiz. Istalgan vaqtda login ma\'lumotlaringiz orqali qayta kirishingiz mumkin.';
+
+  @override
+  String get stayLoggedIn => 'Hisobda qolish';
+
+  @override
+  String get logOut => 'Chiqish';
 }

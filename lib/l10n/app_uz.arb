@@ -1,3 +1,4 @@
+
 {
   "@@locale": "uz",
   "error_network_title": "Internet mavjud emas",
@@ -23,5 +24,66 @@
   "singleSelect": "Bitta tanlov",
   "multipleSelect": "Bir nechta tanlov",
   "trueFalse": "To‘g‘ri yoki Noto‘g‘ri",
-  "textQuestion": "Matnli javob"
+  "textQuestion": "Matnli javob",
+
+
+  "followed": "Obuna bo‘lingan",
+  "follow": "Obuna bo‘lish",
+  "shareProfile": "Profilni ulashish",
+  "editProfile": "Profilni tahrirlash",
+  "coins": "Tangalar",
+  "bookmarkedQuestions": "Saqlangan savollar",
+  "addQuestion": "Savol qo‘shish",
+  "home": "Bosh sahifa",
+  "search": "Qidirish",
+  "library": "Kutubxona",
+  "profile": "Profil",
+  "questions": "Savollar",
+  "blockTest": "Testni bloklash",
+  "books": "Kitoblar",
+  "followers": "Obunachilar",
+  "following": "Obuna bo‘linganlar",
+  "totalTests": "Jami testlar",
+  "correctAnswers": "To‘g‘ri javoblar",
+  "wrongAnswers": "Noto‘g‘ri javoblar",
+  "accuracy": "Aniqlik",
+  "quizPerformance": "Test natijalari",
+
+
+  "profileInformation": "Profil ma'lumotlari",
+  "personalInformation": "Shaxsiy ma'lumotlar",
+  "updatePersonalInfoDescription": "Ismingiz, email manzilingiz, telefon raqamingiz va biografik ma'lumotlaringizni yangilang.",
+
+  "location": "Joylashuv",
+  "regionalSettings": "Hududiy sozlamalar",
+  "regionalSettingsDescription": "Mahalliy kontent va vaqt zonalari uchun mamlakat, viloyat va shaharingizni boshqaring.",
+
+  "privacy": "Maxfiylik",
+  "changePassword": "Parolni o‘zgartirish",
+  "changePasswordDescription": "Profilingiz xavfsizligini ta'minlash uchun hisob parolingizni yangilang.",
+
+  "appPreferences": "Ilova sozlamalari",
+  "themeSettings": "Mavzu sozlamalari",
+  "themeSettingsDescription": "Yorug‘ va qorong‘i rejimlar o‘rtasida almashing yoki tizim sozlamalari bilan sinxronlang.",
+
+  "language": "Til",
+  "languageDescription": "Qurilmangizning umumiy sozlamalaridan mustaqil ravishda ushbu ilova uchun tilni tanlang.",
+
+  "referral": "Tavsiya",
+  "referAndEarn": "Taklif qiling va bonus oling",
+  "referDescription": "Tarmog‘ingizni taklif qiling va keyingi xaridingiz uchun bonuslar to‘plang.",
+
+  "account": "Hisob",
+  "logout": "Chiqish",
+
+  "editAndSettings": "Tahrirlash va sozlamalar",
+  "logoutQuestion": "Hisobdan chiqilsinmi?",
+  "logoutDescription": "Siz ushbu qurilmadan hisobingizdan chiqarilasiz. Istalgan vaqtda login ma'lumotlaringiz orqali qayta kirishingiz mumkin.",
+  "stayLoggedIn": "Hisobda qolish",
+  "logOut": "Chiqish"
+
+
+
+
+
 }

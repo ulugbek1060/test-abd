@@ -61,24 +61,27 @@ abstract class AppRouter {
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
 
   static const userBlockDetail = '/user_block_detail/:block_id';
-  static String userBlockDetailWithBlockId(int blockId) => '/user_block_detail/$blockId';
+  static String userBlockDetailWithBlockId(int blockId) =>
+      '/user_block_detail/$blockId';
 
   static const userQuestionDetail = '/user_question_detail/:question_id';
-  static String userQuestionDetailWithBlockId(int questionId) => '/user_question_detail/$questionId';
+  static String userQuestionDetailWithBlockId(int? questionId) =>
+      '/user_question_detail/$questionId';
 
   static const myQuestionDetail = '/my_question_detail/:question_id';
   static String myQuestionDetailWithArgs(int? questionId) =>
       '/my_question_detail/$questionId';
 
   static String userProfileWithUsername(String username) => '/users/$username';
-
   static const userConnection = '/user_connection/:user_id/:connection_type';
+
   static String userConnectionWithUserId({
     required int userId,
     required String connectionType,
   }) => '/user_connection/$userId/$connectionType';
 
   static const profileConnection = '/profile_connection/:connection_type';
+
   static String profileConnectionWithUserId({required String connectionType}) =>
       '/profile_connection/$connectionType';
 }
