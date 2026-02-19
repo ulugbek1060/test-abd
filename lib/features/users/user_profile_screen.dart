@@ -565,7 +565,7 @@ class _BlocksSection extends StatelessWidget {
             questionCount: topic.totalQuestions ?? 0,
             createdAt: topic.createdAt ?? DateTime.now(),
             onTap: () => context.push(
-              AppRouter.blockQuestionsWithBlockId(topic.id ?? 0),
+              AppRouter.userBlockDetailWithBlockId(topic.id ?? 0),
             ),
           );
         }, childCount: state.topics.length),

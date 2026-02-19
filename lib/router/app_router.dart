@@ -8,6 +8,7 @@ import 'package:testabd/features/auth/register/register_screen.dart';
 import 'package:testabd/features/home/home_screen.dart';
 import 'package:testabd/features/home/leaderboard_screen.dart';
 import 'package:testabd/features/home/notifications_screen.dart';
+import 'package:testabd/features/users/user_block_detail_screen.dart';
 import 'package:testabd/features/init/init_screen.dart';
 import 'package:testabd/features/library/library_screen.dart';
 import 'package:testabd/features/profile/my_block_detail_screen.dart';
@@ -63,6 +64,9 @@ abstract class AppRouter {
 
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
 
+  static const userBlockDetail = '/user_block_detail/:block_id';
+  static String userBlockDetailWithBlockId(int blockId) => '/user_block_detail/$blockId';
+
   static const myQuestionDetail = '/my_question_detail/:question_id';
 
   static String myQuestionDetailWithArgs(int? questionId) =>
@@ -83,13 +87,8 @@ abstract class AppRouter {
       '/profile_connection/$connectionType';
 
   static const questionDetail = '/question_detail/:questionId';
-
   static String questionDetailWithQuestionId(int? questionId) =>
       '/question_detail/$questionId';
-  static const blockQuestions = '/block_questions/:blockId';
-
-  static String blockQuestionsWithBlockId(int blockId) =>
-      '/block_questions/$blockId';
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -124,7 +123,6 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) =>
           CupertinoPage(child: const NotificationsScreen()),
     ),
-
     GoRoute(
       path: AppRouter.userProfile,
       pageBuilder: (context, state) {
@@ -166,15 +164,6 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRouter.blockQuestions,
-      pageBuilder: (context, state) {
-        final blockId = state.pathParameters['blockId']!;
-        return CupertinoPage(
-          child: BlockQuestionsScreen(blockId: int.tryParse(blockId) ?? -1),
-        );
-      },
-    ),
-    GoRoute(
       path: AppRouter.leaderboard,
       pageBuilder: (context, state) {
         return CupertinoPage(child: LeaderboardScreen());
@@ -198,6 +187,15 @@ final appRouter = GoRouter(
         final blockId = state.pathParameters['block_id']!;
         return CupertinoPage(
           child: MyBlockDetailScreen(blockId: int.tryParse(blockId) ?? -1),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.userBlockDetail,
+      pageBuilder: (context, state) {
+        final blockId = state.pathParameters['block_id']!;
+        return CupertinoPage(
+          child: UserBlockDetailScreen(blockId: int.tryParse(blockId) ?? -1),
         );
       },
     ),

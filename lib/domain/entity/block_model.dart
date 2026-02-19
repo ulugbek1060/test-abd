@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:testabd/core/enums/access_enum.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
@@ -10,7 +11,7 @@ class BlockModel extends Equatable {
   final String? title;
   final String? description;
   final CategoryModel? category;
-  final String? visibility;
+  final AccessType? visibility;
   final String? accessMode;
   final String? participantRoles;
   final int? maxParticipants;
@@ -67,7 +68,7 @@ class BlockModel extends Equatable {
         emoji: response.category?.emoji,
         image: response.category?.image,
       ),
-      visibility: response.visibility,
+      visibility: AccessType.fromString(response.accessMode),
       accessMode: response.accessMode,
       participantRoles: response.participantRoles,
       maxParticipants: response.maxParticipants,
