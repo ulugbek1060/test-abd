@@ -38,7 +38,6 @@ import '../features/auth/login/login_cubit.dart' as _i958;
 import '../features/auth/register/register_cubit.dart' as _i163;
 import '../features/home/home_cubit.dart' as _i639;
 import '../features/home/leaderboard_cubit.dart' as _i279;
-import '../features/users/user_block_detail_cubit.dart' as _i15;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
@@ -51,8 +50,10 @@ import '../features/profile/settings/edit_profile_cubit.dart' as _i523;
 import '../features/profile/settings/personal_info_cubit.dart' as _i688;
 import '../features/profile/settings/referrals_cubit.dart' as _i168;
 import '../features/profile/settings/regional_settings_cubit.dart' as _i877;
+import '../features/users/user_block_detail_cubit.dart' as _i420;
 import '../features/users/user_connection_cubit.dart' as _i297;
 import '../features/users/user_profile_cubit.dart' as _i445;
+import '../features/users/user_question_detail_cubit.dart' as _i929;
 import 'app_module.dart' as _i460;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -139,6 +140,15 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i575.LeaderboardRepository>(() =>
         _i317.LeaderboardRepositoryImpl(gh<_i259.LeaderboardSocketService>()));
+    gh.factoryParam<_i929.UserQuestionDetailCubit, int?, dynamic>((
+      questionId,
+      _,
+    ) =>
+        _i929.UserQuestionDetailCubit(
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          questionId,
+        ));
     gh.factoryParam<_i296.MyBlockDetailCubit, int, dynamic>((
       id,
       _,
@@ -181,11 +191,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i36.ForgotPswdCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
-    gh.factoryParam<_i15.UserBlockDetailCubit, int?, dynamic>((
+    gh.factoryParam<_i420.UserBlockDetailCubit, int?, dynamic>((
       blockId,
       _,
     ) =>
-        _i15.UserBlockDetailCubit(
+        _i420.UserBlockDetailCubit(
           blockId,
           gh<_i156.QuizRepository>(),
           gh<_i877.AppMessageHandler>(),

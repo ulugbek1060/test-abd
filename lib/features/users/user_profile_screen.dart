@@ -802,7 +802,7 @@ class _QuestionsSection extends StatelessWidget {
             wrongAnswers: question.wrongCount,
             difficulty: question.difficultyPercentage.toDifficulty(),
             onTap: () => context.push(
-              AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+              AppRouter.userQuestionDetailWithBlockId(question.id ?? -1),
             ),
           );
         }, childCount: state.questions.length),

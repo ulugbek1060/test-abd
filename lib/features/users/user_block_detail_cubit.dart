@@ -17,7 +17,21 @@ class UserBlockDetailCubit extends Cubit<UserBlockDetailState> {
     this._appMessageHandler,
   ) : super(UserBlockDetailState());
 
-  fetchBlock() {}
+  Future<void> fetchBlock() async {
+    if (state.isLoading) return;
+    if (blockId == null) return;
 
+    emit(state.copyWith(isLoading: true));
 
+    final result = await _quizRepository.getBlockById(blockId!);
+    result.fold(
+      (error) {
+        _appMessageHandler.handleDialog(error);
+        emit(state.copyWith(error: error.message));
+      },
+      (value) {
+        emit(state.copyWith(error: null, block: value, isLoading: false));
+      },
+    );
+  }
 }

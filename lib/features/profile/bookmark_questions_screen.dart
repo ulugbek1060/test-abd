@@ -87,7 +87,7 @@ class _QuestionsSection extends StatelessWidget {
             wrongAnswers: 2,
             difficulty: Difficulty.easy,
             onTap: () => context.push(
-              AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+              AppRouter.userQuestionDetailWithBlockId(question.id ?? -1),
             ),
           );
         }, childCount: state.bookmarkQuestions.results.length),

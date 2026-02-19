@@ -26,10 +26,9 @@ import 'package:testabd/features/profile/settings/regional_settings_screen.dart'
 import 'package:testabd/features/root/shell_screen.dart';
 import 'package:testabd/features/search/search_screen.dart';
 import 'package:testabd/features/testabd/test_screen.dart';
-import 'package:testabd/features/users/block_questions_screen.dart';
-import 'package:testabd/features/users/question_detail_screen.dart';
 import 'package:testabd/features/users/user_connection_screen.dart';
 import 'package:testabd/features/users/user_profile_screen.dart';
+import 'package:testabd/features/users/user_question_detail_screen.dart';
 
 abstract class AppRouter {
   static const initial = '/';
@@ -52,43 +51,36 @@ abstract class AppRouter {
   static const changePassword = '/change_password';
 
   static const createQuestions = '/create_question/:question_id';
-
   static String createQuestionWithArgs(int? questionId) =>
       '/create_question/$questionId';
 
   static const createBlock = '/create_block/:block_id';
-
   static String createBlockWithArg(int? blockId) => '/create_block/$blockId';
 
   static const blockDetail = '/block_detail/:block_id';
-
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
 
   static const userBlockDetail = '/user_block_detail/:block_id';
   static String userBlockDetailWithBlockId(int blockId) => '/user_block_detail/$blockId';
 
-  static const myQuestionDetail = '/my_question_detail/:question_id';
+  static const userQuestionDetail = '/user_question_detail/:question_id';
+  static String userQuestionDetailWithBlockId(int questionId) => '/user_question_detail/$questionId';
 
+  static const myQuestionDetail = '/my_question_detail/:question_id';
   static String myQuestionDetailWithArgs(int? questionId) =>
       '/my_question_detail/$questionId';
 
   static String userProfileWithUsername(String username) => '/users/$username';
 
   static const userConnection = '/user_connection/:user_id/:connection_type';
-
   static String userConnectionWithUserId({
     required int userId,
     required String connectionType,
   }) => '/user_connection/$userId/$connectionType';
 
   static const profileConnection = '/profile_connection/:connection_type';
-
   static String profileConnectionWithUserId({required String connectionType}) =>
       '/profile_connection/$connectionType';
-
-  static const questionDetail = '/question_detail/:questionId';
-  static String questionDetailWithQuestionId(int? questionId) =>
-      '/question_detail/$questionId';
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -144,20 +136,22 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRouter.questionDetail,
-      pageBuilder: (context, state) {
-        final questionId = state.pathParameters['questionId'] ?? "";
-        return CupertinoPage(
-          child: QuestionDetailScreen(questionId: int.tryParse(questionId)),
-        );
-      },
-    ),
-    GoRoute(
       path: AppRouter.myQuestionDetail,
       pageBuilder: (context, state) {
         final questionId = state.pathParameters['question_id'];
         return CupertinoPage(
           child: MyQuestionDetailScreen(
+            questionId: int.tryParse(questionId ?? ""),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.userQuestionDetail,
+      pageBuilder: (context, state) {
+        final questionId = state.pathParameters['question_id'];
+        return CupertinoPage(
+          child: UserQuestionDetailScreen(
             questionId: int.tryParse(questionId ?? ""),
           ),
         );
@@ -224,7 +218,6 @@ final appRouter = GoRouter(
         return CupertinoPage(child: ReferralsScreen());
       },
     ),
-
     GoRoute(
       path: AppRouter.changePassword,
       pageBuilder: (context, state) {
@@ -232,7 +225,6 @@ final appRouter = GoRouter(
         return CupertinoPage(child: ChangePasswordScreen());
       },
     ),
-
     GoRoute(
       path: AppRouter.personalInfo,
       pageBuilder: (context, state) {
@@ -240,7 +232,6 @@ final appRouter = GoRouter(
         return CupertinoPage(child: PersonalInfoScreen());
       },
     ),
-
     GoRoute(
       path: AppRouter.createQuestions,
       pageBuilder: (context, state) {
@@ -252,7 +243,6 @@ final appRouter = GoRouter(
         );
       },
     ),
-
     GoRoute(
       path: AppRouter.createBlock,
       pageBuilder: (context, state) {

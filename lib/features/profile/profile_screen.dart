@@ -795,7 +795,7 @@ class MyQuestionsSection extends StatelessWidget {
                 wrongAnswers: 2,
                 difficulty: Difficulty.easy,
                 onTap: () => context.push(
-                  AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+                  AppRouter.myQuestionDetailWithArgs(question.id ?? -1),
                 ),
               );
             }, childCount: state.questions.length),
