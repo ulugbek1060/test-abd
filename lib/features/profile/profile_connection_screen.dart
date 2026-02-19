@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/enums/connections_enum.dart';
 import 'package:testabd/core/utils/formatters.dart';
@@ -10,6 +11,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/account/entities/user_connections_model.dart';
 import 'package:testabd/features/profile/profile_connection_cubit.dart';
 import 'package:testabd/features/profile/profile_connection_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 class ProfileConnectionScreen extends StatelessWidget {
@@ -57,8 +59,8 @@ class _ViewState extends State<_View> {
             unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
             labelColor: Theme.of(context).colorScheme.onSurface,
             tabs: [
-              Tab(text: 'Followers'),
-              Tab(text: 'Following'),
+              Tab(text: context.l10n.followers),
+              Tab(text: context.l10n.following),
             ],
           ),
         ),
@@ -103,7 +105,7 @@ class _ConnectionsList extends StatelessWidget {
         separatorBuilder: (_, __) => const Divider(height: 1),
         itemBuilder: (context, index) {
           final user = users[index];
-          return UserTile(
+          return _UserTile(
             user: user,
             onTap: () =>
                 context.push(AppRouter.userProfileWithUsername(user.username)),
@@ -115,12 +117,12 @@ class _ConnectionsList extends StatelessWidget {
   }
 }
 
-class UserTile extends StatelessWidget {
+class _UserTile extends StatelessWidget {
   final UserConnectionModel user;
   final VoidCallback onTap;
   final VoidCallback onTapFollow;
 
-  const UserTile({
+  const _UserTile({
     super.key,
     required this.user,
     required this.onTap,
@@ -160,7 +162,7 @@ class UserTile extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: user.isFollowing
-                ? Theme.of(context).colorScheme.onSurface.withAlpha(150)
+                ? AppColors.onSurfaceColor(context)
                 : Colors.blue,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -170,7 +172,9 @@ class UserTile extends StatelessWidget {
           child: user.isLoading
               ? SizedBox(width: 16, height: 16, child: const ProgressView())
               : Text(
-                  user.isFollowing ? 'Unfollow' : 'Follow',
+                  user.isFollowing
+                      ? context.l10n.followed
+                      : context.l10n.follow,
                   style: TextStyle(color: Colors.white),
                 ),
         ),

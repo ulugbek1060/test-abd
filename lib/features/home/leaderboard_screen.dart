@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_icons.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
@@ -11,6 +12,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/account/entities/leaderboard_model.dart';
 import 'package:testabd/features/home/leaderboard_cubit.dart';
 import 'package:testabd/features/home/leaderboard_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 class LeaderboardScreen extends StatelessWidget {
@@ -349,7 +351,7 @@ class _ListTile extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: user.isFollowing
-                      ? Theme.of(context).colorScheme.onSurface.withAlpha(150)
+                      ? AppColors.onSurfaceColor(context)
                       : Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -359,7 +361,9 @@ class _ListTile extends StatelessWidget {
                 child: user.isLoading
                     ? const ProgressView()
                     : Text(
-                        user.isFollowing ? 'Unfollow' : 'Follow',
+                        user.isFollowing
+                            ? context.l10n.followed
+                            : context.l10n.follow,
                         style: TextStyle(color: Colors.white),
                       ),
               ),

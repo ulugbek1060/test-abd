@@ -18,8 +18,37 @@ class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
     @factoryParam this.questionId,
   ) : super(UserQuestionDetailState());
 
+  Future<void> fetchQuestion() async {
+    if (state.isLoading || questionId == null) return;
 
-  Future<void> fetchQuestion() async {}
+    emit(state.copyWith(isLoading: true));
 
-  void toggleBookmark() {}
+    final result = await _quizRepository.getQuestionById(questionId!);
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(state.copyWith(isLoading: false, error: error.message));
+      },
+      (value) {
+        emit(state.copyWith(isLoading: false, question: value, error: null));
+      },
+    );
+  }
+
+  void toggleBookmark() async {
+    if (state.isLoading || questionId == null) return;
+
+    emit(state.copyWith(isLoading: true));
+
+    final result = await _quizRepository.bookmarkQuestion(questionId!);
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(state.copyWith(isLoading: false, error: error.message));
+      },
+      (value) {
+        emit(state.copyWith(isLoading: false, question: value, error: null));
+      },
+    );
+  }
 }

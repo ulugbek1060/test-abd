@@ -274,7 +274,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRouter.search,
-              builder: (_, state) => const SearchScreen(),
+              builder: (_, state) =>  SearchScreen(),
             ),
           ],
         ),

@@ -231,11 +231,11 @@ class QuizRepositoryImpl extends QuizRepository {
         answers: model.answers
             ?.map(
               (e) => CreateAnswerRequest(
-            letter: e.letter,
-            answerText: e.answerText,
-            isCorrect: e.isCorrect,
-          ),
-        )
+                letter: e.letter,
+                answerText: e.answerText,
+                isCorrect: e.isCorrect,
+              ),
+            )
             .toList(),
       );
       final result = await _quizSource.updateQuestion(questionId, data);
@@ -290,6 +290,18 @@ class QuizRepositoryImpl extends QuizRepository {
     try {
       final result = await _quizSource.getQuestionById(questionId);
       return Right(QuestionModel.fromResponse(result));
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, dynamic>> bookmarkQuestion(int questionId) async {
+    try {
+      final result = await _quizSource.bookmarkQuestions(questionId);
+      return Right(result);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
