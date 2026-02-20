@@ -1354,7 +1354,7 @@ class _PerformanceItem extends StatelessWidget {
                 ),
                 child: Icon(
                   icon,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   size: 30,
                 ),
               ),
@@ -1362,7 +1362,7 @@ class _PerformanceItem extends StatelessWidget {
               Text(
                 value,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -1372,15 +1372,15 @@ class _PerformanceItem extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
+              color: Theme.of(context).colorScheme.onPrimary,
               fontSize: 14,
             ),
           ),
           if (progress != null)
             LinearProgressIndicator(
               value: (progress ?? 1) / 100,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-              backgroundColor: Color(0xffD6D6D6),
+              backgroundColor: Color(0xFFFFFFFF),
+              valueColor: AlwaysStoppedAnimation(Colors.deepOrange),
               borderRadius: BorderRadius.circular(4),
             ),
         ],

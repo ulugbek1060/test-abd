@@ -29,7 +29,7 @@ class NewProfileScreen extends StatelessWidget {
 enum PageType { questions, block, books }
 
 class _View extends StatefulWidget {
-  const _View({super.key});
+  const _View();
 
   @override
   State<_View> createState() => _ViewState();
@@ -139,26 +139,20 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                 ),
 
                 /// SUBHEADER
-                _SubHeader(
+                _Statistics(
                   coins: state.myInfoModel?.coins?.toString() ?? "0",
                   correct: state.myInfoModel?.correctCount?.toString() ?? "0",
                   wrong: state.myInfoModel?.wrongCount?.toString() ?? "0",
                   accuracy: state.myInfoModel?.findAccuracy().toString() ?? "0",
+                  accuracyPer: state.myInfoModel?.findAccuracy() ?? 0,
                   onBookmark: () => context.push(AppRouter.bookmarkQuestions),
                 ),
 
                 /// CONTENT
-                _TabsSection(
+                _Tabs(
                   pageTye: pageTye,
                   onTabChange: (index) => setState(() {
-                    switch (index) {
-                      case 0:
-                        pageTye = PageType.questions;
-                      case 1:
-                        pageTye = PageType.block;
-                      case 2:
-                        pageTye = PageType.books;
-                    }
+                    pageTye = PageType.values[index];
                   }),
                   controller: _tabController,
                 ),
@@ -322,7 +316,7 @@ class _Header extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // fullname
+            // full name
             Text(
               fullName,
               style: TextStyle(
@@ -395,83 +389,96 @@ class _Header extends StatelessWidget {
   );
 }
 
-class _SubHeader extends StatelessWidget {
+class _Statistics extends StatelessWidget {
   final String coins;
   final String correct;
   final String wrong;
   final String accuracy;
+  final double accuracyPer;
   final VoidCallback onBookmark;
 
-  const _SubHeader({
-    super.key,
+  const _Statistics({
     required this.coins,
     required this.correct,
     required this.wrong,
     required this.accuracy,
+    required this.accuracyPer,
     required this.onBookmark,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          SizedBox(height: 12),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+          sliver: SliverToBoxAdapter(
+            child: Column(
               children: [
-                SizedBox(width: 12),
-                _SubheaderItem(
-                  backgroundColor: Colors.orange,
-                  title: context.l10n.coins,
-                  value: coins,
-                  leading: Icon(
-                    Icons.monetization_on_rounded,
-                    size: 35,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
+                Row(
+                  children: [
+                    Icon(Icons.analytics_rounded, color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.quizPerformance,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withAlpha(120),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 12),
-                _SubheaderItem(
-                  backgroundColor: Colors.green,
-                  title: context.l10n.correctAnswers,
-                  value: correct,
-                  leading: Icon(
-                    Icons.check_circle_rounded,
-                    size: 34,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-                SizedBox(width: 12),
-                _SubheaderItem(
-                  backgroundColor: Colors.red,
-                  title: context.l10n.wrongAnswers,
-                  value: wrong,
-                  leading: Icon(
-                    Icons.error_rounded,
-                    size: 34,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-                SizedBox(width: 12),
-                _SubheaderItem(
-                  backgroundColor: Colors.blue,
-                  title: context.l10n.accuracy,
-                  value: accuracy,
-                  leading: Icon(
-                    Icons.error_rounded,
-                    size: 34,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-                SizedBox(width: 12),
+                const SizedBox(height: 12),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16),
+        ),
+
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 6, left: 16, right: 16),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.5,
+            ),
+            delegate: SliverChildListDelegate([
+              _PerformanceItem(
+                title: context.l10n.totalTests,
+                value: coins,
+                icon: Icons.monetization_on_rounded,
+                color: Colors.orange,
+              ),
+              _PerformanceItem(
+                title: context.l10n.correctAnswers,
+                value: correct,
+                icon: Icons.check_circle,
+                color: Colors.green,
+              ),
+              _PerformanceItem(
+                title: context.l10n.wrongAnswers,
+                value: wrong,
+                icon: Icons.cancel,
+                color: Colors.red,
+              ),
+              _PerformanceItem(
+                title: context.l10n.accuracy,
+                value: accuracy,
+                icon: Icons.balance,
+                color: Colors.blue,
+                progress: accuracyPer,
+              ),
+            ]),
+          ),
+        ),
+
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(
             child: ElevatedButton.icon(
               onPressed: onBookmark,
               icon: const Icon(Icons.bookmark),
@@ -486,18 +493,18 @@ class _SubHeader extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-class _TabsSection extends StatelessWidget {
+class _Tabs extends StatelessWidget {
   final PageType pageTye;
   final void Function(int index) onTabChange;
   final TabController controller;
 
-  const _TabsSection({
+  const _Tabs({
     super.key,
     required this.pageTye,
     required this.onTabChange,
@@ -1048,6 +1055,79 @@ class _QuestionStatItem extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PerformanceItem extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
+  final double? progress;
+
+  const _PerformanceItem({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.color,
+    this.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(50),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  size: 30,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                value,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 14,
+            ),
+          ),
+          if (progress != null)
+            LinearProgressIndicator(
+              value: (progress ?? 1) / 100,
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation(Colors.lightGreen),
+              borderRadius: BorderRadius.circular(4),
+            ),
         ],
       ),
     );

@@ -170,7 +170,7 @@ class QuizSourceImpl implements QuizSource {
   Future<List<UserQuestionResponse>> getUserQuestions(int userId) async {
     try {
       final response = await _dio.get(
-        '/quiz/questions/user_questions/',
+        '/quiz/qs/user_questions/',
         queryParameters: {'user_id': userId},
       );
       final list = (response.data as List)
@@ -342,10 +342,10 @@ class QuizSourceImpl implements QuizSource {
   }) async {
     try {
       final response = await _dio.get(
-        '/quiz/qs/',
+        'quiz/qs/',
         options: Options(
           headers: {
-            "ordering": "-created_at",
+            // "ordering": "-created_at",
             "page_size": pageSize,
             if (page.isNotEmpty) "page": page,
           },

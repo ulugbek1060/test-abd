@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/core/utils/follow_listeners.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/users/user_profile_state.dart';
+import 'package:testabd/main.dart';
 
 @injectable
 class UserProfileCubit extends Cubit<UserProfileState> {
   final AccountRepository _accountRepository;
   final QuizRepository _quizRepository;
+  final AppMessageHandler _messageHandler;
   final ConnectionFollowEventListener _connectionFollowListener;
   final ConnectionFollowEventListener _userProfileFollowListener;
   final ConnectionFollowEventListener _leaderboardFollowListener;
@@ -25,6 +28,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     @factoryParam this.username,
     this._accountRepository,
     this._quizRepository,
+    this._messageHandler,
     @Named.from(ConnectionFollowListener) this._connectionFollowListener,
     @Named.from(UserFollowListener) this._userProfileFollowListener,
     @Named.from(LeaderboardFollowListener) this._leaderboardFollowListener,
@@ -54,7 +58,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   Future<void> load() async {
     if (state.isLoading) return;
 
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(state.copyWith(isLoading: true));
 
     final result = await _accountRepository.getUserProfile(username);
 
@@ -69,6 +73,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         emit(
           state.copyWith(
             isLoading: false,
+            error: null,
             profile: value.copyWith(
               user: value.user?.copyWith(isMe: value.user?.id == id),
             ),
@@ -143,6 +148,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
           error: error.message,
         );
         emit(state.copyWith(questionsState: newQuestionsState));
+        _messageHandler.handleDialog(error);
       },
       (value) {
         final newQuestionsState = questionsState.copyWith(

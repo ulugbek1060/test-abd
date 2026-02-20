@@ -217,23 +217,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i877.AppMessageHandler>(),
           gh<_i156.QuizRepository>(),
         ));
-    gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
-      username,
-      _,
-    ) =>
-        _i445.UserProfileCubit.create(
-          username,
-          gh<_i575.AccountRepository>(),
-          gh<_i156.QuizRepository>(),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'ConnectionFollowListener'),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'UserFollowListener'),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'LeaderboardFollowListener'),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'ProfileFollowListener'),
-        ));
     gh.factory<_i570.ProfileConnectionCubit>(() => _i570.ProfileConnectionCubit(
           gh<_i575.AccountRepository>(),
           gh<_i244.ConnectionFollowEventListener>(
@@ -276,6 +259,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i168.ReferralsCubit>(() => _i168.ReferralsCubit(
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
+      username,
+      _,
+    ) =>
+        _i445.UserProfileCubit.create(
+          username,
+          gh<_i575.AccountRepository>(),
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'ConnectionFollowListener'),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'UserFollowListener'),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'LeaderboardFollowListener'),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'ProfileFollowListener'),
         ));
     gh.factory<_i639.HomeCubit>(() => _i639.HomeCubit(
           gh<_i156.QuizRepository>(),
