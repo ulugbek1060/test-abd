@@ -6,21 +6,21 @@ part of 'notifications_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NotificationResponseImpl _$$NotificationResponseImplFromJson(
+_$NotificationsResponseImpl _$$NotificationsResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$NotificationResponseImpl(
-      id: (json['id'] as num).toInt(),
+    _$NotificationsResponseImpl(
+      id: (json['id'] as num?)?.toInt(),
       verb: json['verb'] as String?,
       message: json['message'] as String?,
-      actor: json['actor'] as String?,
-      contentType: json['content_type'] as String?,
-      objectId: (json['object_id'] as num?)?.toInt(),
+      actor: json['actor'],
+      contentType: json['content_type'],
+      objectId: json['object_id'],
       createdAt: json['created_at'] as String?,
       isRead: json['is_read'] as bool?,
     );
 
-Map<String, dynamic> _$$NotificationResponseImplToJson(
-        _$NotificationResponseImpl instance) =>
+Map<String, dynamic> _$$NotificationsResponseImplToJson(
+        _$NotificationsResponseImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'verb': instance.verb,

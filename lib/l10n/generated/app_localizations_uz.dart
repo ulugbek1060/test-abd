@@ -221,4 +221,20 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get logOut => 'Chiqish';
+
+  @override
+  String get chooseCorrectStatementsBelow =>
+      'Quyidagi savol uchun to‘g‘ri bayonotlarni tanlang.';
+
+  @override
+  String get answers => 'Javoblar';
+
+  @override
+  String get correctCount => 'To‘g‘ri javoblar';
+
+  @override
+  String get wrongCount => 'Noto‘g‘ri javoblar';
+
+  @override
+  String get notifications => 'Bildirishnomalar';
 }

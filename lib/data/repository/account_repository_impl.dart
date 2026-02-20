@@ -51,10 +51,12 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, NotificationModel>> getNotifications() async {
+  Future<Either<AppException, List<NotificationModel>>>
+  getNotifications() async {
     try {
       final result = await _accountSource.notifications();
-      return Right(NotificationModel.fromResponse(result));
+      final list = result.map(NotificationModel.fromResponse).toList();
+      return Right(list);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

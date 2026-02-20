@@ -38,6 +38,7 @@ import '../features/auth/login/login_cubit.dart' as _i958;
 import '../features/auth/register/register_cubit.dart' as _i163;
 import '../features/home/home_cubit.dart' as _i639;
 import '../features/home/leaderboard_cubit.dart' as _i279;
+import '../features/home/notifications_cubit.dart' as _i124;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
@@ -257,6 +258,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i877.AppMessageHandler>(),
         ));
     gh.factory<_i168.ReferralsCubit>(() => _i168.ReferralsCubit(
+          gh<_i575.AccountRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factory<_i124.NotificationsCubit>(() => _i124.NotificationsCubit(
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));

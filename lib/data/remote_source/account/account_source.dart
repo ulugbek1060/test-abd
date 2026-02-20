@@ -5,18 +5,18 @@ import 'package:testabd/data/remote_source/account/model/change_pswd_request.dar
 import 'package:testabd/data/remote_source/account/model/change_pswd_response.dart';
 import 'package:testabd/data/remote_source/account/model/country_item_response.dart';
 import 'package:testabd/data/remote_source/account/model/district_item_response.dart';
+import 'package:testabd/data/remote_source/account/model/notifications_response.dart';
 import 'package:testabd/data/remote_source/account/model/referrals_list_response.dart';
 import 'package:testabd/data/remote_source/account/model/region_item_response.dart';
 import 'package:testabd/data/remote_source/account/model/settlement_item_response.dart';
 import 'package:testabd/data/remote_source/account/model/user_connections_response.dart';
 import 'package:testabd/data/remote_source/account/model/user_profile_response.dart';
 import 'package:testabd/data/remote_source/account/model/my_info_response.dart';
-import 'package:testabd/data/remote_source/account/model/notifications_response.dart';
 
 abstract class AccountSource {
   Future<MyInfoResponse> getUserInfo();
 
-  Future<NotificationsResponse> notifications();
+  Future<List<NotificationsResponse>> notifications();
 
   Future<dynamic> getStories();
 
@@ -62,10 +62,13 @@ class AccountSourceImpl implements AccountSource {
   }
 
   @override
-  Future<NotificationsResponse> notifications() async {
+  Future<List<NotificationsResponse>> notifications() async {
     try {
       final response = await _dio.get("/accounts/notifications/");
-      return NotificationsResponse.fromJson(response.data);
+      final List<NotificationsResponse> notifications = (response.data as List)
+          .map((e) => NotificationsResponse.fromJson(e))
+          .toList();
+      return notifications;
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
@@ -220,7 +223,9 @@ class AccountSourceImpl implements AccountSource {
   }
 
   @override
-  Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData) async {
+  Future<ChangePswdResponse> updatePassword(
+    ChangePswdRequest requestData,
+  ) async {
     try {
       final response = await _dio.post(
         '/accounts/me/change-password/',
@@ -233,5 +238,4 @@ class AccountSourceImpl implements AccountSource {
       throw UnknownException(e.toString(), stackTrace: stackTrace);
     }
   }
-
 }

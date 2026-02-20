@@ -221,4 +221,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOut => 'Log Out';
+
+  @override
+  String get chooseCorrectStatementsBelow =>
+      'Choose the correct statements for the question below.';
+
+  @override
+  String get answers => 'Answers';
+
+  @override
+  String get correctCount => 'Correct count';
+
+  @override
+  String get wrongCount => 'Wrong count';
+
+  @override
+  String get notifications => 'Notifications';
 }

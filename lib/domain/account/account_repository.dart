@@ -15,7 +15,7 @@ import 'package:testabd/domain/account/entities/user_profile_model.dart';
 abstract class AccountRepository {
   Stream<MyInfoModel?> get userInfoStream;
   Future<Either<AppException, MyInfoModel>> fetchMyInfo();
-  Future<Either<AppException, NotificationModel>> getNotifications();
+  Future<Either<AppException, List<NotificationModel>>> getNotifications();
   Future<Either<AppException, Unit>> getStories();
   Future<Either<AppException, UserProfileModel>> getUserProfile(String username);
   Future<Either<AppException, UserConnectionsModel>> getUserConnections(int userId);

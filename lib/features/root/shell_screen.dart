@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/theme/app_images.dart';
+import 'package:testabd/core/utils/app_message_handler.dart';
+import 'package:testabd/data/local_source/my_info_hive_service.dart';
+import 'package:testabd/data/remote_source/account/ws_notifications_source.dart';
+import 'package:testabd/di/app_config.dart';
 import 'package:testabd/l10n/l10n_extension.dart';
+import 'package:testabd/main.dart';
 
-class ShellScreen extends StatelessWidget {
+class ShellScreen extends StatefulWidget {
   final StatefulNavigationShell navShell;
   final List<Widget> children;
 
@@ -14,10 +20,41 @@ class ShellScreen extends StatelessWidget {
   });
 
   @override
+  State<ShellScreen> createState() => _ShellScreenState();
+}
+
+class _ShellScreenState extends State<ShellScreen> {
+  late final WSNotificationsSource _notificationsSource;
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
+  init() async {
+    _notificationsSource = locator<WSNotificationsSource>();
+    final userLocal = locator<MyInfoHiveService>();
+    final userId = await userLocal.userStream.first;
+    _notificationsSource.connectWebSocket(userId?.id ?? 0, (data) {
+      locator<AppMessageHandler>().handleDialog(SuccessException('Test completed'));
+    });
+  }
+
+  @override
+  void dispose() {
+    _notificationsSource.closeWebSocket();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      body: IndexedStack(index: navShell.currentIndex, children: children),
+      body: IndexedStack(
+        index: widget.navShell.currentIndex,
+        children: widget.children,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -71,9 +108,9 @@ class ShellScreen extends StatelessWidget {
           ),
         ],
         selectedItemColor: colorScheme.secondary,
-        currentIndex: navShell.currentIndex,
+        currentIndex: widget.navShell.currentIndex,
         type: BottomNavigationBarType.fixed,
-        onTap: (index) => navShell.goBranch(index),
+        onTap: (index) => widget.navShell.goBranch(index),
       ),
     );
   }

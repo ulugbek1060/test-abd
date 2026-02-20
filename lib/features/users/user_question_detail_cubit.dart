@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/users/user_question_detail_state.dart';
+import 'package:testabd/main.dart';
 
 @injectable
 class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
@@ -35,19 +36,37 @@ class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
     );
   }
 
-  void toggleBookmark() async {
-    if (state.isLoading || questionId == null) return;
+  Future<void> toggleBookmark() async {
+    if (state.bookmarksState.isLoading || questionId == null) return;
 
-    emit(state.copyWith(isLoading: true));
+    emit(
+      state.copyWith(
+        bookmarksState: state.bookmarksState.copyWith(isLoading: true),
+      ),
+    );
 
     final result = await _quizRepository.bookmarkQuestion(questionId!);
     result.fold(
       (error) {
         _messageHandler.handleDialog(error);
-        emit(state.copyWith(isLoading: false, error: error.message));
+        emit(
+          state.copyWith(
+            bookmarksState: state.bookmarksState.copyWith(
+              isLoading: false,
+              error: error.message,
+            ),
+          ),
+        );
       },
       (value) {
-        emit(state.copyWith(isLoading: false, question: value, error: null));
+        emit(
+          state.copyWith(
+            question: state.question?.copyWith(
+              isBookmarked: !(state.question?.isBookmarked ?? false),
+            ),
+            bookmarksState: state.bookmarksState.copyWith(isLoading: false),
+          ),
+        );
       },
     );
   }

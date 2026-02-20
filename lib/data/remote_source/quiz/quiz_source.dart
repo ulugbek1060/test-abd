@@ -218,7 +218,7 @@ class QuizSourceImpl implements QuizSource {
         '/quiz/question-bookmarks/',
         data: {"question": questionId},
       );
-      return RandomQuestionModel.fromJson(response.data);
+      return response.data;
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

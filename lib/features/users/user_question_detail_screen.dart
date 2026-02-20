@@ -7,6 +7,7 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/users/user_question_detail_cubit.dart';
 import 'package:testabd/features/users/user_question_detail_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 
 class UserQuestionDetailScreen extends StatelessWidget {
   final int? questionId;
@@ -55,9 +56,17 @@ class _ViewState extends State<_View> {
             actions: [
               if (state.question?.id != null)
                 IconButton(
-                  onPressed: () =>
-                      context.read<UserQuestionDetailCubit>().toggleBookmark(),
-                  icon: Icon(Icons.bookmark, size: 20),
+                  onPressed: context
+                      .read<UserQuestionDetailCubit>()
+                      .toggleBookmark,
+                  icon: state.bookmarksState.isLoading
+                      ? ProgressView()
+                      : Icon(
+                          (state.question?.isBookmarked ?? false)
+                              ? Icons.bookmark
+                              : Icons.bookmark_border_rounded,
+                          size: 20,
+                        ),
                 ),
             ],
           ),
@@ -102,7 +111,7 @@ class _Header extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          "Correct count: $correctCount",
+          "${context.l10n.correctCount}: $correctCount",
           style: TextStyle(
             color: Colors.blue,
             fontSize: 12,
@@ -118,7 +127,7 @@ class _Header extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          "Wrong count: $wrongCount",
+          "${context.l10n.wrongCount}: $wrongCount",
           style: TextStyle(
             color: Colors.red,
             fontSize: 12,
@@ -159,7 +168,7 @@ class _QuestionCard extends StatelessWidget {
               ),
               SizedBox(height: 12),
               Text(
-                "Choose the correct statements about Java programming language.",
+                context.l10n.chooseCorrectStatementsBelow,
                 style: TextStyle(
                   fontSize: 14,
                   color: Theme.of(context).colorScheme.onSurface,
@@ -176,7 +185,7 @@ class _QuestionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Answers",
+              context.l10n.answers,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -208,8 +217,8 @@ class _QuestionCard extends StatelessWidget {
   }
 
   Iterable<Widget> _singleSelectAnswer(BuildContext context) =>
-      question?.answers.mapIndexed((i, e) {
-        return Container(
+      question?.answers.mapIndexed(
+        (i, e) => Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -234,7 +243,7 @@ class _QuestionCard extends StatelessWidget {
                   color: e.isCorrect ? Colors.blue : Colors.grey.shade800,
                 ),
                 child: Text(
-                  String.fromCharCode(65 + i), // A, B, C, D
+                  String.fromCharCode(65 + i),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -254,8 +263,8 @@ class _QuestionCard extends StatelessWidget {
               ),
             ],
           ),
-        );
-      }) ??
+        ),
+      ) ??
       [];
 
   Iterable<Widget> _trueFalseAnswer(BuildContext context) =>

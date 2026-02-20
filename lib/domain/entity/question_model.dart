@@ -33,7 +33,7 @@ class QuestionModel extends Equatable {
   final UserItemModel? user;
   final DateTime? createdAt;
   final String? roundImage;
-  final bool? isBookmarked;
+  final bool isBookmarked;
   final bool? isFollowing;
   final CategoryModel? category;
 
@@ -62,7 +62,7 @@ class QuestionModel extends Equatable {
     this.user,
     this.createdAt,
     this.roundImage,
-    this.isBookmarked,
+    this.isBookmarked = false,
     this.isFollowing,
     this.category,
     this.isLoading = false,

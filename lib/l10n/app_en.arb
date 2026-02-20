@@ -79,6 +79,14 @@
   "logoutQuestion": "Log out of account?",
   "logoutDescription": "You will be signed out from this device. You can log back in at any time using your credentials.",
   "stayLoggedIn": "Stay Logged In",
-  "logOut": "Log Out"
+  "logOut": "Log Out",
+
+  "chooseCorrectStatementsBelow": "Choose the correct statements for the question below.",
+  "answers": "Answers",
+  "correctCount": "Correct count",
+  "wrongCount": "Wrong count",
+
+  "notifications": "Notifications"
+
 
 }

@@ -1089,6 +1089,7 @@ class _PerformanceItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+
           Row(
             children: [
               Container(
@@ -1114,6 +1115,7 @@ class _PerformanceItem extends StatelessWidget {
               ),
             ],
           ),
+
           Text(
             title,
             style: TextStyle(

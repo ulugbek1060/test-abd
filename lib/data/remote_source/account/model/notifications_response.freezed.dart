@@ -16,19 +16,19 @@ final _privateConstructorUsedError = UnsupportedError(
 
 NotificationsResponse _$NotificationsResponseFromJson(
     Map<String, dynamic> json) {
-  return _NotificationResponse.fromJson(json);
+  return _NotificationsResponse.fromJson(json);
 }
 
 /// @nodoc
 mixin _$NotificationsResponse {
-  int get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String? get verb => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
-  String? get actor => throw _privateConstructorUsedError;
+  dynamic get actor => throw _privateConstructorUsedError;
   @JsonKey(name: 'content_type')
-  String? get contentType => throw _privateConstructorUsedError;
+  dynamic get contentType => throw _privateConstructorUsedError;
   @JsonKey(name: 'object_id')
-  int? get objectId => throw _privateConstructorUsedError;
+  dynamic get objectId => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   String? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_read')
@@ -47,12 +47,12 @@ abstract class $NotificationsResponseCopyWith<$Res> {
       _$NotificationsResponseCopyWithImpl<$Res, NotificationsResponse>;
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String? verb,
       String? message,
-      String? actor,
-      @JsonKey(name: 'content_type') String? contentType,
-      @JsonKey(name: 'object_id') int? objectId,
+      dynamic actor,
+      @JsonKey(name: 'content_type') dynamic contentType,
+      @JsonKey(name: 'object_id') dynamic objectId,
       @JsonKey(name: 'created_at') String? createdAt,
       @JsonKey(name: 'is_read') bool? isRead});
 }
@@ -71,7 +71,7 @@ class _$NotificationsResponseCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? verb = freezed,
     Object? message = freezed,
     Object? actor = freezed,
@@ -81,10 +81,10 @@ class _$NotificationsResponseCopyWithImpl<$Res,
     Object? isRead = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       verb: freezed == verb
           ? _value.verb
           : verb // ignore: cast_nullable_to_non_nullable
@@ -96,15 +96,15 @@ class _$NotificationsResponseCopyWithImpl<$Res,
       actor: freezed == actor
           ? _value.actor
           : actor // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       contentType: freezed == contentType
           ? _value.contentType
           : contentType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       objectId: freezed == objectId
           ? _value.objectId
           : objectId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -118,37 +118,38 @@ class _$NotificationsResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$NotificationResponseImplCopyWith<$Res>
+abstract class _$$NotificationsResponseImplCopyWith<$Res>
     implements $NotificationsResponseCopyWith<$Res> {
-  factory _$$NotificationResponseImplCopyWith(_$NotificationResponseImpl value,
-          $Res Function(_$NotificationResponseImpl) then) =
-      __$$NotificationResponseImplCopyWithImpl<$Res>;
+  factory _$$NotificationsResponseImplCopyWith(
+          _$NotificationsResponseImpl value,
+          $Res Function(_$NotificationsResponseImpl) then) =
+      __$$NotificationsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String? verb,
       String? message,
-      String? actor,
-      @JsonKey(name: 'content_type') String? contentType,
-      @JsonKey(name: 'object_id') int? objectId,
+      dynamic actor,
+      @JsonKey(name: 'content_type') dynamic contentType,
+      @JsonKey(name: 'object_id') dynamic objectId,
       @JsonKey(name: 'created_at') String? createdAt,
       @JsonKey(name: 'is_read') bool? isRead});
 }
 
 /// @nodoc
-class __$$NotificationResponseImplCopyWithImpl<$Res>
+class __$$NotificationsResponseImplCopyWithImpl<$Res>
     extends _$NotificationsResponseCopyWithImpl<$Res,
-        _$NotificationResponseImpl>
-    implements _$$NotificationResponseImplCopyWith<$Res> {
-  __$$NotificationResponseImplCopyWithImpl(_$NotificationResponseImpl _value,
-      $Res Function(_$NotificationResponseImpl) _then)
+        _$NotificationsResponseImpl>
+    implements _$$NotificationsResponseImplCopyWith<$Res> {
+  __$$NotificationsResponseImplCopyWithImpl(_$NotificationsResponseImpl _value,
+      $Res Function(_$NotificationsResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? verb = freezed,
     Object? message = freezed,
     Object? actor = freezed,
@@ -157,11 +158,11 @@ class __$$NotificationResponseImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? isRead = freezed,
   }) {
-    return _then(_$NotificationResponseImpl(
-      id: null == id
+    return _then(_$NotificationsResponseImpl(
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       verb: freezed == verb
           ? _value.verb
           : verb // ignore: cast_nullable_to_non_nullable
@@ -173,15 +174,15 @@ class __$$NotificationResponseImplCopyWithImpl<$Res>
       actor: freezed == actor
           ? _value.actor
           : actor // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       contentType: freezed == contentType
           ? _value.contentType
           : contentType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       objectId: freezed == objectId
           ? _value.objectId
           : objectId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -196,9 +197,9 @@ class __$$NotificationResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$NotificationResponseImpl implements _NotificationResponse {
-  const _$NotificationResponseImpl(
-      {required this.id,
+class _$NotificationsResponseImpl implements _NotificationsResponse {
+  const _$NotificationsResponseImpl(
+      {this.id,
       this.verb,
       this.message,
       this.actor,
@@ -207,23 +208,23 @@ class _$NotificationResponseImpl implements _NotificationResponse {
       @JsonKey(name: 'created_at') this.createdAt,
       @JsonKey(name: 'is_read') this.isRead});
 
-  factory _$NotificationResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$NotificationResponseImplFromJson(json);
+  factory _$NotificationsResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NotificationsResponseImplFromJson(json);
 
   @override
-  final int id;
+  final int? id;
   @override
   final String? verb;
   @override
   final String? message;
   @override
-  final String? actor;
+  final dynamic actor;
   @override
   @JsonKey(name: 'content_type')
-  final String? contentType;
+  final dynamic contentType;
   @override
   @JsonKey(name: 'object_id')
-  final int? objectId;
+  final dynamic objectId;
   @override
   @JsonKey(name: 'created_at')
   final String? createdAt;
@@ -240,15 +241,14 @@ class _$NotificationResponseImpl implements _NotificationResponse {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NotificationResponseImpl &&
+            other is _$NotificationsResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.verb, verb) || other.verb == verb) &&
             (identical(other.message, message) || other.message == message) &&
-            (identical(other.actor, actor) || other.actor == actor) &&
-            (identical(other.contentType, contentType) ||
-                other.contentType == contentType) &&
-            (identical(other.objectId, objectId) ||
-                other.objectId == objectId) &&
+            const DeepCollectionEquality().equals(other.actor, actor) &&
+            const DeepCollectionEquality()
+                .equals(other.contentType, contentType) &&
+            const DeepCollectionEquality().equals(other.objectId, objectId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.isRead, isRead) || other.isRead == isRead));
@@ -256,54 +256,61 @@ class _$NotificationResponseImpl implements _NotificationResponse {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, verb, message, actor,
-      contentType, objectId, createdAt, isRead);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      verb,
+      message,
+      const DeepCollectionEquality().hash(actor),
+      const DeepCollectionEquality().hash(contentType),
+      const DeepCollectionEquality().hash(objectId),
+      createdAt,
+      isRead);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotificationResponseImplCopyWith<_$NotificationResponseImpl>
-      get copyWith =>
-          __$$NotificationResponseImplCopyWithImpl<_$NotificationResponseImpl>(
-              this, _$identity);
+  _$$NotificationsResponseImplCopyWith<_$NotificationsResponseImpl>
+      get copyWith => __$$NotificationsResponseImplCopyWithImpl<
+          _$NotificationsResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationResponseImplToJson(
+    return _$$NotificationsResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _NotificationResponse implements NotificationsResponse {
-  const factory _NotificationResponse(
-          {required final int id,
+abstract class _NotificationsResponse implements NotificationsResponse {
+  const factory _NotificationsResponse(
+          {final int? id,
           final String? verb,
           final String? message,
-          final String? actor,
-          @JsonKey(name: 'content_type') final String? contentType,
-          @JsonKey(name: 'object_id') final int? objectId,
+          final dynamic actor,
+          @JsonKey(name: 'content_type') final dynamic contentType,
+          @JsonKey(name: 'object_id') final dynamic objectId,
           @JsonKey(name: 'created_at') final String? createdAt,
           @JsonKey(name: 'is_read') final bool? isRead}) =
-      _$NotificationResponseImpl;
+      _$NotificationsResponseImpl;
 
-  factory _NotificationResponse.fromJson(Map<String, dynamic> json) =
-      _$NotificationResponseImpl.fromJson;
+  factory _NotificationsResponse.fromJson(Map<String, dynamic> json) =
+      _$NotificationsResponseImpl.fromJson;
 
   @override
-  int get id;
+  int? get id;
   @override
   String? get verb;
   @override
   String? get message;
   @override
-  String? get actor;
+  dynamic get actor;
   @override
   @JsonKey(name: 'content_type')
-  String? get contentType;
+  dynamic get contentType;
   @override
   @JsonKey(name: 'object_id')
-  int? get objectId;
+  dynamic get objectId;
   @override
   @JsonKey(name: 'created_at')
   String? get createdAt;
@@ -312,6 +319,6 @@ abstract class _NotificationResponse implements NotificationsResponse {
   bool? get isRead;
   @override
   @JsonKey(ignore: true)
-  _$$NotificationResponseImplCopyWith<_$NotificationResponseImpl>
+  _$$NotificationsResponseImplCopyWith<_$NotificationsResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

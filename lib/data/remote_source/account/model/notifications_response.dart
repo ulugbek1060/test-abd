@@ -6,15 +6,15 @@ part 'notifications_response.g.dart';
 @freezed
 class NotificationsResponse with _$NotificationsResponse {
   const factory NotificationsResponse({
-    required int id,
+    int? id,
     String? verb,
     String? message,
-    String? actor,
-    @JsonKey(name: 'content_type') String? contentType,
-    @JsonKey(name: 'object_id') int? objectId,
+    dynamic actor,
+    @JsonKey(name: 'content_type') dynamic contentType,
+    @JsonKey(name: 'object_id') dynamic objectId,
     @JsonKey(name: 'created_at') String? createdAt,
     @JsonKey(name: 'is_read') bool? isRead,
-  }) = _NotificationResponse;
+  }) = _NotificationsResponse;
 
   factory NotificationsResponse.fromJson(Map<String, dynamic> json) =>
       _$NotificationsResponseFromJson(json);

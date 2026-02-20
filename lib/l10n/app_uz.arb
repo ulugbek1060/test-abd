@@ -80,7 +80,15 @@
   "logoutQuestion": "Hisobdan chiqilsinmi?",
   "logoutDescription": "Siz ushbu qurilmadan hisobingizdan chiqarilasiz. Istalgan vaqtda login ma'lumotlaringiz orqali qayta kirishingiz mumkin.",
   "stayLoggedIn": "Hisobda qolish",
-  "logOut": "Chiqish"
+  "logOut": "Chiqish",
+
+  "chooseCorrectStatementsBelow": "Quyidagi savol uchun to‘g‘ri bayonotlarni tanlang.",
+  "answers": "Javoblar",
+  "correctCount": "To‘g‘ri javoblar",
+  "wrongCount": "Noto‘g‘ri javoblar",
+
+  "notifications": "Bildirishnomalar"
+
 
 
 

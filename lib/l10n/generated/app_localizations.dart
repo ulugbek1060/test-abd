@@ -513,6 +513,36 @@ abstract class AppLocalizations {
   /// In uz, this message translates to:
   /// **'Chiqish'**
   String get logOut;
+
+  /// No description provided for @chooseCorrectStatementsBelow.
+  ///
+  /// In uz, this message translates to:
+  /// **'Quyidagi savol uchun to‘g‘ri bayonotlarni tanlang.'**
+  String get chooseCorrectStatementsBelow;
+
+  /// No description provided for @answers.
+  ///
+  /// In uz, this message translates to:
+  /// **'Javoblar'**
+  String get answers;
+
+  /// No description provided for @correctCount.
+  ///
+  /// In uz, this message translates to:
+  /// **'To‘g‘ri javoblar'**
+  String get correctCount;
+
+  /// No description provided for @wrongCount.
+  ///
+  /// In uz, this message translates to:
+  /// **'Noto‘g‘ri javoblar'**
+  String get wrongCount;
+
+  /// No description provided for @notifications.
+  ///
+  /// In uz, this message translates to:
+  /// **'Bildirishnomalar'**
+  String get notifications;
 }
 
 class _AppLocalizationsDelegate

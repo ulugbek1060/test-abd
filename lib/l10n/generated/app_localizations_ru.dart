@@ -221,4 +221,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get logOut => 'Выйти';
+
+  @override
+  String get chooseCorrectStatementsBelow =>
+      'Выберите правильные утверждения для приведённого ниже вопроса.';
+
+  @override
+  String get answers => 'Ответы';
+
+  @override
+  String get correctCount => 'Правильных ответов';
+
+  @override
+  String get wrongCount => 'Неправильных ответов';
+
+  @override
+  String get notifications => 'Уведомления';
 }
