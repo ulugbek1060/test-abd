@@ -44,7 +44,7 @@ class QuizRepositoryImpl extends QuizRepository {
   @override
   Future<Either<AppException, CheckAnswerModel>> submitAnswer({
     required int questionId,
-    required List<int> selectedAnswers,
+    required Set<int> selectedAnswers,
     int? duration,
   }) async {
     try {
@@ -92,8 +92,8 @@ class QuizRepositoryImpl extends QuizRepository {
   ) async {
     try {
       final result = await _quizSource.getUserQuestions(userId);
-      final list = result.map(QuestionModel.fromUserQuestionResponse).toList();
-      return Right(list);
+      // final list = result.map(QuestionModel.fromUserQuestionResponse).toList();
+      return Right(result);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

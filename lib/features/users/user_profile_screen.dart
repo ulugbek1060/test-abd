@@ -45,11 +45,8 @@ class UserProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (context) => locator<UserProfileCubit>(param1: username)
-      ..load()
-      ..loadBlocks()
-      ..loadQuestions(),
-    child: _View(),
+    create: (context) => locator<UserProfileCubit>(param1: username)..load(),
+    child: const _View(),
   );
 }
 

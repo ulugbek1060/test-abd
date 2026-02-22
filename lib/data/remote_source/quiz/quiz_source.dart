@@ -17,7 +17,7 @@ import 'package:testabd/core/enums/access_enum.dart';
 import 'models/block_questions_response.dart';
 
 abstract class QuizSource {
-  Future<List<UserQuestionResponse>> getUserQuestions(int userId);
+  Future<dynamic> getUserQuestions(int userId);
 
   Future<BlockQuestionsResponse> getBlockTests(int blockId);
 
@@ -43,7 +43,7 @@ abstract class QuizSource {
 
   Future<AnswerResponse> submitAnswer(
     int questionId,
-    List<int> selectedAnswers,
+    Set<int> selectedAnswers,
     int? duration,
   );
 
@@ -123,7 +123,7 @@ class QuizSourceImpl implements QuizSource {
   @override
   Future<AnswerResponse> submitAnswer(
     int questionId,
-    List<int> selectedAnswers,
+    Set<int> selectedAnswers,
     int? duration,
   ) async {
     try {
@@ -167,16 +167,13 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<List<UserQuestionResponse>> getUserQuestions(int userId) async {
+  Future<dynamic> getUserQuestions(int userId) async {
     try {
       final response = await _dio.get(
-        '/quiz/qs/user_questions/',
+        'quiz/question/by-user/',
         queryParameters: {'user_id': userId},
       );
-      final list = (response.data as List)
-          .map((e) => UserQuestionResponse.fromJson(e))
-          .toList();
-      return list;
+      return response.data;
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

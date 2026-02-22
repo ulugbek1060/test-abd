@@ -217,90 +217,112 @@ class _QuestionCard extends StatelessWidget {
   }
 
   Iterable<Widget> _singleSelectAnswer(BuildContext context) =>
-      question?.answers.mapIndexed(
-        (i, e) => Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: e.isCorrect
-                ? Colors.blue.withAlpha(20)
-                : const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: e.isCorrect ? Colors.blue : Colors.transparent,
-              width: 1.5,
+      question?.answers.mapIndexed((i, e) {
+        final isSelected = question?.myAnswersId.contains(e.id) ?? false;
+        return GestureDetector(
+          onTap: () => context.read<UserQuestionDetailCubit>().selectAnswer({
+            e.id ?? -1,
+          }),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isSelected
+                    ? e.isCorrect
+                          ? Colors.green
+                          : Colors.red
+                    : Colors.grey.shade800,
+                width: 1.5,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 28,
+                  height: 28,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected
+                        ? e.isCorrect
+                              ? Colors.green
+                              : Colors.red
+                        : Colors.grey.shade800,
+                  ),
+                  child: e.isLoading
+                      ? ProgressView()
+                      : Text(
+                          e.letter ?? "",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                ),
+
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    e.answerText ?? "",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: e.isCorrect ? Colors.blue : Colors.grey.shade800,
-                ),
-                child: Text(
-                  String.fromCharCode(65 + i),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  e.answerText ?? "",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ) ??
+        );
+      }) ??
       [];
 
   Iterable<Widget> _trueFalseAnswer(BuildContext context) =>
       question?.answers.mapIndexed((i, e) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: e.isCorrect
-                ? Colors.blue.withAlpha(20)
-                : const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: e.isCorrect ? Colors.blue : Colors.transparent,
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                i == 0 ? Icons.check_circle : Icons.cancel,
-                color: i == 0 ? Colors.green : Colors.red,
-                size: 28,
+        final isSelected = question?.myAnswersId.contains(e.id) ?? false;
+        return GestureDetector(
+          onTap: () => context.read<UserQuestionDetailCubit>().selectAnswer({
+            e.id ?? -1,
+          }),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isSelected
+                    ? e.isCorrect
+                          ? Colors.green
+                          : Colors.red
+                    : Colors.grey.shade800,
+                width: 1.5,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  e.answerText ?? "",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).colorScheme.onSurface,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  i == 0 ? Icons.check_circle : Icons.cancel,
+                  color: i == 0 ? Colors.green : Colors.red,
+                  size: 28,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    e.answerText ?? "",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }) ??
@@ -308,36 +330,40 @@ class _QuestionCard extends StatelessWidget {
 
   Iterable<Widget> _multiSelectAnswer(BuildContext context) =>
       question?.answers.mapIndexed((i, e) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: e.isCorrect
-                ? Colors.blue.withAlpha(20)
-                : const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: e.isCorrect ? Colors.blue : Colors.transparent,
-              width: 1.5,
+        final isSelected = question?.myAnswersId.contains(e.id) ?? false;
+        return GestureDetector(
+          onTap: () => context.read<UserQuestionDetailCubit>().selectMultipleAnswers(e.id),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: e.isCorrect
+                  ? Colors.blue.withAlpha(20)
+                  : const Color(0xFF1A1A1A),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: e.isCorrect ? Colors.blue : Colors.transparent,
+                width: 1.5,
+              ),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Checkbox(value: e.isCorrect, onChanged: null),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  e.answerText ?? "",
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).colorScheme.onSurface,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Checkbox(value: e.isCorrect, onChanged: null),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    e.answerText ?? "",
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }) ??

@@ -17,11 +17,11 @@ abstract class QuizRepository {
 
   Future<Either<AppException, CheckAnswerModel>> submitAnswer({
     required int questionId,
-    required List<int> selectedAnswers,
+    required Set<int> selectedAnswers,
     int? duration,
   });
 
-  Future<Either<AppException, List<QuestionModel>>> getUserQuestions(
+  Future<Either<AppException, dynamic>> getUserQuestions(
     int userId,
   );
 

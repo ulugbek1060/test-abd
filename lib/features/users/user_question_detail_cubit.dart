@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
+import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'package:testabd/features/users/user_question_detail_state.dart';
@@ -69,5 +70,74 @@ class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
         );
       },
     );
+  }
+
+  Future<void> selectAnswer(Set<int> answers) async {
+    if (state.question?.isCompleted == true) return;
+
+    if (questionId == null) {
+      _messageHandler.handleDialog(UnknownException("Question id is null"));
+      return;
+    }
+
+    final answersList =
+        state.question?.answers.map((e) {
+          return answers.contains(e.id) ? e.copyWith(isLoading: true) : e;
+        }) ??
+        [];
+
+    emit(
+      state.copyWith(
+        question: state.question?.copyWith(
+          answers: List.of(answersList),
+          myAnswersId: answers,
+        ),
+      ),
+    );
+
+    final result = await _quizRepository.submitAnswer(
+      questionId: questionId!,
+      selectedAnswers: answers,
+    );
+
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        final answersList =
+            state.question?.answers
+                .map((e) => e.copyWith(isLoading: false))
+                .toList() ??
+            [];
+        final newQuestions = state.question?.copyWith(
+          answers: List.of(answersList),
+        );
+        emit(state.copyWith(question: newQuestions));
+      },
+      (value) {
+        final answersList =
+            state.question?.answers
+                .map((e) => e.copyWith(isLoading: false))
+                .toList() ??
+            [];
+
+        final newQuestions = state.question?.copyWith(
+          answers: List.of(answersList),
+          isCompleted: true,
+        );
+        emit(state.copyWith(question: newQuestions));
+      },
+    );
+  }
+
+  void selectMultipleAnswers(int? list) {
+    if (state.question?.isCompleted == true) return;
+
+    if (questionId == null) {
+      _messageHandler.handleDialog(UnknownException("Question id is null"));
+      return;
+    }
+
+    final answers = List.of(state.question?.answers ?? []);
+
   }
 }

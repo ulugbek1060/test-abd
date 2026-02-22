@@ -116,8 +116,7 @@ class HomeCubit extends Cubit<HomeState> {
     if (questionId == null || answerId == null) return;
 
     _updateQuestion(questionId, (q) {
-      final list = [answerId]; // for single answer – always only one selected
-      return q.copyWith(myAnswersId: list);
+      return q.copyWith(myAnswersId: {answerId});
     });
   }
 

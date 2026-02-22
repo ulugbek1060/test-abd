@@ -41,7 +41,7 @@ class QuestionModel extends Equatable {
   final bool isLoading;
   final bool isCompleted;
   final bool isCorrect;
-  final List<int> myAnswersId;
+  final Set<int> myAnswersId;
 
   const QuestionModel({
     this.id,
@@ -68,7 +68,7 @@ class QuestionModel extends Equatable {
     this.isLoading = false,
     this.isCompleted = false,
     this.isCorrect = false,
-    this.myAnswersId = const [],
+    this.myAnswersId =  const {},
   });
 
   @override
@@ -125,7 +125,7 @@ class QuestionModel extends Equatable {
     bool? isLoading,
     bool? isCompleted,
     bool? isCorrect,
-    List<int>? myAnswersId,
+    Set<int>? myAnswersId,
   }) {
     return QuestionModel(
       id: id ?? this.id,
@@ -184,6 +184,8 @@ class QuestionModel extends Equatable {
       wrongCount: response.wrongCount,
       difficultyPercentage: response.difficultyPercentage?.toDouble(),
       userAttemptCount: response.userAttemptCount,
+      isBookmarked: response.isBookmarked ?? false,
+      isFollowing: response.isFollowing ?? false,
       category: CategoryModel(
         id: response.category?.id,
         totalQuestions: response.category?.totalQuestions,
