@@ -131,7 +131,7 @@ class QuizSourceImpl implements QuizSource {
         '/quiz/submit-answer/',
         data: {
           "question": questionId,
-          "selected_answer_ids": selectedAnswers,
+          "selected_answer_ids": selectedAnswers.toList(),
           "duration": duration ?? 2,
         },
       );

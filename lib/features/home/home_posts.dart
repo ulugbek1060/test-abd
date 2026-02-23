@@ -216,12 +216,12 @@ class QuestionCard extends StatelessWidget {
 
 class MultipleAnswerCard extends StatelessWidget {
   final List<AnswerItemModel> answers;
-  final List<int> myAnswersId;
+  final Set<int> myAnswersId;
   final bool isCompleted;
   final bool isLoading;
 
   final void Function(int answerId) onItemTap;
-  final void Function(List<int> answers) onSubmitTap;
+  final void Function(Set<int> answers) onSubmitTap;
 
   const MultipleAnswerCard({
     super.key,
@@ -316,7 +316,7 @@ class MultipleAnswerCard extends StatelessWidget {
 
 class SingleAnswerCard extends StatelessWidget {
   final List<AnswerItemModel> answers;
-  final List<int> myAnswersId;
+  final Set<int> myAnswersId;
   final bool isCompleted;
   final void Function(int? answerId) onSubmitTap;
 
@@ -399,7 +399,10 @@ class SingleAnswerCard extends StatelessWidget {
       final isCorrect = correct;
       return CircleAvatar(
         backgroundColor: isCorrect ? Colors.green : Colors.red,
-        child: Icon(isCorrect ? Icons.check : Icons.close, color: Colors.white),
+        child: Icon(
+          isCorrect ? Icons.check_outlined : Icons.clear_rounded,
+          color: Colors.white,
+        ),
       );
     }
 
@@ -417,7 +420,7 @@ class SingleAnswerCard extends StatelessWidget {
 
 class TrueFalseAnswerCard extends StatelessWidget {
   final List<AnswerItemModel> answers;
-  final List<int> myAnswersId;
+  final Set<int> myAnswersId;
   final bool isCompleted;
   final void Function(int? answerId) onSubmitTap;
 
@@ -511,7 +514,7 @@ class TrueFalseAnswerCard extends StatelessWidget {
 class _AnswersList extends StatelessWidget {
   final int? questionId;
   final List<AnswerItemModel> answers;
-  final List<int> myAnswersId;
+  final Set<int> myAnswersId;
   final QuestionType? questionType;
   final bool isCompleted;
   final bool isLoading;
@@ -548,7 +551,7 @@ class _AnswersList extends StatelessWidget {
           isCompleted: isCompleted,
           onSubmitTap: isLoading
               ? (_) {}
-              : (answerId) => cubit.submitAnswer(questionId!, [answerId ?? -1]),
+              : (answerId) => cubit.submitAnswer(questionId!, {answerId ?? -1}),
         );
       case QuestionType.trueFalse:
         return TrueFalseAnswerCard(
@@ -557,7 +560,7 @@ class _AnswersList extends StatelessWidget {
           isCompleted: isCompleted,
           onSubmitTap: isLoading
               ? (_) {}
-              : (answerId) => cubit.submitAnswer(questionId!, [answerId ?? -1]),
+              : (answerId) => cubit.submitAnswer(questionId!, {answerId ?? -1}),
         );
 
       // TODO create text question card
@@ -568,7 +571,7 @@ class _AnswersList extends StatelessWidget {
           isCompleted: isCompleted,
           onSubmitTap: isLoading
               ? (_) {}
-              : (answerId) => cubit.submitAnswer(questionId!, [answerId ?? -1]),
+              : (answerId) => cubit.submitAnswer(questionId!, {answerId ?? -1}),
         );
       default:
         return SingleAnswerCard(
@@ -577,7 +580,7 @@ class _AnswersList extends StatelessWidget {
           isCompleted: isCompleted,
           onSubmitTap: isLoading
               ? (_) {}
-              : (answerId) => cubit.submitAnswer(questionId!, [answerId ?? -1]),
+              : (answerId) => cubit.submitAnswer(questionId!, {answerId ?? -1}),
         );
     }
   }

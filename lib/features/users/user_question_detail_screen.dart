@@ -1,9 +1,10 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
+import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
+import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/users/user_question_detail_cubit.dart';
 import 'package:testabd/features/users/user_question_detail_state.dart';
@@ -142,230 +143,233 @@ class _Header extends StatelessWidget {
 class _QuestionCard extends StatelessWidget {
   final QuestionModel? question;
 
-  const _QuestionCard({required this.question});
+  const _QuestionCard({super.key, required this.question});
 
   @override
   Widget build(BuildContext context) {
+    if (question == null) return const SizedBox();
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                question?.questionText ?? "",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              SizedBox(height: 12),
-              Text(
-                context.l10n.chooseCorrectStatementsBelow,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ],
-          ),
-        ),
+        _buildQuestionHeader(context),
         const SizedBox(height: 24),
-
-        // answer section
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.answers,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            ...answers(context),
-          ],
-        ),
+        _buildAnswersSection(context),
       ],
     );
   }
 
-  Iterable<Widget> answers(BuildContext context) {
+  // ================= QUESTION HEADER =================
+
+  Widget _buildQuestionHeader(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.onSurfaceColor(context),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            question?.questionText ?? "",
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            context.l10n.chooseCorrectStatementsBelow,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================= ANSWERS SECTION =================
+  Widget _buildAnswersSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.answers,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ..._buildAnswers(context),
+      ],
+    );
+  }
+
+  List<Widget> _buildAnswers(BuildContext context) {
     switch (question?.questionType) {
       case QuestionType.singleSelect:
-        return _singleSelectAnswer(context);
+        return _singleSelect(context);
       case QuestionType.multipleSelect:
-        return _multiSelectAnswer(context);
+        return _multiSelect(context);
       case QuestionType.trueFalse:
-        return _trueFalseAnswer(context);
-      case QuestionType.textQuestion:
-        return [];
+        return _trueFalse(context);
       default:
         return [];
     }
   }
 
-  Iterable<Widget> _singleSelectAnswer(BuildContext context) =>
-      question?.answers.mapIndexed((i, e) {
-        final isSelected = question?.myAnswersId.contains(e.id) ?? false;
-        return GestureDetector(
-          onTap: () => context.read<UserQuestionDetailCubit>().selectAnswer({
-            e.id ?? -1,
-          }),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isSelected
-                    ? e.isCorrect
-                          ? Colors.green
-                          : Colors.red
-                    : Colors.grey.shade800,
-                width: 1.5,
+  // ================= SINGLE SELECT =================
+
+  List<Widget> _singleSelect(BuildContext context) {
+    return question?.answers.map((answer) {
+          final isSelected = question?.myAnswersId.contains(answer.id) ?? false;
+
+          return _AnswerContainer(
+            isSelected: isSelected,
+            isCorrect: answer.isCorrect,
+            onTap: () => context.read<UserQuestionDetailCubit>().selectAnswer({
+              answer.id ?? -1,
+            }),
+            leading: _buildSingleLeading(answer, isSelected),
+            text: answer.answerText ?? "",
+          );
+        }).toList() ??
+        [];
+  }
+
+  Widget _buildSingleLeading(AnswerItemModel answer, bool isSelected) {
+    final backgroundColor = isSelected
+        ? (answer.isCorrect ? Colors.green : Colors.red)
+        : Colors.grey.shade800;
+
+    return Container(
+      width: 32,
+      height: 32,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: backgroundColor),
+      child: answer.isLoading
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : isSelected
+          ? Icon(
+              answer.isCorrect ? Icons.check : Icons.close,
+              color: Colors.white,
+              size: 18,
+            )
+          : Text(
+              answer.letter ?? "",
+              style: const TextStyle(color: Colors.white),
+            ),
+    );
+  }
+
+  // ================= MULTI SELECT =================
+
+  List<Widget> _multiSelect(BuildContext context) {
+    return question?.answers.map((answer) {
+          final isSelected = question?.myAnswersId.contains(answer.id) ?? false;
+
+          return _AnswerContainer(
+            isSelected: isSelected,
+            isCorrect: answer.isCorrect,
+            onTap: () => context
+                .read<UserQuestionDetailCubit>()
+                .selectMultipleAnswers(answer.id),
+            leading: Checkbox(
+              value: isSelected,
+              onChanged: (_) => context
+                  .read<UserQuestionDetailCubit>()
+                  .selectMultipleAnswers(answer.id),
+            ),
+            text: answer.answerText ?? "",
+          );
+        }).toList() ??
+        [];
+  }
+
+  // ================= TRUE / FALSE =================
+
+  List<Widget> _trueFalse(BuildContext context) {
+    return question?.answers.asMap().entries.map((entry) {
+          final index = entry.key;
+          final answer = entry.value;
+
+          return _AnswerContainer(
+            isSelected: question?.myAnswersId.contains(answer.id) ?? false,
+            isCorrect: answer.isCorrect,
+            onTap: () => context.read<UserQuestionDetailCubit>().selectAnswer({
+              answer.id ?? -1,
+            }),
+            leading: Icon(
+              index == 0 ? Icons.check_circle : Icons.cancel,
+              color: index == 0 ? Colors.green : Colors.red,
+              size: 28,
+            ),
+            text: answer.answerText ?? "",
+          );
+        }).toList() ??
+        [];
+  }
+}
+
+// ================= REUSABLE ANSWER CONTAINER =================
+
+class _AnswerContainer extends StatelessWidget {
+  final bool isSelected;
+  final bool isCorrect;
+  final VoidCallback onTap;
+  final Widget leading;
+  final String text;
+
+  const _AnswerContainer({
+    required this.isSelected,
+    required this.isCorrect,
+    required this.onTap,
+    required this.leading,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor = isSelected
+        ? (isCorrect ? Colors.green : Colors.red)
+        : Colors.grey.shade800;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: borderColor, width: 1.5),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            leading,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isSelected
-                        ? e.isCorrect
-                              ? Colors.green
-                              : Colors.red
-                        : Colors.grey.shade800,
-                  ),
-                  child: e.isLoading
-                      ? ProgressView()
-                      : Text(
-                          e.letter ?? "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                ),
-
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    e.answerText ?? "",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }) ??
-      [];
-
-  Iterable<Widget> _trueFalseAnswer(BuildContext context) =>
-      question?.answers.mapIndexed((i, e) {
-        final isSelected = question?.myAnswersId.contains(e.id) ?? false;
-        return GestureDetector(
-          onTap: () => context.read<UserQuestionDetailCubit>().selectAnswer({
-            e.id ?? -1,
-          }),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isSelected
-                    ? e.isCorrect
-                          ? Colors.green
-                          : Colors.red
-                    : Colors.grey.shade800,
-                width: 1.5,
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  i == 0 ? Icons.check_circle : Icons.cancel,
-                  color: i == 0 ? Colors.green : Colors.red,
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    e.answerText ?? "",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }) ??
-      [];
-
-  Iterable<Widget> _multiSelectAnswer(BuildContext context) =>
-      question?.answers.mapIndexed((i, e) {
-        final isSelected = question?.myAnswersId.contains(e.id) ?? false;
-        return GestureDetector(
-          onTap: () => context.read<UserQuestionDetailCubit>().selectMultipleAnswers(e.id),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: e.isCorrect
-                  ? Colors.blue.withAlpha(20)
-                  : const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: e.isCorrect ? Colors.blue : Colors.transparent,
-                width: 1.5,
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Checkbox(value: e.isCorrect, onChanged: null),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    e.answerText ?? "",
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }) ??
-      [];
+          ],
+        ),
+      ),
+    );
+  }
 }

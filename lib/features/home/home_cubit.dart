@@ -92,7 +92,7 @@ class HomeCubit extends Cubit<HomeState> {
   // ---------------------------------------------------------------------------
   // Submit Answer (Single / Multiple)
   // ---------------------------------------------------------------------------
-  Future<void> submitAnswer(int questionId, List<int> answers) async {
+  Future<void> submitAnswer(int questionId, Set<int> answers) async {
     final index = _findQuestionIndex(questionId);
     if (index == -1) return;
 
@@ -122,7 +122,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   void setMultipleAnswer(int questionId, int answerId) {
     _updateQuestion(questionId, (q) {
-      final list = List<int>.from(q.myAnswersId);
+      final list = Set<int>.from(q.myAnswersId);
 
       list.contains(answerId) ? list.remove(answerId) : list.add(answerId);
 
@@ -150,7 +150,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void _setQuestionLoading(int index, List<int> answers, bool value) {
+  void _setQuestionLoading(int index, Set<int> answers, bool value) {
     final q = state.followedQuizStata.questions[index];
 
     final updatedAnswers = q.answers.map((a) {
@@ -169,13 +169,13 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   // ---------------- SUBMIT RESULT HANDLING ----------------
-  void _handleSubmitError(int index, List<int> answers) {
+  void _handleSubmitError(int index, Set<int> answers) {
     _setQuestionLoading(index, answers, false);
   }
 
   void _handleSubmitSuccess(
     int index,
-    List<int> answers,
+    Set<int> answers,
     CheckAnswerModel response,
   ) {
     final q = state.followedQuizStata.questions[index];
