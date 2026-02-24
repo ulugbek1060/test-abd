@@ -38,6 +38,7 @@ class QuestionModel extends Equatable {
   final CategoryModel? category;
 
   // additional
+  final bool isBookmarkLoading;
   final bool isLoading;
   final bool isCompleted;
   final bool isCorrect;
@@ -66,6 +67,7 @@ class QuestionModel extends Equatable {
     this.isFollowing,
     this.category,
     this.isLoading = false,
+    this.isBookmarkLoading = false,
     this.isCompleted = false,
     this.isCorrect = false,
     this.myAnswersId =  const {},
@@ -95,6 +97,7 @@ class QuestionModel extends Equatable {
     isFollowing,
     category,
     isLoading,
+    isBookmarkLoading,
     isCompleted,
     isCorrect,
     myAnswersId,
@@ -123,6 +126,7 @@ class QuestionModel extends Equatable {
     bool? isFollowing,
     CategoryModel? category,
     bool? isLoading,
+    bool? isBookmarkLoading,
     bool? isCompleted,
     bool? isCorrect,
     Set<int>? myAnswersId,
@@ -150,6 +154,7 @@ class QuestionModel extends Equatable {
       isFollowing: isFollowing ?? this.isFollowing,
       category: category ?? this.category,
       isLoading: isLoading ?? this.isLoading,
+      isBookmarkLoading: isBookmarkLoading ?? this.isBookmarkLoading,
       isCompleted: isCompleted ?? this.isCompleted,
       isCorrect: isCorrect ?? this.isCorrect,
       myAnswersId: myAnswersId ?? this.myAnswersId,

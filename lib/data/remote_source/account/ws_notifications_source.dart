@@ -24,9 +24,12 @@ class WSNotificationsSourceImpl implements WSNotificationsSource {
   ) async {
     await closeWebSocket();
 
+    logger.d(userId);
     final uri = Uri.parse('wss://backend.testabd.uz/ws/notifications/$userId/');
 
-    _channel = WebSocketChannel.connect(uri);
+    _channel = WebSocketChannel.connect(
+      uri,
+    );
 
     _subscription = _channel!.stream.listen(
       (message) {

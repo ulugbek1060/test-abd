@@ -204,8 +204,10 @@ class QuestionCard extends StatelessWidget {
               wrongCount: quiz.wrongCount?.toString() ?? '',
               title: quiz.testTitle ?? '',
               description: quiz.testDescription ?? '',
+              isBookmarkLoading: quiz.isBookmarkLoading,
+              isBookmark: quiz.isBookmarked,
               onShare: () {},
-              onSave: () {},
+              onSave: () => context.read<HomeCubit>().toggleBookmark(quiz.id),
             ),
           ],
         ),
@@ -671,6 +673,8 @@ class _BottomQuestionInformation extends StatelessWidget {
   final String wrongCount;
   final String title;
   final String description;
+  final bool isBookmarkLoading;
+  final bool isBookmark;
   final Function() onShare;
   final Function() onSave;
 
@@ -680,8 +684,10 @@ class _BottomQuestionInformation extends StatelessWidget {
     required this.wrongCount,
     required this.title,
     required this.description,
+    required this.isBookmarkLoading,
     required this.onShare,
     required this.onSave,
+    required this.isBookmark,
   });
 
   @override
@@ -728,7 +734,7 @@ class _BottomQuestionInformation extends StatelessWidget {
 
               // share buttons
               IconButton(
-                onPressed: () {},
+                onPressed: onShare,
                 icon: Icon(
                   Icons.share,
                   color: Theme.of(context).colorScheme.onSurface,
@@ -736,11 +742,15 @@ class _BottomQuestionInformation extends StatelessWidget {
               ),
 
               IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.bookmark_border_rounded,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+                onPressed: onSave,
+                icon: isBookmarkLoading
+                    ? ProgressView()
+                    : Icon(
+                        isBookmark
+                            ? Icons.bookmark_outlined
+                            : Icons.bookmark_border_rounded,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
               ),
             ],
           ),

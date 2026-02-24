@@ -5,6 +5,7 @@ import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
+import 'package:testabd/main.dart';
 import 'home_state.dart';
 
 @injectable
@@ -33,6 +34,54 @@ class HomeCubit extends Cubit<HomeState> {
       _messageHandler.handleDialog(error);
     }, (value) {});
   }
+
+  // ---------------------------------------------------------------------------
+  // Toggle bookmark
+  // ---------------------------------------------------------------------------
+  Future<void> toggleBookmark(int? questionId) async {
+    if (questionId == null) return;
+    _setBookmarkLoading(questionId, true);
+    final result = await _quizRepository.bookmarkQuestion(questionId);
+    result.fold((error) {
+      _messageHandler.handleDialog(error);
+      _setBookmarkLoading(questionId, false);
+    }, (value) => _changeBookmarkValues(questionId, false));
+  }
+
+  void _setBookmarkLoading(int questionId, bool isLoading) {
+    final fQuestionsState = state.followedQuizStata;
+    final list = List.of(fQuestionsState.questions);
+    final index = list.indexWhere((e) => e.id == questionId);
+    if (index == -1) return;
+    final updatedQuestion = list[index].copyWith(isBookmarkLoading: isLoading);
+    list[index] = updatedQuestion;
+    emit(
+      state.copyWith(
+        followedQuizStata: fQuestionsState.copyWith(questions: list),
+      ),
+    );
+  }
+
+  void _changeBookmarkValues(int questionId, bool isLoading) {
+    final fQuestionsState = state.followedQuizStata;
+    final list = List.of(fQuestionsState.questions);
+    final index = list.indexWhere((e) => e.id == questionId);
+    if (index == -1) return;
+    final question = list[index];
+    final updatedQuestion = question.copyWith(
+      isBookmarkLoading: isLoading,
+      isBookmarked: !question.isBookmarked,
+    );
+    list[index] = updatedQuestion;
+    emit(
+      state.copyWith(
+        followedQuizStata: fQuestionsState.copyWith(
+          questions: list,
+        ),
+      ),
+    );
+  }
+
 
   // ---------------------------------------------------------------------------
   // Pagination
@@ -136,7 +185,10 @@ class HomeCubit extends Cubit<HomeState> {
   int _findQuestionIndex(int questionId) =>
       state.followedQuizStata.questions.indexWhere((e) => e.id == questionId);
 
-  void _updateQuestion(int questionId, QuestionModel Function(QuestionModel) updateFn) {
+  void _updateQuestion(
+    int questionId,
+    QuestionModel Function(QuestionModel) updateFn,
+  ) {
     final index = _findQuestionIndex(questionId);
     if (index == -1) return;
 

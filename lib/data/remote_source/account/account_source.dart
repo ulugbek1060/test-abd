@@ -41,6 +41,8 @@ abstract class AccountSource {
   Future<dynamic> uploadUserImage(String path);
 
   Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData);
+
+  Future<dynamic> search(String? query);
 }
 
 @Injectable(as: AccountSource)
@@ -238,4 +240,7 @@ class AccountSourceImpl implements AccountSource {
       throw UnknownException(e.toString(), stackTrace: stackTrace);
     }
   }
+
+  @override
+  Future<dynamic> search(String? query) async {}
 }
