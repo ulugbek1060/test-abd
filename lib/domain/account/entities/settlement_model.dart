@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/settlement_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/settlement_item_response.dart';
 
 class SettlementModel extends Equatable {
   final int? id;

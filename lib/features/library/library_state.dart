@@ -1,6 +1,16 @@
-part of 'library_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:testabd/domain/books/entities/book_model.dart';
 
-@immutable
-sealed class LibraryState {}
+part 'library_state.freezed.dart';
 
-final class LibraryInitial extends LibraryState {}
+@freezed
+class LibraryState with _$LibraryState {
+  const factory LibraryState({
+    String? error,
+    @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
+    @Default([]) List<BookModel> books,
+    @Default('') String next,
+    @Default('') String previous,
+  }) = _LibraryState;
+}

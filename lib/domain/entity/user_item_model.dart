@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/referrals_list_response.dart';
+import 'package:testabd/data/remote_source/account/models/referrals_list_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart';
 
 class UserItemModel extends Equatable {

@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/user_connections_response.dart';
+import 'package:testabd/data/remote_source/account/models/user_connections_response.dart';
 import 'package:testabd/features/users/user_connection_screen.dart';
 
 class UserConnectionsModel extends Equatable {
@@ -23,7 +23,7 @@ class UserConnectionsModel extends Equatable {
     );
   }
 
-  // model without user provided userId
+  // models without user provided userId
   UserConnectionsModel toggleIsMe(int? userId) {
     return UserConnectionsModel(
       followers: followers.map((e) {

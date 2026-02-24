@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/local_source/entities/my_info_db.dart';
-import 'package:testabd/data/remote_source/account/model/my_info_response.dart';
+import 'package:testabd/data/remote_source/account/models/my_info_response.dart';
 
 @singleton
 class MyInfoHiveService {

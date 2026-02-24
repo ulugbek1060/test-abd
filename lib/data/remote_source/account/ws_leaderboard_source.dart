@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/services/token_service.dart';
-import 'package:testabd/data/remote_source/account/model/leaderboard_response.dart';
+import 'package:testabd/data/remote_source/account/models/leaderboard_response.dart';
 import 'package:testabd/main.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

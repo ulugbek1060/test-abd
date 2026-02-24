@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/data/local_source/my_info_hive_service.dart';
 import 'package:testabd/data/remote_source/account/account_source.dart';
-import 'package:testabd/data/remote_source/account/model/change_pswd_request.dart';
+import 'package:testabd/data/remote_source/account/models/change_pswd_request.dart';
 import 'package:testabd/data/remote_source/account/ws_leaderboard_source.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/account/entities/country_model.dart';
@@ -227,8 +227,8 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<dynamic> updateProfileImage(String path) async {
     try {
       final result = await _accountSource.uploadUserImage(path);
-      // final model = MyInfoModel.fromResponse(result);
-      // final dbModel = MyInfoModel.toDb(model);
+      // final models = MyInfoModel.fromResponse(result);
+      // final dbModel = MyInfoModel.toDb(models);
       // _hiveService.saveMyInfo(dbModel);
       return Right(result);
     } on AppException catch (e) {

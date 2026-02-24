@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/leaderboard_response.dart';
+import 'package:testabd/data/remote_source/account/models/leaderboard_response.dart';
 
 class LeaderboardModel extends Equatable {
   final int count;

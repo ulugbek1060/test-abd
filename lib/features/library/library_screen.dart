@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testabd/core/widgets/loading_widget.dart';
+import 'package:testabd/di/app_config.dart';
+import 'package:testabd/domain/books/entities/book_model.dart';
+import 'package:testabd/features/library/library_cubit.dart';
+import 'package:testabd/features/library/library_state.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _View();
+    return BlocProvider(
+      create: (context) => locator<LibraryCubit>()..getBooks(),
+      child: _View(),
+    );
   }
 }
 
@@ -14,87 +23,40 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Library'), centerTitle: true),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.all(6),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-                childAspectRatio: 3 / 4,
-              ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final book = books[index];
-                return BookCard(book: book);
-              }, childCount: books.length),
-            ),
-          ),
-        ],
-      ),
+    return BlocBuilder<LibraryCubit, LibraryState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(title: const Text('Library'), centerTitle: true),
+          body: state.isLoading
+              ? ProgressView()
+              : CustomScrollView(
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.all(6),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 8.0,
+                              mainAxisSpacing: 8.0,
+                              childAspectRatio: 3 / 4,
+                            ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final book = state.books[index];
+                          return BookCard(book: book);
+                        }, childCount: state.books.length),
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      },
     );
   }
 }
 
-final List<Book> books = [
-  Book(
-    title: "The Midnight Library",
-    author: "Matt Haig",
-    coverUrl: "https://images.unsplash.com/photo-1544947950-fa07b98aaee8?w=400",
-    rating: 4.2,
-  ),
-  Book(
-    title: "Project Hail Mary",
-    author: "Andy Weir",
-    coverUrl: "https://images.unsplash.com/photo-1543002588-bfa740a1e3a4?w=400",
-    rating: 4.7,
-  ),
-  Book(
-    title: "Atomic Habits",
-    author: "James Clear",
-    coverUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
-    rating: 4.8,
-  ),
-  Book(
-    title: "The Psychology of Money",
-    author: "Morgan Housel",
-    coverUrl: "https://images.unsplash.com/photo-1553729784-e91953dec042?w=400",
-    rating: 4.5,
-  ),
-  Book(
-    title: "Dune",
-    author: "Frank Herbert",
-    coverUrl: "https://images.unsplash.com/photo-1543007631-7180d0e3f3e3?w=400",
-    rating: 4.6,
-  ),
-  Book(
-    title: "Sapiens",
-    author: "Yuval Noah Harari",
-    coverUrl:
-        "https://images.unsplash.com/photo-1541963463532-dbb7d3a7b3a3?w=400",
-    rating: 4.4,
-  ),
-];
-
-class Book {
-  final String title;
-  final String author;
-  final String coverUrl;
-  final double rating;
-
-  Book({
-    required this.title,
-    required this.author,
-    required this.coverUrl,
-    required this.rating,
-  });
-}
-
 class BookCard extends StatelessWidget {
-  final Book book;
+  final BookModel book;
 
   const BookCard({super.key, required this.book});
 
@@ -107,9 +69,10 @@ class BookCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
+
           // Background cover image
           Image.network(
-            book.coverUrl,
+            book.coverImage ?? "",
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
               color: Colors.grey.shade800,
@@ -138,7 +101,7 @@ class BookCard extends StatelessWidget {
               children: [
                 // Title
                 Text(
-                  book.title,
+                  book.title ?? "",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -158,7 +121,7 @@ class BookCard extends StatelessWidget {
 
                 // Author
                 Text(
-                  book.author,
+                  book.author?.fullName ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -168,10 +131,9 @@ class BookCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                _RatingStars(rating: book.rating),
-
+                // _RatingStars(rating: book.author),
                 Text(
-                  book.rating.toStringAsFixed(1),
+                  book.totalPages?.toString() ?? "",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,

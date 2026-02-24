@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
 import 'package:testabd/data/local_source/entities/my_info_db.dart';
-import 'package:testabd/data/remote_source/account/model/my_info_response.dart';
+import 'package:testabd/data/remote_source/account/models/my_info_response.dart';
 import 'package:testabd/domain/account/entities/country_model.dart';
 import 'package:testabd/domain/account/entities/district_model.dart';
 import 'package:testabd/domain/account/entities/region_model.dart';

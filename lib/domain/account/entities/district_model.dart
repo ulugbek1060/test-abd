@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/district_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/district_item_response.dart';
 
 class DistrictModel extends Equatable {
   final int? id;

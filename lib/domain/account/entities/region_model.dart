@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/region_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/region_item_response.dart';
 
 class RegionModel extends Equatable {
   final int? id;

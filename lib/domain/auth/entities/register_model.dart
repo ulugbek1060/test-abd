@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/auth/model/user_register_response.dart';
+import 'package:testabd/data/remote_source/auth/models/user_register_response.dart';
 
 class RegisterModel with EquatableMixin {
   final int? id;

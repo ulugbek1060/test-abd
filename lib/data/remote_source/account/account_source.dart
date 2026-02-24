@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
-import 'package:testabd/data/remote_source/account/model/change_pswd_request.dart';
-import 'package:testabd/data/remote_source/account/model/change_pswd_response.dart';
-import 'package:testabd/data/remote_source/account/model/country_item_response.dart';
-import 'package:testabd/data/remote_source/account/model/district_item_response.dart';
-import 'package:testabd/data/remote_source/account/model/notifications_response.dart';
-import 'package:testabd/data/remote_source/account/model/referrals_list_response.dart';
-import 'package:testabd/data/remote_source/account/model/region_item_response.dart';
-import 'package:testabd/data/remote_source/account/model/settlement_item_response.dart';
-import 'package:testabd/data/remote_source/account/model/user_connections_response.dart';
-import 'package:testabd/data/remote_source/account/model/user_profile_response.dart';
-import 'package:testabd/data/remote_source/account/model/my_info_response.dart';
+import 'package:testabd/data/remote_source/account/models/change_pswd_request.dart';
+import 'package:testabd/data/remote_source/account/models/change_pswd_response.dart';
+import 'package:testabd/data/remote_source/account/models/country_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/district_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/notifications_response.dart';
+import 'package:testabd/data/remote_source/account/models/referrals_list_response.dart';
+import 'package:testabd/data/remote_source/account/models/region_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/settlement_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/user_connections_response.dart';
+import 'package:testabd/data/remote_source/account/models/user_profile_response.dart';
+import 'package:testabd/data/remote_source/account/models/my_info_response.dart';
 
 abstract class AccountSource {
   Future<MyInfoResponse> getUserInfo();

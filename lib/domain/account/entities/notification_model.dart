@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/core/utils/formatters.dart';
-import 'package:testabd/data/remote_source/account/model/notifications_response.dart';
+import 'package:testabd/data/remote_source/account/models/notifications_response.dart';
 
 class NotificationModel extends Equatable {
   final int? id;

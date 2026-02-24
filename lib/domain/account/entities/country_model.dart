@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:testabd/data/remote_source/account/model/country_item_response.dart';
+import 'package:testabd/data/remote_source/account/models/country_item_response.dart';
 
 class CountryModel with EquatableMixin {
   final int? id;

@@ -26,12 +26,15 @@ import '../data/remote_source/account/account_source.dart' as _i65;
 import '../data/remote_source/account/ws_leaderboard_source.dart' as _i259;
 import '../data/remote_source/account/ws_notifications_source.dart' as _i1067;
 import '../data/remote_source/auth/auth_source.dart' as _i142;
+import '../data/remote_source/books/books_source.dart' as _i83;
 import '../data/remote_source/quiz/quiz_source.dart' as _i792;
 import '../data/repository/account_repository_impl.dart' as _i317;
 import '../data/repository/auth_repository_impl.dart' as _i461;
+import '../data/repository/books_repository_impl.dart' as _i656;
 import '../data/repository/quiz_repository_impl.dart' as _i75;
 import '../domain/account/account_repository.dart' as _i575;
 import '../domain/auth/auth_repository.dart' as _i893;
+import '../domain/books/books_repository.dart' as _i923;
 import '../domain/quiz/quiz_repository.dart' as _i156;
 import '../features/auth/forgotpswd/forgot_pswd_cubit.dart' as _i36;
 import '../features/auth/login/login_cubit.dart' as _i958;
@@ -39,6 +42,7 @@ import '../features/auth/register/register_cubit.dart' as _i163;
 import '../features/home/home_cubit.dart' as _i639;
 import '../features/home/leaderboard_cubit.dart' as _i279;
 import '../features/home/notifications_cubit.dart' as _i124;
+import '../features/library/library_cubit.dart' as _i46;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
@@ -192,6 +196,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i36.ForgotPswdCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
+    gh.factory<_i83.BooksSource>(() => _i83.BooksSourceImpl(gh<_i361.Dio>()));
     gh.factoryParam<_i420.UserBlockDetailCubit, int?, dynamic>((
       blockId,
       _,
@@ -265,6 +270,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
+    gh.singleton<_i923.BooksRepository>(
+        () => _i656.BooksRepositoryImpl(gh<_i83.BooksSource>()));
     gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
       username,
       _,
@@ -286,6 +293,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i639.HomeCubit>(() => _i639.HomeCubit(
           gh<_i156.QuizRepository>(),
           gh<_i575.AccountRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factory<_i46.LibraryCubit>(() => _i46.LibraryCubit(
+          gh<_i923.BooksRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
     return this;

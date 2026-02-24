@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
-import 'package:testabd/data/remote_source/auth/model/login_response.dart';
-import 'package:testabd/data/remote_source/auth/model/user_register_response.dart';
+import 'package:testabd/data/remote_source/auth/models/login_response.dart';
+import 'package:testabd/data/remote_source/auth/models/user_register_response.dart';
 
 abstract class AuthSource {
   Future<UserRegisterResponse> register(String username, String email, String password, String? referralCode,);
