@@ -6,6 +6,8 @@ import 'package:testabd/domain/books/entities/book_model.dart';
 import 'package:testabd/features/library/library_cubit.dart';
 import 'package:testabd/features/library/library_state.dart';
 
+import '../../core/theme/app_colors.dart';
+
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
 
@@ -217,6 +219,7 @@ class AuthorSection extends StatelessWidget {
                 return StoryItem(
                   username: author.fullName ?? "",
                   imageUrl: author.image ?? "",
+                  onTap: (){},
                 );
               },
             ),
@@ -230,8 +233,14 @@ class AuthorSection extends StatelessWidget {
 class StoryItem extends StatelessWidget {
   final String username;
   final String imageUrl;
+  final VoidCallback onTap;
 
-  const StoryItem({super.key, required this.username, required this.imageUrl});
+  const StoryItem({
+    super.key,
+    required this.onTap,
+    required this.username,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -240,16 +249,13 @@ class StoryItem extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: onTap,
             child: Container(
               padding: const EdgeInsets.all(3),
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xFFFEDA75),
-                    Color(0xFFFA7E1E),
-                    Color(0xFFD62976),
                     Color(0xFF962FBF),
                     Color(0xFF4F5BD5),
                   ],
