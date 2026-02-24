@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:testabd/data/remote_source/books/models/books_response.dart';
+import 'package:testabd/domain/books/entities/author_model.dart';
 
 class BookModel extends Equatable {
   final int? id;
@@ -59,16 +60,4 @@ class BookModel extends Equatable {
     totalPages,
     createdAt,
   ];
-}
-
-class AuthorModel extends Equatable {
-  final int? id;
-  final String? fullName;
-  final String? bio;
-  final String? image;
-
-  const AuthorModel({this.id, this.fullName, this.bio, this.image});
-
-  @override
-  List<Object?> get props => [id, fullName, bio, image];
 }

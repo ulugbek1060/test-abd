@@ -4,10 +4,11 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/data/remote_source/books/models/authors_response.dart';
 import 'package:testabd/data/remote_source/books/models/books_response.dart';
 
 abstract class BooksSource {
-  Future<dynamic> getAuthor();
+  Future<AuthorsResponse> getAuthor();
   Future<BooksResponse> getBooks();
 }
 
@@ -18,10 +19,10 @@ class BooksSourceImpl implements BooksSource {
   BooksSourceImpl(this._dio);
 
   @override
-  Future<dynamic> getAuthor() async {
+  Future<AuthorsResponse> getAuthor() async {
     try {
       final response = await _dio.get("/books/authors/");
-      return response.data;
+      return AuthorsResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
