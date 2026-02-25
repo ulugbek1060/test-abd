@@ -2,30 +2,31 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:testabd/core/theme/app_colors.dart';
-import 'package:testabd/core/theme/app_icons.dart';
-import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/enums/connections_enum.dart';
-import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
+import 'package:testabd/core/theme/app_images.dart';
+import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
-
-enum PageType { questions, block, books }
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-    create: (_) => locator<ProfileCubit>(),
-    child: const _View(),
-  );
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => locator<ProfileCubit>(),
+      child: const _View(),
+    );
+  }
 }
+
+enum PageType { questions, block, books }
 
 class _View extends StatefulWidget {
   const _View();
@@ -89,117 +90,97 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ProfileCubit>();
-
     return BlocBuilder<ProfileCubit, ProfileState>(
       buildWhen: (s1, s2) =>
-          s1.isLoading != s2.isLoading ||
+      s1.isLoading != s2.isLoading ||
           s1.myInfoModel != s2.myInfoModel ||
           s1.userConnectionsState != s2.userConnectionsState,
+
       builder: (context, state) {
         return RefreshIndicator(
-          onRefresh: cubit.refresh,
+          onRefresh: context.read<ProfileCubit>().refresh,
           child: Scaffold(
             appBar: AppBar(
-              elevation: 0,
-              title: Text(
-                '@${state.myInfoModel?.username}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              title: Text("@${state.myInfoModel?.username ?? ""}"),
+              centerTitle: true,
             ),
 
-            // body
-            body: state.isLoading
-                ? ProgressView()
-                : CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      /// Header
-                      HeaderSection(
-                        imageUrl: state.myInfoModel?.profileImage ?? '',
-                        tests:
-                            state.myInfoModel?.testsSolved?.toString() ?? '0',
-                        followers: state
-                            .userConnectionsState
-                            .connections
-                            .followers
-                            .length
-                            .toString(),
-                        followings: state
-                            .userConnectionsState
-                            .connections
-                            .following
-                            .length
-                            .toString(),
-                        level: state.myInfoModel?.level ?? KnowledgeLevel.none,
-                        fullName:
-                            '${state.myInfoModel?.firstName} ${state.myInfoModel?.lastName}',
-                        bio: state.myInfoModel?.bio ?? '',
-                        onTestsTap: () {},
-                        onFollowersTap: () => context.push(
-                          AppRouter.profileConnectionWithUserId(
-                            connectionType: ConnectionsEnum.followers.name,
-                          ),
-                        ),
-                        onFollowingTap: () => context.push(
-                          AppRouter.profileConnectionWithUserId(
-                            connectionType: ConnectionsEnum.following.name,
-                          ),
-                        ),
-                        onEditProfileTap: () => context.push(AppRouter.editProfile),
-                      ),
-
-                      /// Statistics Cards
-                      SubHeaderSection(
-                        coins: state.myInfoModel?.coins?.toString() ?? '0',
-                        correctAnswers: state.myInfoModel?.correctCount?.toString() ?? '0',
-                        wrongAnswers: state.myInfoModel?.wrongCount?.toString() ?? '0',
-                        accuracy: state.myInfoModel?.findAccuracy().toString() ?? '0',
-                        accuracyProgress: state.myInfoModel?.findAccuracy() ?? 0,
-                        onQuestionsBookmarkTap: () => context.push(AppRouter.bookmarkQuestions),
-                      ),
-
-                      /// tabBar
-                      TabsSection(
-                        pageTye: pageTye,
-                        onTabChange: (index) => setState(() {
-                          switch (index) {
-                            case 0:
-                              pageTye = PageType.questions;
-                            case 1:
-                              pageTye = PageType.block;
-                            case 2:
-                              pageTye = PageType.books;
-                          }
-                        }),
-                        controller: _tabController,
-                      ),
-
-                      BlocBuilder<ProfileCubit, ProfileState>(
-                        buildWhen: (s1, s2) => s1.blocksState != s2.blocksState,
-                        builder: (_, s) => MyBlockSection(
-                          key: _blockKey,
-                          isEnabled: pageTye == PageType.block,
-                          state: s.blocksState,
-                        ),
-                      ),
-
-                      BlocBuilder<ProfileCubit, ProfileState>(
-                        buildWhen: (s1, s2) =>
-                            s1.questionsState != s2.questionsState,
-                        builder: (_, s) => MyQuestionsSection(
-                          key: _questionsKey,
-                          isEnabled: pageTye == PageType.questions,
-                          state: s.questionsState,
-                        ),
-                      ),
-
-                      MyBooksSection(
-                        key: _booksKey,
-                        isEnabled: pageTye == PageType.books,
-                      ),
-                    ],
+            body: CustomScrollView(
+              slivers: [
+                /// HEADER
+                _Header(
+                  imageUrl: state.myInfoModel?.profileImage ?? "",
+                  level: state.myInfoModel?.level ?? KnowledgeLevel.none,
+                  fullName: state.myInfoModel?.fullName ?? "",
+                  bio: state.myInfoModel?.bio ?? "",
+                  followers: state
+                      .userConnectionsState
+                      .connections
+                      .followers
+                      .length
+                      .toString(),
+                  following: state
+                      .userConnectionsState
+                      .connections
+                      .following
+                      .length
+                      .toString(),
+                  onEdit: () => context.push(AppRouter.editProfile),
+                  onFollowers: () => context.push(
+                    AppRouter.profileConnectionWithUserId(
+                      connectionType: ConnectionsEnum.followers.name,
+                    ),
                   ),
+                  onFollowing: () => context.push(
+                    AppRouter.profileConnectionWithUserId(
+                      connectionType: ConnectionsEnum.following.name,
+                    ),
+                  ),
+                ),
+
+                /// SUBHEADER
+                _Statistics(
+                  coins: state.myInfoModel?.coins?.toString() ?? "0",
+                  correct: state.myInfoModel?.correctCount?.toString() ?? "0",
+                  wrong: state.myInfoModel?.wrongCount?.toString() ?? "0",
+                  accuracy: state.myInfoModel?.findAccuracy().toString() ?? "0",
+                  accuracyPer: state.myInfoModel?.findAccuracy() ?? 0,
+                  onBookmark: () => context.push(AppRouter.bookmarkQuestions),
+                ),
+
+                /// CONTENT
+                _Tabs(
+                  pageTye: pageTye,
+                  onTabChange: (index) => setState(() {
+                    pageTye = PageType.values[index];
+                  }),
+                  controller: _tabController,
+                ),
+
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  buildWhen: (s1, s2) => s1.blocksState != s2.blocksState,
+                  builder: (_, s) => _BlocksSection(
+                    key: _blockKey,
+                    isEnabled: pageTye == PageType.block,
+                    state: s.blocksState,
+                  ),
+                ),
+
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  buildWhen: (s1, s2) => s1.questionsState != s2.questionsState,
+                  builder: (_, s) => _QuestionsSection(
+                    key: _questionsKey,
+                    isEnabled: pageTye == PageType.questions,
+                    state: s.questionsState,
+                  ),
+                ),
+
+                _BooksSection(
+                  key: _booksKey,
+                  isEnabled: pageTye == PageType.books,
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -207,205 +188,222 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   }
 }
 
-class HeaderSection extends StatelessWidget {
+class _Header extends StatelessWidget {
   final String imageUrl;
-  final String followers;
-  final String followings;
-  final String tests;
+  final KnowledgeLevel level;
   final String fullName;
   final String bio;
-  final KnowledgeLevel level;
-  final VoidCallback onFollowersTap;
-  final VoidCallback onFollowingTap;
-  final VoidCallback onTestsTap;
-  final VoidCallback onEditProfileTap;
+  final String followers;
+  final String following;
+  final VoidCallback onEdit;
+  final VoidCallback onFollowers;
+  final VoidCallback onFollowing;
 
-  const HeaderSection({
+  const _Header({
     super.key,
     required this.imageUrl,
-    required this.followers,
-    required this.followings,
-    required this.tests,
+    required this.level,
     required this.fullName,
     required this.bio,
-    required this.level,
-    required this.onFollowersTap,
-    required this.onFollowingTap,
-    required this.onTestsTap,
-    required this.onEditProfileTap,
+    required this.followers,
+    required this.following,
+    required this.onEdit,
+    required this.onFollowers,
+    required this.onFollowing,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(16),
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverToBoxAdapter(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                  SizedBox(
-                    width: 90,
-                    height: 90,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 0,
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.purple, width: 3),
-                              gradient: const LinearGradient(
-                                colors: [Colors.purple, Colors.blue],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
+                SizedBox(
+                  width: 90,
+                  height: 90,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.purple, width: 3),
+                            gradient: const LinearGradient(
+                              colors: [Colors.purple, Colors.blue],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            child: ClipOval(
-                              child: CachedNetworkImage(
-                                width: 46,
-                                height: 46,
-                                imageUrl: imageUrl,
+                          ),
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              width: 46,
+                              height: 46,
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => Image.asset(
+                                AppImages.defaultAvatar,
                                 fit: BoxFit.cover,
-                                placeholder: (_, __) => Image.asset(
-                                  AppImages.defaultAvatar,
-                                  fit: BoxFit.cover,
-                                ),
-                                errorWidget: (_, __, ___) => Image.asset(
-                                  AppImages.defaultAvatar,
-                                  fit: BoxFit.cover,
-                                ),
+                              ),
+                              errorWidget: (_, __, ___) => Image.asset(
+                                AppImages.defaultAvatar,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
                         ),
+                      ),
 
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          left: 0,
-                          child: Container(
-                            width: 80,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(12)),
-                              gradient: const LinearGradient(
-                                colors: [Colors.purple, Colors.blue],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                        child: Container(
+                          width: 80,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: const LinearGradient(
+                              colors: [Colors.purple, Colors.blue],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            child: Center(
-                              child: Text(
-                                level.getText(context),
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onPrimary,
-                                    ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              level.getText(context),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary,
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
                 const SizedBox(width: 20),
-
-                /// Stats
                 Expanded(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // _StatItem(
-                      //   title: "Tests",
-                      //   value: tests,
-                      //   onTap: onTestsTap,
-                      // ),
-                      _StatItem(
-                        title: "Followers",
-                        value: followers,
-                        onTap: onFollowersTap,
+                      countItem(
+                        context,
+                        context.l10n.followers,
+                        followers,
+                        onFollowers,
                       ),
-                      _StatItem(
-                        title: "Following",
-                        value: followings,
-                        onTap: onFollowingTap,
+                      countItem(
+                        context,
+                        context.l10n.following,
+                        following,
+                        onFollowing,
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 12),
 
-            // fullname bui section
+            // full name
             Text(
               fullName,
               style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
+
+            // bio
             Text(
               bio,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: 1.5,
+                overflow: TextOverflow.ellipsis,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 12),
 
-            // edit button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: onEdit,
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(context.l10n.editProfile),
                   ),
                 ),
-                onPressed: onEditProfileTap,
-                child: Text(
-                  'Edit profile',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget countItem(
+      BuildContext context,
+      String title,
+      String value,
+      VoidCallback onTap,
+      ) => GestureDetector(
+    onTap: onTap,
+    child: Column(
+      children: [
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
-class SubHeaderSection extends StatelessWidget {
+class _Statistics extends StatelessWidget {
   final String coins;
-  final String correctAnswers;
-  final String wrongAnswers;
+  final String correct;
+  final String wrong;
   final String accuracy;
-  final double accuracyProgress;
-  final VoidCallback onQuestionsBookmarkTap;
+  final double accuracyPer;
+  final VoidCallback onBookmark;
 
-  const SubHeaderSection({
-    super.key,
-    required this.accuracy,
+  const _Statistics({
     required this.coins,
-    required this.correctAnswers,
-    required this.wrongAnswers,
-    required this.accuracyProgress,
-    required this.onQuestionsBookmarkTap,
+    required this.correct,
+    required this.wrong,
+    required this.accuracy,
+    required this.accuracyPer,
+    required this.onBookmark,
   });
 
   @override
@@ -413,30 +411,27 @@ class SubHeaderSection extends StatelessWidget {
     return SliverMainAxisGroup(
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.only(
-            top: 8.0,
-            left: 16,
-            right: 16,
-            bottom: 8,
-          ),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
           sliver: SliverToBoxAdapter(
-            child: Row(
+            child: Column(
               children: [
-                Icon(
-                  Icons.analytics_rounded,
-                  color: Theme.of(context).colorScheme.onSurface.withAlpha(150),
+                Row(
+                  children: [
+                    Icon(Icons.analytics_rounded, color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.quizPerformance,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withAlpha(120),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  'Statistics',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withAlpha(120),
-                  ),
-                ),
+                const SizedBox(height: 12),
               ],
             ),
           ),
@@ -453,89 +448,48 @@ class SubHeaderSection extends StatelessWidget {
             ),
             delegate: SliverChildListDelegate([
               _PerformanceItem(
-                title: 'Coins',
+                title: context.l10n.totalTests,
                 value: coins,
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.yellow.withAlpha(50),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(AppIcons.coin),
-                ),
-                color: Colors.blue,
+                icon: Icons.monetization_on_rounded,
+                color: Colors.orange,
               ),
               _PerformanceItem(
-                title: 'Correct Answers',
-                value: correctAnswers,
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withAlpha(50),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.check_circle, color: Colors.green),
-                ),
+                title: context.l10n.correctAnswers,
+                value: correct,
+                icon: Icons.check_circle,
                 color: Colors.green,
               ),
               _PerformanceItem(
-                title: 'Wrong Answers',
-                value: wrongAnswers,
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withAlpha(50),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.cancel, color: Colors.red),
-                ),
+                title: context.l10n.wrongAnswers,
+                value: wrong,
+                icon: Icons.cancel,
                 color: Colors.red,
               ),
               _PerformanceItem(
-                title: 'Accuracy',
+                title: context.l10n.accuracy,
                 value: accuracy,
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withAlpha(50),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.line_weight, color: Colors.orange),
-                ),
-                color: Colors.orange,
-                progress: accuracyProgress,
+                icon: Icons.balance,
+                color: Colors.blue,
+                progress: accuracyPer,
               ),
             ]),
           ),
         ),
 
         SliverPadding(
-          padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+          padding: const EdgeInsets.all(16),
           sliver: SliverToBoxAdapter(
-            child: GestureDetector(
-              onTap: onQuestionsBookmarkTap,
-              child: _PerformanceItem(
-                title: 'Questions Bookmark',
-                value: '12',
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withAlpha(50),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.bookmark, color: Colors.blue),
+            child: ElevatedButton.icon(
+              onPressed: onBookmark,
+              icon: const Icon(Icons.bookmark),
+              label: Text(context.l10n.bookmarkedQuestions),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                minimumSize: const Size(double.infinity, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                color: Colors.blue,
               ),
             ),
           ),
@@ -545,12 +499,12 @@ class SubHeaderSection extends StatelessWidget {
   }
 }
 
-class TabsSection extends StatelessWidget {
+class _Tabs extends StatelessWidget {
   final PageType pageTye;
   final void Function(int index) onTabChange;
   final TabController controller;
 
-  const TabsSection({
+  const _Tabs({
     super.key,
     required this.pageTye,
     required this.onTabChange,
@@ -564,14 +518,30 @@ class TabsSection extends StatelessWidget {
       delegate: _SliverAppBarDelegate(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         TabBar(
-          unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+          unselectedLabelColor: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.6),
           labelColor: Theme.of(context).colorScheme.onSurface,
+          labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
           onTap: onTabChange,
           controller: controller,
           tabs: [
-            Tab(text: 'Savollar'),
-            Tab(text: 'Bloklar'),
-            Tab(text: 'Kitoblar'),
+            Tab(
+              text: context.l10n.questions,
+              icon: Icon(Icons.question_mark_rounded, size: 20),
+            ),
+            Tab(
+              text: context.l10n.blockTest,
+              icon: Icon(Icons.library_add_check, size: 20),
+            ),
+            Tab(
+              text: context.l10n.books,
+              icon: Icon(Icons.menu_book_rounded, size: 20),
+            ),
           ],
         ),
       ),
@@ -580,11 +550,11 @@ class TabsSection extends StatelessWidget {
 }
 
 /// ---------------- Questions block section ----------------
-class MyBlockSection extends StatelessWidget {
+class _BlocksSection extends StatelessWidget {
   final bool isEnabled;
   final MyBlocksState state;
 
-  const MyBlockSection({
+  const _BlocksSection({
     super.key,
     required this.isEnabled,
     required this.state,
@@ -606,9 +576,9 @@ class MyBlockSection extends StatelessWidget {
             childAspectRatio: 1.0,
           ),
           delegate: SliverChildBuilderDelegate((
-            BuildContext context,
-            int index,
-          ) {
+              BuildContext context,
+              int index,
+              ) {
             return Center(child: ProgressView());
           }, childCount: 4),
         ),
@@ -658,7 +628,7 @@ class MyBlockSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Add question',
+                        context.l10n.addQuestion,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -670,7 +640,7 @@ class MyBlockSection extends StatelessWidget {
             );
           }
 
-          return QuestionCard(
+          return _QuestionCard(
             title: question.title ?? '',
             description: question.description ?? '',
             createdAt: question.createdAt,
@@ -678,8 +648,7 @@ class MyBlockSection extends StatelessWidget {
             wrongAnswers: 2,
             difficulty: Difficulty.easy,
             onTap: () => context.push(
-              AppRouter.blockDetail
-              // AppRouter.questionDetailWithQuestionId(question.id ?? -1),
+              AppRouter.blockDetailWithBlockId(question.id ?? -1),
             ),
           );
         }, childCount: state.myQuestions.length),
@@ -689,11 +658,11 @@ class MyBlockSection extends StatelessWidget {
 }
 
 /// ---------------- My questions section ----------------
-class MyQuestionsSection extends StatelessWidget {
+class _QuestionsSection extends StatelessWidget {
   final bool isEnabled;
   final MyQuestionsState state;
 
-  const MyQuestionsSection({
+  const _QuestionsSection({
     super.key,
     required this.isEnabled,
     required this.state,
@@ -704,102 +673,83 @@ class MyQuestionsSection extends StatelessWidget {
     if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
 
     /// loading state
-    if (state.isLoading) {
-      return SliverPadding(
-        padding: const EdgeInsets.all(8),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            childAspectRatio: 1.0,
-          ),
-          delegate: SliverChildBuilderDelegate((
-            BuildContext context,
-            int index,
-          ) {
-            return Center(child: ProgressView());
-          }, childCount: 4),
-        ),
-      );
-    }
+    if (state.isLoading) return SliverToBoxAdapter(child: ProgressView());
 
     /// for active state
     return SliverMainAxisGroup(
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.all(8),
-          sliver: SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-              childAspectRatio: 1.0,
-            ),
-            delegate: SliverChildBuilderDelegate((
-              BuildContext context,
-              int index,
-            ) {
-              final question = state.questions[index];
-
-              if (question.id == -1) {
-                return GestureDetector(
-                  onTap: () {
-                    context.push(AppRouter.createQuestions);
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.1),
-                          blurRadius: 12,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Add question',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimary,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
+        SliverList.separated(
+          itemCount: state.questions.length,
+          itemBuilder: (_, index) {
+            if (state.questions[index].id == -1) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  top: index == 0 ? 16 : 0,
+                ),
+                child: ListTile(
+                  onTap: () => context.push(AppRouter.createQuestions),
+                  tileColor: Theme.of(context).colorScheme.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              }
-
-              return QuestionCard(
-                title: question.testTitle ?? '',
-                description: question.testDescription ?? '',
-                createdAt: question.createdAt,
-                correctAnswers: 2,
-                wrongAnswers: 2,
-                difficulty: Difficulty.easy,
-                onTap: () => context.push(
-                  AppRouter.myQuestionDetailWithArgs(question.id ?? -1),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        context.l10n.addQuestion,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    color: Colors.white,
+                  ),
                 ),
               );
-            }, childCount: state.questions.length),
-          ),
+            }
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: index == 0 ? 16 : 0,
+              ),
+              child: ListTile(
+                onTap: () => context.push(
+                  AppRouter.myQuestionDetailWithArgs(state.questions[index].id),
+                ),
+                tileColor: Theme.of(context).colorScheme.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                title: Text(
+                  state.questions[index].testTitle ?? '',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                subtitle: Text(
+                  state.questions[index].testDescription ?? '',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                trailing: _DifficultyChip(
+                  label: Difficulty.easy.name.toUpperCase(),
+                  color: Difficulty.easy.color,
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (_, __) => const SizedBox(height: 8),
         ),
 
         if (state.isLoadingMore)
@@ -813,10 +763,10 @@ class MyQuestionsSection extends StatelessWidget {
 }
 
 /// ---------------- My books section ----------------
-class MyBooksSection extends StatelessWidget {
+class _BooksSection extends StatelessWidget {
   final bool isEnabled;
 
-  const MyBooksSection({super.key, required this.isEnabled});
+  const _BooksSection({super.key, required this.isEnabled});
 
   @override
   Widget build(BuildContext context) {
@@ -825,95 +775,21 @@ class MyBooksSection extends StatelessWidget {
   }
 }
 
-/// ---------------- COMPONENTS ----------------
-class _StatItem extends StatelessWidget {
-  final String title;
-  final String value;
-  final VoidCallback onTap;
-
-  const _StatItem({
-    required this.title,
-    required this.value,
-    required this.onTap,
-  });
+class _BooksTab extends StatelessWidget {
+  const _BooksTab();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-          ),
-        ],
+    return GridView.builder(
+      padding: const EdgeInsets.all(12),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.75,
       ),
-    );
-  }
-}
-
-class _PerformanceItem extends StatelessWidget {
-  final String title;
-  final String value;
-  final Widget icon;
-  final Color color;
-  final double? progress;
-
-  const _PerformanceItem({
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.color,
-    this.progress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Row(
-            children: [
-              icon,
-              const Spacer(),
-              Text(
-                value,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Text(title, style: TextStyle(color: Colors.grey, fontSize: 14)),
-          if (progress != null)
-            LinearProgressIndicator(
-              value: (progress ?? 1) / 100,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-              backgroundColor: Color(0xffD6D6D6),
-              borderRadius: BorderRadius.circular(4),
-            ),
-        ],
-      ),
+      itemCount: 4,
+      itemBuilder: (_, index) => _GridCard(title: "Book ${index + 1}"),
     );
   }
 }
@@ -933,10 +809,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) => Container(color: backgroundColor, child: _tabBar);
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent,
+      ) => Container(color: backgroundColor, child: _tabBar);
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
@@ -944,7 +820,83 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class QuestionCard extends StatelessWidget {
+/// ---------- COMPONENTS ----------
+class _GridCard extends StatelessWidget {
+  final String title;
+
+  const _GridCard({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+}
+
+/// ---------- SUBHEADER ITEM ----------
+class _SubheaderItem extends StatelessWidget {
+  final Color backgroundColor;
+  final String title;
+  final String value;
+  final Widget leading;
+
+  const _SubheaderItem({
+    super.key,
+    required this.backgroundColor,
+    required this.title,
+    required this.value,
+    required this.leading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              leading,
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// ----------- ITEMS -----------
+class _QuestionCard extends StatelessWidget {
   final String title;
   final String description;
   final DateTime? createdAt;
@@ -953,7 +905,7 @@ class QuestionCard extends StatelessWidget {
   final Difficulty difficulty;
   final void Function()? onTap;
 
-  const QuestionCard({
+  const _QuestionCard({
     super.key,
     required this.title,
     required this.description,
@@ -973,13 +925,6 @@ class QuestionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-          //     blurRadius: 12,
-          //     offset: const Offset(0, 0),
-          //   ),
-          // ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -1029,18 +974,23 @@ class QuestionCard extends StatelessWidget {
                   _QuestionStatItem(
                     icon: Icons.check_circle_outline,
                     value: correctAnswers,
-                    color: const Color(0xFF4CAF50),
+                    color: Colors.green,
                   ),
                   const SizedBox(width: 8),
                   _QuestionStatItem(
                     icon: Icons.cancel_outlined,
                     value: wrongAnswers,
-                    color: const Color(0xFFF44336),
+                    color: Colors.red,
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              _DateChip(date: formatDate(createdAt)),
+              Text(
+                formatDate(createdAt),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
             ],
           ),
         ),
@@ -1060,14 +1010,13 @@ class _DifficultyChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.4)),
       ),
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: color,
+          color: Theme.of(context).colorScheme.onPrimary,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -1112,33 +1061,75 @@ class _QuestionStatItem extends StatelessWidget {
   }
 }
 
-class _DateChip extends StatelessWidget {
-  final String date;
+class _PerformanceItem extends StatelessWidget {
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
+  final double? progress;
 
-  const _DateChip({required this.date});
+  const _PerformanceItem({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.color,
+    this.progress,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.onSurfaceColor(context),
-        borderRadius: BorderRadius.circular(12),
+        color: color,
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(
-            Icons.schedule,
-            size: 14,
-            color: Theme.of(context).colorScheme.onSurface,
+
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(50),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  size: 30,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                value,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 6),
+
           Text(
-            date,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
+            title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 14,
             ),
           ),
+          if (progress != null)
+            LinearProgressIndicator(
+              value: (progress ?? 1) / 100,
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation(Colors.lightGreen),
+              borderRadius: BorderRadius.circular(4),
+            ),
         ],
       ),
     );

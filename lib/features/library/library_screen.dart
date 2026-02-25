@@ -6,20 +6,16 @@ import 'package:testabd/domain/books/entities/book_model.dart';
 import 'package:testabd/features/library/library_cubit.dart';
 import 'package:testabd/features/library/library_state.dart';
 
-import '../../core/theme/app_colors.dart';
-
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => locator<LibraryCubit>()
-        ..getBooks()
-        ..getAuthor(),
-      child: const _View(),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider(
+    create: (context) => locator<LibraryCubit>()
+      ..getBooks()
+      ..getAuthor(),
+    child: const _View(),
+  );
 }
 
 class _View extends StatelessWidget {
@@ -219,7 +215,7 @@ class AuthorSection extends StatelessWidget {
                 return StoryItem(
                   username: author.fullName ?? "",
                   imageUrl: author.image ?? "",
-                  onTap: (){},
+                  onTap: () {},
                 );
               },
             ),
@@ -252,13 +248,10 @@ class StoryItem extends StatelessWidget {
             onTap: onTap,
             child: Container(
               padding: const EdgeInsets.all(3),
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF962FBF),
-                    Color(0xFF4F5BD5),
-                  ],
+                  colors: [Color(0xFF962FBF), Color(0xFF4F5BD5)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),

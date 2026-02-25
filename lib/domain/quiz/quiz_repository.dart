@@ -21,9 +21,8 @@ abstract class QuizRepository {
     int? duration,
   });
 
-  Future<Either<AppException, dynamic>> getUserQuestions(
-    int userId,
-  );
+  Future<Either<AppException, PagedData<String, QuestionModel>>>
+  getUserQuestions(int userId);
 
   Future<Either<AppException, PagedData<String, BlockModel>>> getBocksByUserId(
     int userId, {
@@ -55,14 +54,18 @@ abstract class QuizRepository {
   Future<Either<AppException, QuestionModel>> createQuestion({
     required CreateQuestionModel model,
   });
+
   Future<Either<AppException, QuestionModel>> updateQuestion({
     required int questionId,
     required CreateQuestionModel model,
   });
+
   Future<Either<AppException, PagedData<String, QuestionModel>>>
   getMyQuestions({required String page, required int pageSize});
-  Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
-  Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
-  Future<Either<AppException, dynamic>> bookmarkQuestion(int questionId);
 
+  Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
+
+  Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
+
+  Future<Either<AppException, dynamic>> bookmarkQuestion(int questionId);
 }

@@ -15,51 +15,40 @@ import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart
 import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 import 'package:testabd/core/enums/access_enum.dart';
 import 'models/block_questions_response.dart';
+import 'models/user_questions_response.dart';
 
 abstract class QuizSource {
-  Future<dynamic> getUserQuestions(int userId);
-
+  Future<UserQuestionsResponse> getUserQuestions(int userId);
   Future<BlockQuestionsResponse> getBlockTests(int blockId);
-
   Future<dynamic> bookmarkQuestions(int questionId);
-
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
-
   Future<List<CategoryResponse>> getCategories();
-
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
-
   Future<List<MyBlockResponse>> getMyBlocks();
-
   Future<QuestionsResponse> getMyQuestions({
     required String page,
     required int pageSize,
   });
-
   Future<FollowedQuestionsResponse> getFollowedQuestions(
     int page,
     int pageSize,
   );
-
   Future<AnswerResponse> submitAnswer(
     int questionId,
     Set<int> selectedAnswers,
     int? duration,
   );
-
   Future<UserBlocksResponse> getBlocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
   });
-
   Future<BlockDetailResponse> createBlock(
     String title,
     String description,
     int categoryId,
     AccessType accessType,
   );
-
   Future<BlockDetailResponse> updateBlock(
     int blockId,
     String title,
@@ -67,16 +56,12 @@ abstract class QuizSource {
     int categoryId,
     AccessType accessType,
   );
-
   Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
-
   Future<QuestionResponse> updateQuestion(
     int questionId,
     CreateQuestionDataRequest data,
   );
-
   Future<BlockDetailResponse> getBlockById(int id);
-
   Future<QuestionResponse> getQuestionById(int questionId);
 }
 
@@ -103,10 +88,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<FollowedQuestionsResponse> getFollowedQuestions(
-    int page,
-    int pageSize,
-  ) async {
+  Future<FollowedQuestionsResponse> getFollowedQuestions(int page, int pageSize) async {
     try {
       final response = await _dio.get(
         '/quiz/recommended/followed-questions/',
@@ -121,11 +103,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<AnswerResponse> submitAnswer(
-    int questionId,
-    Set<int> selectedAnswers,
-    int? duration,
-  ) async {
+  Future<AnswerResponse> submitAnswer(int questionId, Set<int> selectedAnswers, int? duration) async {
     try {
       final response = await _dio.post(
         '/quiz/submit-answer/',
@@ -144,11 +122,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<UserBlocksResponse> getBlocksByUserId(
-    int userId, {
-    int? page,
-    int? pageSize,
-  }) async {
+  Future<UserBlocksResponse> getBlocksByUserId(int userId, {int? page, int? pageSize}) async {
     try {
       final response = await _dio.get(
         '/quiz/tests/by_user/$userId/',
@@ -167,13 +141,10 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<dynamic> getUserQuestions(int userId) async {
+  Future<UserQuestionsResponse> getUserQuestions(int userId) async {
     try {
-      final response = await _dio.get(
-        'quiz/question/by-user/',
-        queryParameters: {'user_id': userId},
-      );
-      return response.data;
+      final response = await _dio.get('/quiz/questions/by-user/$userId/');
+      return UserQuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
@@ -250,12 +221,7 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<BlockDetailResponse> createBlock(
-    String title,
-    String description,
-    int categoryId,
-    AccessType accessType,
-  ) async {
+  Future<BlockDetailResponse> createBlock(String title, String description, int categoryId, AccessType accessType) async {
     try {
       final response = await _dio.post(
         '/quiz/tests/',

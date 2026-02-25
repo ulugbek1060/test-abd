@@ -10,6 +10,7 @@ import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart
     as userBlock;
 import 'package:testabd/data/remote_source/quiz/models/questions_response.dart'
     as questions;
+import 'package:testabd/data/remote_source/quiz/models/user_questions_response.dart' as user_question_by_id;
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
@@ -271,6 +272,45 @@ class QuestionModel extends Equatable {
               isCorrect: answer.isCorrect ?? false,
             ),
           )
+          .toList(),
+      testDescription: response.testDescription,
+      correctAnswerText: response.correctAnswerText,
+      answerLanguage: response.answerLanguage,
+      correctCount: response.correctCount,
+      wrongCount: response.wrongCount,
+      difficultyPercentage: response.difficultyPercentage?.toDouble(),
+      userAttemptCount: response.userAttemptCount,
+      user: UserItemModel(
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
+      ),
+      createdAt: response.createdAt,
+      roundImage: response.roundImage,
+    );
+  }
+
+  static QuestionModel fromUserQuestionsResponse(user_question_by_id.Question response) {
+    return QuestionModel(
+      id: response.id,
+      test: response.test,
+      testTitle: response.testTitle,
+      questionText: response.questionText,
+      questionType: QuestionType.fromString(response.questionType),
+      orderIndex: response.orderIndex,
+      media: response.media,
+      answers: response.answers
+          .map(
+            (answer) => AnswerItemModel(
+          id: answer.id,
+          letter: answer.letter,
+          answerText: answer.answerText,
+          isCorrect: answer.isCorrect ?? false,
+        ),
+      )
           .toList(),
       testDescription: response.testDescription,
       correctAnswerText: response.correctAnswerText,

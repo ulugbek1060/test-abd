@@ -151,13 +151,12 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         _messageHandler.handleDialog(error);
       },
       (value) {
-        logger.d(value);
-        // final newQuestionsState = questionsState.copyWith(
-        //   questions: value,
-        //   error: null,
-        //   isLoading: false,
-        // );
-        // emit(state.copyWith(questionsState: newQuestionsState));
+        final newQuestionsState = questionsState.copyWith(
+          questions: value.data,
+          error: null,
+          isLoading: false,
+        );
+        emit(state.copyWith(questionsState: newQuestionsState));
       },
     );
   }

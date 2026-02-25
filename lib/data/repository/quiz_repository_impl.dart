@@ -87,13 +87,21 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, List<QuestionModel>>> getUserQuestions(
+  Future<Either<AppException, PagedData<String, QuestionModel>>> getUserQuestions(
     int userId,
   ) async {
     try {
       final result = await _quizSource.getUserQuestions(userId);
-      // final list = result.map(QuestionModel.fromUserQuestionResponse).toList();
-      return Right(result);
+      final list = result.results
+          .map(QuestionModel.fromUserQuestionsResponse)
+          .toList();
+      final data = PagedData(
+        data: list,
+        next: result.next,
+        previous: result.previous,
+        count: result.count,
+      );
+      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
