@@ -552,7 +552,7 @@ class _Tabs extends StatelessWidget {
 /// ---------------- Questions block section ----------------
 class _BlocksSection extends StatelessWidget {
   final bool isEnabled;
-  final MyBlocksState state;
+  final BlocksState state;
 
   const _BlocksSection({
     super.key,
@@ -596,7 +596,7 @@ class _BlocksSection extends StatelessWidget {
           childAspectRatio: 1.0,
         ),
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final question = state.myQuestions[index];
+          final question = state.blocks[index];
 
           if (question.id == -1) {
             return GestureDetector(
@@ -651,7 +651,7 @@ class _BlocksSection extends StatelessWidget {
               AppRouter.blockDetailWithBlockId(question.id ?? -1),
             ),
           );
-        }, childCount: state.myQuestions.length),
+        }, childCount: state.blocks.length),
       ),
     );
   }
@@ -660,7 +660,7 @@ class _BlocksSection extends StatelessWidget {
 /// ---------------- My questions section ----------------
 class _QuestionsSection extends StatelessWidget {
   final bool isEnabled;
-  final MyQuestionsState state;
+  final QuestionsState state;
 
   const _QuestionsSection({
     super.key,

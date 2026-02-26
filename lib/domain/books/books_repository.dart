@@ -5,6 +5,6 @@ import 'package:testabd/domain/books/entities/author_model.dart';
 import 'package:testabd/domain/books/entities/book_model.dart';
 
 abstract class BooksRepository {
-  Future<Either<AppException, PagedData<String, BookModel>>> getBooks();
-  Future<Either<AppException, PagedData<String, AuthorModel>>> getAuthors();
+  Future<Either<AppException, PagedData<BookModel>>> getBooks();
+  Future<Either<AppException, PagedData<AuthorModel>>> getAuthors();
 }

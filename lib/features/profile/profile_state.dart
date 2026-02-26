@@ -13,49 +13,43 @@ class ProfileState with _$ProfileState {
     String? error,
     MyInfoModel? myInfoModel,
     @Default(false) bool isLoading,
-    @Default(UserConnectionsState()) UserConnectionsState userConnectionsState,
-    @Default(QuestionsBookmarkState()) QuestionsBookmarkState questionsBookmarkState,
-    @Default(MyBlocksState()) MyBlocksState blocksState,
-    @Default(MyQuestionsState()) MyQuestionsState questionsState,
+    @Default(ConnectionsState()) ConnectionsState userConnectionsState,
+    @Default(BlocksState()) BlocksState blocksState,
+    @Default(QuestionsState()) QuestionsState questionsState,
   }) = _ProfileState;
 }
 
 @freezed
-class UserConnectionsState with _$UserConnectionsState {
-  const factory UserConnectionsState({
+class ConnectionsState with _$ConnectionsState {
+  const factory ConnectionsState({
     @Default(false) bool isLoading,
     String? error,
     @Default(UserConnectionsModel()) UserConnectionsModel connections,
-  }) = _UserConnectionsState;
+  }) = _ConnectionsState;
 }
 
 @freezed
-class QuestionsBookmarkState with _$QuestionsBookmarkState {
-  const factory QuestionsBookmarkState({
-    @Default(false) bool isLoading,
-    String? error,
-    @Default(QuestionsBookmarkModel()) QuestionsBookmarkModel questionsBookmark,
-  }) = _QuestionsBookmarkState;
-}
-
-@freezed
-class MyBlocksState with _$MyBlocksState {
-  const factory MyBlocksState({
-    @Default(false) bool isLoading,
-    String? error,
-    @Default([]) List<MyBlockModel> myQuestions,
-  }) = _MyBlocksState;
-}
-
-@freezed
-class MyQuestionsState with _$MyQuestionsState {
-  const factory MyQuestionsState({
+class BlocksState with _$BlocksState {
+  const factory BlocksState({
     @Default(false) bool isLoading,
     @Default(false) bool isLoadingMore,
     @Default(false) bool isLastPage,
-    String? previous,
-    String? next,
+    @Default(0) int previous,
+    @Default(1) int next,
+    String? error,
+    @Default([]) List<MyBlockModel> blocks,
+  }) = _BlocksState;
+}
+
+@freezed
+class QuestionsState with _$QuestionsState {
+  const factory QuestionsState({
+    @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
+    @Default(false) bool isLastPage,
+    @Default(0) int previous,
+    @Default(1) int next,
     String? error,
     @Default([]) List<QuestionModel> questions,
-  }) = _MyQuestionsState;
+  }) = _QuestionsState;
 }

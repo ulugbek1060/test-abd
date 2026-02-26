@@ -5,23 +5,15 @@ import 'package:testabd/domain/entity/question_model.dart';
 
 part 'user_profile_state.freezed.dart';
 
-/// Main screen state
 @freezed
 class UserProfileState with _$UserProfileState {
   const factory UserProfileState({
-    // global loading
     @Default(false) bool isLoading,
-    // user profile
     UserProfileModel? profile,
-    // global errors
     String? error,
-    // topics state
-    @Default(BlocksState()) BlocksState topicsState,
-    // questions state
+    @Default(BlocksState()) BlocksState blockState,
     @Default(QuestionsState()) QuestionsState questionsState,
-    // book state
     @Default(BooksState()) BooksState booksState,
-    // follow action state
     @Default(FollowState()) FollowState followState,
   }) = _UserProfileState;
 }
@@ -31,9 +23,10 @@ class BlocksState with _$BlocksState {
   const factory BlocksState({
     @Default(false) bool isLoading,
     @Default(false) bool isLoadingMore,
-    @Default([]) List<BlockModel> topics,
-    @Default(1) int nextPage,
-    @Default(0) int previousPage,
+    @Default(false) bool isLast,
+    @Default([]) List<BlockModel> blocks,
+    @Default(1) int next,
+    @Default(0) int previous,
     String? error,
   }) = _BlocksState;
 }
@@ -42,7 +35,11 @@ class BlocksState with _$BlocksState {
 class QuestionsState with _$QuestionsState {
   const factory QuestionsState({
     @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
+    @Default(false) bool isLast,
     @Default([]) List<QuestionModel> questions,
+    @Default(1) int next,
+    @Default(0) int previous,
     String? error,
   }) = _QuestionsState;
 }
@@ -57,6 +54,7 @@ class BooksState with _$BooksState {
 
 @freezed
 class FollowState with _$FollowState {
-  const factory FollowState({@Default(false) bool isLoading, String? error}) =
-      _FollowState;
+  const factory FollowState({
+    @Default(false) bool isLoading,
+    String? error}) = _FollowState;
 }

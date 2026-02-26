@@ -21,6 +21,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   late final StreamSubscription _myInfoSubscription;
 
   static const int _pageSize = 10;
+  static const int _questionsPageSize = 10;
 
   ProfileCubit(
     this._accountRepository,
@@ -38,7 +39,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     });
 
     _questionsUpdateListener.listen(() => fetchQuestionsByPage());
-    _blocksUpdateListener.listen(() => fetchBlocks());
+    _blocksUpdateListener.listen(() => getBlocks());
 
     load();
   }
@@ -53,7 +54,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> load() async {
     emit(ProfileState());
     fetchUserInfo();
-    fetchBlocks();
+    getBlocks();
     fetchQuestionsByPage();
   }
 
@@ -105,38 +106,37 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> fetchQuestionBookmark() async {
-    if (state.questionsBookmarkState.isLoading) return;
+  // ------------------------------------------------------
+  // Block
+  // ------------------------------------------------------
+  Future<void> getBlocks() async {
+    final current = state.blocksState;
+    if (current.isLoading || current.isLastPage || current.isLoadingMore) {
+      return;
+    }
 
-    emit(
-      state.copyWith(
-        questionsBookmarkState: state.questionsBookmarkState.copyWith(
-          isLoading: true,
-          error: null,
-        ),
-      ),
-    );
+    emit(state.copyWith(blocksState: current.copyWith(isLoading: true)));
 
-    final result = await _quizRepository.getQuestionsBookmark();
+    final result = await _quizRepository.getMyBlocks();
 
     result.fold(
       (error) {
+        _messageHandler.handleDialog(error);
         emit(
           state.copyWith(
-            questionsBookmarkState: state.questionsBookmarkState.copyWith(
+            blocksState: state.blocksState.copyWith(
               isLoading: false,
               error: error.message,
             ),
           ),
         );
-        _messageHandler.handleDialog(error);
       },
-      (value) {
+      (questions) {
         emit(
           state.copyWith(
-            questionsBookmarkState: state.questionsBookmarkState.copyWith(
+            blocksState: current.copyWith(
               isLoading: false,
-              questionsBookmark: value,
+              blocks: questions..insert(0, MyBlockModel(id: -1)),
               error: null,
             ),
           ),
@@ -145,40 +145,52 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> fetchBlocks() async {
-    final current = state.blocksState;
-    if (current.isLoading) return;
+  // ------------------------------------------------------
+  // Questions
+  // ------------------------------------------------------
+  Future<void> getQuestions() async {
+    final user = await _accountRepository.userInfoStream.first;
+    if (user?.id == null) return;
+
+    final questionsState = state.questionsState;
+    if (questionsState.isLoading ||
+        questionsState.isLoadingMore ||
+        questionsState.isLastPage) {
+      return;
+    }
 
     emit(
-      state.copyWith(
-        blocksState: current.copyWith(isLoading: true, error: null),
-      ),
+      state.copyWith(questionsState: questionsState.copyWith(isLoading: true)),
     );
 
-    final result = await _quizRepository.getMyBlocks();
-
+    final result = await _quizRepository.getUserQuestions(
+      user!.id!,
+      1,
+      _questionsPageSize,
+    );
     result.fold(
       (error) {
+        _messageHandler.handleDialog(error);
         emit(
           state.copyWith(
-            blocksState: current.copyWith(
+            questionsState: state.questionsState.copyWith(
               isLoading: false,
               error: error.message,
             ),
           ),
         );
-        _messageHandler.handleDialog(error);
       },
-      (questions) {
-        final list = List.of(questions);
-        final itemForAddButton = MyBlockModel(id: -1);
-        list.insert(0, itemForAddButton);
+      (value) {
         emit(
           state.copyWith(
-            blocksState: current.copyWith(
+            questionsState: state.questionsState.copyWith(
               isLoading: false,
-              myQuestions: list,
               error: null,
+              questions: value.data,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage:
+                  value.data.length < _questionsPageSize || value.next == null,
             ),
           ),
         );
@@ -187,55 +199,54 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> fetchQuestionsByPage() async {
-    final currentState = state.questionsState;
+    final user = await _accountRepository.userInfoStream.first;
+    final userId = user?.id;
+    final questionsState = state.questionsState;
 
-    if (currentState.isLoading) return;
-    if (currentState.isLoadingMore) return;
-    if (currentState.isLastPage) return;
-
-    if (currentState.questions.isEmpty) {
-      emit(
-        state.copyWith(questionsState: currentState.copyWith(isLoading: true)),
-      );
-    } else {
-      emit(
-        state.copyWith(
-          questionsState: currentState.copyWith(isLoadingMore: true),
-        ),
-      );
+    if (userId == null ||
+        questionsState.isLoading ||
+        questionsState.isLoadingMore ||
+        questionsState.isLastPage) {
+      return;
     }
 
-    final result = await _quizRepository.getMyQuestions(
-      pageSize: _pageSize,
-      page: state.questionsState.next ?? "",
+    emit(
+      state.copyWith(
+        questionsState: state.questionsState.copyWith(isLoadingMore: true),
+      ),
+    );
+
+    final result = await _quizRepository.getUserQuestions(
+      userId,
+      questionsState.next,
+      _questionsPageSize,
     );
 
     result.fold(
-      (e) {
+      (error) {
+        _messageHandler.handleDialog(error);
         emit(
           state.copyWith(
             questionsState: state.questionsState.copyWith(
-              isLoading: false,
               isLoadingMore: false,
-              error: e.message,
+              error: error.message,
             ),
           ),
         );
-        _messageHandler.handleDialog(e);
       },
       (value) {
         final list = List.of(state.questionsState.questions);
-        if (list.isEmpty) list.insert(0, QuestionModel(id: -1));
         list.addAll(value.data);
         emit(
           state.copyWith(
             questionsState: state.questionsState.copyWith(
-              isLoading: false,
               isLoadingMore: false,
-              isLastPage: value.data.length < _pageSize || value.next == null,
-              next: value.next,
-              previous: value.previous,
+              error: null,
               questions: list,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage:
+                  value.data.length < _questionsPageSize || value.next == null,
             ),
           ),
         );
@@ -246,6 +257,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
 abstract class UpdateListener {
   void onUpdate();
+
   void listen(void Function() param0);
 }
 
@@ -253,8 +265,10 @@ abstract class UpdateListener {
 @Singleton(as: UpdateListener)
 class ProfileQuestionsUpdater implements UpdateListener {
   late final void Function() listener;
+
   @override
   void listen(void Function() param0) => listener = param0;
+
   @override
   void onUpdate() => listener.call();
 }
@@ -263,9 +277,10 @@ class ProfileQuestionsUpdater implements UpdateListener {
 @Singleton(as: UpdateListener)
 class ProfileBlockUpdater implements UpdateListener {
   late final void Function() listener;
+
   @override
   void listen(void Function() param0) => listener = param0;
+
   @override
   void onUpdate() => listener.call();
 }
-

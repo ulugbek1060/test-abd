@@ -160,7 +160,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                       /// ViewBlock
                       _BlocksSection(
                         key: _blockKey,
-                        state: state.topicsState,
+                        state: state.blockState,
                         isEnabled: pageTye == PageType.block,
                       ),
 
@@ -619,7 +619,7 @@ class _BlocksSection extends StatelessWidget {
           childAspectRatio: 1.0,
         ),
         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final topic = state.topics[index];
+          final topic = state.blocks[index];
           return QuestionCollectionCard(
             title: topic.title ?? '',
             description: topic.description ?? '',
@@ -629,7 +629,7 @@ class _BlocksSection extends StatelessWidget {
               AppRouter.userBlockDetailWithBlockId(topic.id ?? 0),
             ),
           );
-        }, childCount: state.topics.length),
+        }, childCount: state.blocks.length),
       ),
     );
   }

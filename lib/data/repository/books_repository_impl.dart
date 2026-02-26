@@ -14,7 +14,7 @@ class BooksRepositoryImpl implements BooksRepository {
   BooksRepositoryImpl(this._booksSource);
 
   @override
-  Future<Either<AppException, PagedData<String, BookModel>>> getBooks() async {
+  Future<Either<AppException, PagedData<BookModel>>> getBooks() async {
     try {
       final result = await _booksSource.getBooks();
       final data = PagedData(
@@ -32,8 +32,7 @@ class BooksRepositoryImpl implements BooksRepository {
   }
 
   @override
-  Future<Either<AppException, PagedData<String, AuthorModel>>>
-  getAuthors() async {
+  Future<Either<AppException, PagedData<AuthorModel>>> getAuthors() async {
     try {
       final result = await _booksSource.getAuthor();
       final data = PagedData(

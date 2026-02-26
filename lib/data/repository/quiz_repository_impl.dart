@@ -23,8 +23,10 @@ class QuizRepositoryImpl extends QuizRepository {
   QuizRepositoryImpl(this._quizSource);
 
   @override
-  Future<Either<AppException, PagedData<String, QuestionModel>>>
-  getFollowedQuestions({required int page, required int pageSize}) async {
+  Future<Either<AppException, PagedData<QuestionModel>>> getFollowedQuestions({
+    required int page,
+    required int pageSize,
+  }) async {
     try {
       final result = await _quizSource.getFollowedQuestions(page, pageSize);
       final data = PagedData(
@@ -62,7 +64,7 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, PagedData<String, BlockModel>>> getBocksByUserId(
+  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId(
     int userId, {
     int? page,
     int? pageSize,
@@ -87,11 +89,13 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, PagedData<String, QuestionModel>>> getUserQuestions(
+  Future<Either<AppException, PagedData<QuestionModel>>> getUserQuestions(
     int userId,
+    int page,
+    int pageSize,
   ) async {
     try {
-      final result = await _quizSource.getUserQuestions(userId);
+      final result = await _quizSource.getUserQuestions(userId, page, pageSize);
       final list = result.results
           .map(QuestionModel.fromUserQuestionsResponse)
           .toList();
@@ -248,30 +252,6 @@ class QuizRepositoryImpl extends QuizRepository {
       );
       final result = await _quizSource.updateQuestion(questionId, data);
       return Right(QuestionModel.fromResponse(result));
-    } on AppException catch (e) {
-      return Left(e);
-    } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
-    }
-  }
-
-  @override
-  Future<Either<AppException, PagedData<String, QuestionModel>>>
-  getMyQuestions({required String page, required int pageSize}) async {
-    try {
-      final result = await _quizSource.getMyQuestions(
-        page: page,
-        pageSize: pageSize,
-      );
-      final data = PagedData(
-        count: result.count,
-        next: result.next,
-        previous: result.previous,
-        data: result.results
-            .map(QuestionModel.fromProfileQuestionResponse)
-            .toList(),
-      );
-      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

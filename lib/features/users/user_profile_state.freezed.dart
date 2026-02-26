@@ -16,17 +16,12 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$UserProfileState {
-// global loading
-  bool get isLoading => throw _privateConstructorUsedError; // user profile
-  UserProfileModel? get profile =>
-      throw _privateConstructorUsedError; // global errors
-  String? get error => throw _privateConstructorUsedError; // topics state
-  BlocksState get topicsState =>
-      throw _privateConstructorUsedError; // questions state
-  QuestionsState get questionsState =>
-      throw _privateConstructorUsedError; // book state
-  BooksState get booksState =>
-      throw _privateConstructorUsedError; // follow action state
+  bool get isLoading => throw _privateConstructorUsedError;
+  UserProfileModel? get profile => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
+  BlocksState get blockState => throw _privateConstructorUsedError;
+  QuestionsState get questionsState => throw _privateConstructorUsedError;
+  BooksState get booksState => throw _privateConstructorUsedError;
   FollowState get followState => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -44,12 +39,12 @@ abstract class $UserProfileStateCopyWith<$Res> {
       {bool isLoading,
       UserProfileModel? profile,
       String? error,
-      BlocksState topicsState,
+      BlocksState blockState,
       QuestionsState questionsState,
       BooksState booksState,
       FollowState followState});
 
-  $BlocksStateCopyWith<$Res> get topicsState;
+  $BlocksStateCopyWith<$Res> get blockState;
   $QuestionsStateCopyWith<$Res> get questionsState;
   $BooksStateCopyWith<$Res> get booksState;
   $FollowStateCopyWith<$Res> get followState;
@@ -71,7 +66,7 @@ class _$UserProfileStateCopyWithImpl<$Res, $Val extends UserProfileState>
     Object? isLoading = null,
     Object? profile = freezed,
     Object? error = freezed,
-    Object? topicsState = null,
+    Object? blockState = null,
     Object? questionsState = null,
     Object? booksState = null,
     Object? followState = null,
@@ -89,9 +84,9 @@ class _$UserProfileStateCopyWithImpl<$Res, $Val extends UserProfileState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
-      topicsState: null == topicsState
-          ? _value.topicsState
-          : topicsState // ignore: cast_nullable_to_non_nullable
+      blockState: null == blockState
+          ? _value.blockState
+          : blockState // ignore: cast_nullable_to_non_nullable
               as BlocksState,
       questionsState: null == questionsState
           ? _value.questionsState
@@ -110,9 +105,9 @@ class _$UserProfileStateCopyWithImpl<$Res, $Val extends UserProfileState>
 
   @override
   @pragma('vm:prefer-inline')
-  $BlocksStateCopyWith<$Res> get topicsState {
-    return $BlocksStateCopyWith<$Res>(_value.topicsState, (value) {
-      return _then(_value.copyWith(topicsState: value) as $Val);
+  $BlocksStateCopyWith<$Res> get blockState {
+    return $BlocksStateCopyWith<$Res>(_value.blockState, (value) {
+      return _then(_value.copyWith(blockState: value) as $Val);
     });
   }
 
@@ -153,13 +148,13 @@ abstract class _$$UserProfileStateImplCopyWith<$Res>
       {bool isLoading,
       UserProfileModel? profile,
       String? error,
-      BlocksState topicsState,
+      BlocksState blockState,
       QuestionsState questionsState,
       BooksState booksState,
       FollowState followState});
 
   @override
-  $BlocksStateCopyWith<$Res> get topicsState;
+  $BlocksStateCopyWith<$Res> get blockState;
   @override
   $QuestionsStateCopyWith<$Res> get questionsState;
   @override
@@ -182,7 +177,7 @@ class __$$UserProfileStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? profile = freezed,
     Object? error = freezed,
-    Object? topicsState = null,
+    Object? blockState = null,
     Object? questionsState = null,
     Object? booksState = null,
     Object? followState = null,
@@ -200,9 +195,9 @@ class __$$UserProfileStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
-      topicsState: null == topicsState
-          ? _value.topicsState
-          : topicsState // ignore: cast_nullable_to_non_nullable
+      blockState: null == blockState
+          ? _value.blockState
+          : blockState // ignore: cast_nullable_to_non_nullable
               as BlocksState,
       questionsState: null == questionsState
           ? _value.questionsState
@@ -227,41 +222,34 @@ class _$UserProfileStateImpl implements _UserProfileState {
       {this.isLoading = false,
       this.profile,
       this.error,
-      this.topicsState = const BlocksState(),
+      this.blockState = const BlocksState(),
       this.questionsState = const QuestionsState(),
       this.booksState = const BooksState(),
       this.followState = const FollowState()});
 
-// global loading
   @override
   @JsonKey()
   final bool isLoading;
-// user profile
   @override
   final UserProfileModel? profile;
-// global errors
   @override
   final String? error;
-// topics state
   @override
   @JsonKey()
-  final BlocksState topicsState;
-// questions state
+  final BlocksState blockState;
   @override
   @JsonKey()
   final QuestionsState questionsState;
-// book state
   @override
   @JsonKey()
   final BooksState booksState;
-// follow action state
   @override
   @JsonKey()
   final FollowState followState;
 
   @override
   String toString() {
-    return 'UserProfileState(isLoading: $isLoading, profile: $profile, error: $error, topicsState: $topicsState, questionsState: $questionsState, booksState: $booksState, followState: $followState)';
+    return 'UserProfileState(isLoading: $isLoading, profile: $profile, error: $error, blockState: $blockState, questionsState: $questionsState, booksState: $booksState, followState: $followState)';
   }
 
   @override
@@ -273,8 +261,8 @@ class _$UserProfileStateImpl implements _UserProfileState {
                 other.isLoading == isLoading) &&
             (identical(other.profile, profile) || other.profile == profile) &&
             (identical(other.error, error) || other.error == error) &&
-            (identical(other.topicsState, topicsState) ||
-                other.topicsState == topicsState) &&
+            (identical(other.blockState, blockState) ||
+                other.blockState == blockState) &&
             (identical(other.questionsState, questionsState) ||
                 other.questionsState == questionsState) &&
             (identical(other.booksState, booksState) ||
@@ -285,7 +273,7 @@ class _$UserProfileStateImpl implements _UserProfileState {
 
   @override
   int get hashCode => Object.hash(runtimeType, isLoading, profile, error,
-      topicsState, questionsState, booksState, followState);
+      blockState, questionsState, booksState, followState);
 
   @JsonKey(ignore: true)
   @override
@@ -300,24 +288,24 @@ abstract class _UserProfileState implements UserProfileState {
       {final bool isLoading,
       final UserProfileModel? profile,
       final String? error,
-      final BlocksState topicsState,
+      final BlocksState blockState,
       final QuestionsState questionsState,
       final BooksState booksState,
       final FollowState followState}) = _$UserProfileStateImpl;
 
-  @override // global loading
+  @override
   bool get isLoading;
-  @override // user profile
+  @override
   UserProfileModel? get profile;
-  @override // global errors
+  @override
   String? get error;
-  @override // topics state
-  BlocksState get topicsState;
-  @override // questions state
+  @override
+  BlocksState get blockState;
+  @override
   QuestionsState get questionsState;
-  @override // book state
+  @override
   BooksState get booksState;
-  @override // follow action state
+  @override
   FollowState get followState;
   @override
   @JsonKey(ignore: true)
@@ -329,9 +317,10 @@ abstract class _UserProfileState implements UserProfileState {
 mixin _$BlocksState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadingMore => throw _privateConstructorUsedError;
-  List<BlockModel> get topics => throw _privateConstructorUsedError;
-  int get nextPage => throw _privateConstructorUsedError;
-  int get previousPage => throw _privateConstructorUsedError;
+  bool get isLast => throw _privateConstructorUsedError;
+  List<BlockModel> get blocks => throw _privateConstructorUsedError;
+  int get next => throw _privateConstructorUsedError;
+  int get previous => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -348,9 +337,10 @@ abstract class $BlocksStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
-      List<BlockModel> topics,
-      int nextPage,
-      int previousPage,
+      bool isLast,
+      List<BlockModel> blocks,
+      int next,
+      int previous,
       String? error});
 }
 
@@ -369,9 +359,10 @@ class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
   $Res call({
     Object? isLoading = null,
     Object? isLoadingMore = null,
-    Object? topics = null,
-    Object? nextPage = null,
-    Object? previousPage = null,
+    Object? isLast = null,
+    Object? blocks = null,
+    Object? next = null,
+    Object? previous = null,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
@@ -383,17 +374,21 @@ class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
           ? _value.isLoadingMore
           : isLoadingMore // ignore: cast_nullable_to_non_nullable
               as bool,
-      topics: null == topics
-          ? _value.topics
-          : topics // ignore: cast_nullable_to_non_nullable
+      isLast: null == isLast
+          ? _value.isLast
+          : isLast // ignore: cast_nullable_to_non_nullable
+              as bool,
+      blocks: null == blocks
+          ? _value.blocks
+          : blocks // ignore: cast_nullable_to_non_nullable
               as List<BlockModel>,
-      nextPage: null == nextPage
-          ? _value.nextPage
-          : nextPage // ignore: cast_nullable_to_non_nullable
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
               as int,
-      previousPage: null == previousPage
-          ? _value.previousPage
-          : previousPage // ignore: cast_nullable_to_non_nullable
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
               as int,
       error: freezed == error
           ? _value.error
@@ -414,9 +409,10 @@ abstract class _$$BlocksStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
-      List<BlockModel> topics,
-      int nextPage,
-      int previousPage,
+      bool isLast,
+      List<BlockModel> blocks,
+      int next,
+      int previous,
       String? error});
 }
 
@@ -433,9 +429,10 @@ class __$$BlocksStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? isLoadingMore = null,
-    Object? topics = null,
-    Object? nextPage = null,
-    Object? previousPage = null,
+    Object? isLast = null,
+    Object? blocks = null,
+    Object? next = null,
+    Object? previous = null,
     Object? error = freezed,
   }) {
     return _then(_$BlocksStateImpl(
@@ -447,17 +444,21 @@ class __$$BlocksStateImplCopyWithImpl<$Res>
           ? _value.isLoadingMore
           : isLoadingMore // ignore: cast_nullable_to_non_nullable
               as bool,
-      topics: null == topics
-          ? _value._topics
-          : topics // ignore: cast_nullable_to_non_nullable
+      isLast: null == isLast
+          ? _value.isLast
+          : isLast // ignore: cast_nullable_to_non_nullable
+              as bool,
+      blocks: null == blocks
+          ? _value._blocks
+          : blocks // ignore: cast_nullable_to_non_nullable
               as List<BlockModel>,
-      nextPage: null == nextPage
-          ? _value.nextPage
-          : nextPage // ignore: cast_nullable_to_non_nullable
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
               as int,
-      previousPage: null == previousPage
-          ? _value.previousPage
-          : previousPage // ignore: cast_nullable_to_non_nullable
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
               as int,
       error: freezed == error
           ? _value.error
@@ -473,11 +474,12 @@ class _$BlocksStateImpl implements _BlocksState {
   const _$BlocksStateImpl(
       {this.isLoading = false,
       this.isLoadingMore = false,
-      final List<BlockModel> topics = const [],
-      this.nextPage = 1,
-      this.previousPage = 0,
+      this.isLast = false,
+      final List<BlockModel> blocks = const [],
+      this.next = 1,
+      this.previous = 0,
       this.error})
-      : _topics = topics;
+      : _blocks = blocks;
 
   @override
   @JsonKey()
@@ -485,27 +487,30 @@ class _$BlocksStateImpl implements _BlocksState {
   @override
   @JsonKey()
   final bool isLoadingMore;
-  final List<BlockModel> _topics;
   @override
   @JsonKey()
-  List<BlockModel> get topics {
-    if (_topics is EqualUnmodifiableListView) return _topics;
+  final bool isLast;
+  final List<BlockModel> _blocks;
+  @override
+  @JsonKey()
+  List<BlockModel> get blocks {
+    if (_blocks is EqualUnmodifiableListView) return _blocks;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_topics);
+    return EqualUnmodifiableListView(_blocks);
   }
 
   @override
   @JsonKey()
-  final int nextPage;
+  final int next;
   @override
   @JsonKey()
-  final int previousPage;
+  final int previous;
   @override
   final String? error;
 
   @override
   String toString() {
-    return 'BlocksState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, topics: $topics, nextPage: $nextPage, previousPage: $previousPage, error: $error)';
+    return 'BlocksState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLast: $isLast, blocks: $blocks, next: $next, previous: $previous, error: $error)';
   }
 
   @override
@@ -517,23 +522,17 @@ class _$BlocksStateImpl implements _BlocksState {
                 other.isLoading == isLoading) &&
             (identical(other.isLoadingMore, isLoadingMore) ||
                 other.isLoadingMore == isLoadingMore) &&
-            const DeepCollectionEquality().equals(other._topics, _topics) &&
-            (identical(other.nextPage, nextPage) ||
-                other.nextPage == nextPage) &&
-            (identical(other.previousPage, previousPage) ||
-                other.previousPage == previousPage) &&
+            (identical(other.isLast, isLast) || other.isLast == isLast) &&
+            const DeepCollectionEquality().equals(other._blocks, _blocks) &&
+            (identical(other.next, next) || other.next == next) &&
+            (identical(other.previous, previous) ||
+                other.previous == previous) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      isLoading,
-      isLoadingMore,
-      const DeepCollectionEquality().hash(_topics),
-      nextPage,
-      previousPage,
-      error);
+  int get hashCode => Object.hash(runtimeType, isLoading, isLoadingMore, isLast,
+      const DeepCollectionEquality().hash(_blocks), next, previous, error);
 
   @JsonKey(ignore: true)
   @override
@@ -546,9 +545,10 @@ abstract class _BlocksState implements BlocksState {
   const factory _BlocksState(
       {final bool isLoading,
       final bool isLoadingMore,
-      final List<BlockModel> topics,
-      final int nextPage,
-      final int previousPage,
+      final bool isLast,
+      final List<BlockModel> blocks,
+      final int next,
+      final int previous,
       final String? error}) = _$BlocksStateImpl;
 
   @override
@@ -556,11 +556,13 @@ abstract class _BlocksState implements BlocksState {
   @override
   bool get isLoadingMore;
   @override
-  List<BlockModel> get topics;
+  bool get isLast;
   @override
-  int get nextPage;
+  List<BlockModel> get blocks;
   @override
-  int get previousPage;
+  int get next;
+  @override
+  int get previous;
   @override
   String? get error;
   @override
@@ -572,7 +574,11 @@ abstract class _BlocksState implements BlocksState {
 /// @nodoc
 mixin _$QuestionsState {
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get isLast => throw _privateConstructorUsedError;
   List<QuestionModel> get questions => throw _privateConstructorUsedError;
+  int get next => throw _privateConstructorUsedError;
+  int get previous => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -586,7 +592,14 @@ abstract class $QuestionsStateCopyWith<$Res> {
           QuestionsState value, $Res Function(QuestionsState) then) =
       _$QuestionsStateCopyWithImpl<$Res, QuestionsState>;
   @useResult
-  $Res call({bool isLoading, List<QuestionModel> questions, String? error});
+  $Res call(
+      {bool isLoading,
+      bool isLoadingMore,
+      bool isLast,
+      List<QuestionModel> questions,
+      int next,
+      int previous,
+      String? error});
 }
 
 /// @nodoc
@@ -603,7 +616,11 @@ class _$QuestionsStateCopyWithImpl<$Res, $Val extends QuestionsState>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLast = null,
     Object? questions = null,
+    Object? next = null,
+    Object? previous = null,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
@@ -611,10 +628,26 @@ class _$QuestionsStateCopyWithImpl<$Res, $Val extends QuestionsState>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLast: null == isLast
+          ? _value.isLast
+          : isLast // ignore: cast_nullable_to_non_nullable
+              as bool,
       questions: null == questions
           ? _value.questions
           : questions // ignore: cast_nullable_to_non_nullable
               as List<QuestionModel>,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -631,7 +664,14 @@ abstract class _$$QuestionsStateImplCopyWith<$Res>
       __$$QuestionsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, List<QuestionModel> questions, String? error});
+  $Res call(
+      {bool isLoading,
+      bool isLoadingMore,
+      bool isLast,
+      List<QuestionModel> questions,
+      int next,
+      int previous,
+      String? error});
 }
 
 /// @nodoc
@@ -646,7 +686,11 @@ class __$$QuestionsStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLast = null,
     Object? questions = null,
+    Object? next = null,
+    Object? previous = null,
     Object? error = freezed,
   }) {
     return _then(_$QuestionsStateImpl(
@@ -654,10 +698,26 @@ class __$$QuestionsStateImplCopyWithImpl<$Res>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLast: null == isLast
+          ? _value.isLast
+          : isLast // ignore: cast_nullable_to_non_nullable
+              as bool,
       questions: null == questions
           ? _value._questions
           : questions // ignore: cast_nullable_to_non_nullable
               as List<QuestionModel>,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -671,13 +731,23 @@ class __$$QuestionsStateImplCopyWithImpl<$Res>
 class _$QuestionsStateImpl implements _QuestionsState {
   const _$QuestionsStateImpl(
       {this.isLoading = false,
+      this.isLoadingMore = false,
+      this.isLast = false,
       final List<QuestionModel> questions = const [],
+      this.next = 1,
+      this.previous = 0,
       this.error})
       : _questions = questions;
 
   @override
   @JsonKey()
   final bool isLoading;
+  @override
+  @JsonKey()
+  final bool isLoadingMore;
+  @override
+  @JsonKey()
+  final bool isLast;
   final List<QuestionModel> _questions;
   @override
   @JsonKey()
@@ -688,11 +758,17 @@ class _$QuestionsStateImpl implements _QuestionsState {
   }
 
   @override
+  @JsonKey()
+  final int next;
+  @override
+  @JsonKey()
+  final int previous;
+  @override
   final String? error;
 
   @override
   String toString() {
-    return 'QuestionsState(isLoading: $isLoading, questions: $questions, error: $error)';
+    return 'QuestionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLast: $isLast, questions: $questions, next: $next, previous: $previous, error: $error)';
   }
 
   @override
@@ -702,14 +778,20 @@ class _$QuestionsStateImpl implements _QuestionsState {
             other is _$QuestionsStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore) &&
+            (identical(other.isLast, isLast) || other.isLast == isLast) &&
             const DeepCollectionEquality()
                 .equals(other._questions, _questions) &&
+            (identical(other.next, next) || other.next == next) &&
+            (identical(other.previous, previous) ||
+                other.previous == previous) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading,
-      const DeepCollectionEquality().hash(_questions), error);
+  int get hashCode => Object.hash(runtimeType, isLoading, isLoadingMore, isLast,
+      const DeepCollectionEquality().hash(_questions), next, previous, error);
 
   @JsonKey(ignore: true)
   @override
@@ -722,13 +804,25 @@ class _$QuestionsStateImpl implements _QuestionsState {
 abstract class _QuestionsState implements QuestionsState {
   const factory _QuestionsState(
       {final bool isLoading,
+      final bool isLoadingMore,
+      final bool isLast,
       final List<QuestionModel> questions,
+      final int next,
+      final int previous,
       final String? error}) = _$QuestionsStateImpl;
 
   @override
   bool get isLoading;
   @override
+  bool get isLoadingMore;
+  @override
+  bool get isLast;
+  @override
   List<QuestionModel> get questions;
+  @override
+  int get next;
+  @override
+  int get previous;
   @override
   String? get error;
   @override

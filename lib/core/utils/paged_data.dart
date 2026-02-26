@@ -1,10 +1,24 @@
 import 'package:equatable/equatable.dart';
 
-class PagedData<P, D> extends Equatable {
+class PagedData<T> extends Equatable {
   final int? count;
-  final P? next;
-  final P? previous;
-  final List<D> data;
+  final String? next;
+  final String? previous;
+  final List<T> data;
+
+  int nextPage() {
+    if (next == null) return 1;
+    final uri = Uri.parse(next!);
+    final page = uri.queryParameters['page'];
+    return int.tryParse(page ?? '') ?? 1;
+  }
+
+  int previousPage() {
+    if (previous == null) return 1;
+    final uri = Uri.parse(previous!);
+    final page = uri.queryParameters['page'];
+    return int.tryParse(page ?? '') ?? 1;
+  }
 
   const PagedData({
     this.count,
@@ -13,13 +27,13 @@ class PagedData<P, D> extends Equatable {
     required this.data,
   });
 
-  PagedData<P, D> copyWith({
+  PagedData<T> copyWith({
     int? count,
-    P? next,
-    P? previous,
-    List<D>? data,
+    String? next,
+    String? previous,
+    List<T>? data,
   }) {
-    return PagedData<P, D>(
+    return PagedData<T>(
       count: count ?? this.count,
       next: next ?? this.next,
       previous: previous ?? this.previous,

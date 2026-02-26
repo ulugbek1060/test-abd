@@ -22,6 +22,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   final String username;
 
   final int _pageSize = 10;
+  static const int _questionsPageSize = 10;
 
   @factoryMethod
   UserProfileCubit.create(
@@ -54,7 +55,9 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     return super.close();
   }
 
-  /// main loading
+  // ------------------------------------------------------
+  // Others
+  // ------------------------------------------------------
   Future<void> load() async {
     if (state.isLoading) return;
 
@@ -81,85 +84,13 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         );
 
         /// load topics
-        loadBlocks();
-        loadQuestions();
+        getBlocksByPage();
+        getQuestions();
       },
     );
   }
 
   Future<void> refresh() => load();
-
-  Future<void> loadBlocks() async {
-    final userId = state.profile?.user?.id;
-    if (userId == null) return;
-    if (state.topicsState.isLoading || state.topicsState.isLoadingMore) return;
-
-    final currentPage = state.topicsState.nextPage;
-
-    emit(
-      state.copyWith(
-        topicsState: state.topicsState.copyWith(
-          isLoading: currentPage <= 1,
-          isLoadingMore: currentPage > 1,
-        ),
-      ),
-    );
-    final result = await _quizRepository.getBocksByUserId(
-      userId,
-      pageSize: _pageSize,
-      page: currentPage,
-    );
-    result.fold(
-      (error) {
-        final newTopicState = state.topicsState.copyWith(
-          isLoading: false,
-          isLoadingMore: false,
-        );
-        emit(state.copyWith(topicsState: newTopicState, error: error.message));
-      },
-      (value) {
-        final newTopicState = state.topicsState.copyWith(
-          topics: [...state.topicsState.topics, ...value.data],
-          nextPage: currentPage + 1,
-          previousPage: currentPage > 1 ? currentPage - 1 : 0,
-          isLoading: false,
-          isLoadingMore: false,
-        );
-        emit(state.copyWith(topicsState: newTopicState));
-      },
-    );
-  }
-
-  Future<void> loadQuestions() async {
-    final userId = state.profile?.user?.id;
-    if (userId == null) return;
-
-    final questionsState = state.questionsState;
-    if (questionsState.isLoading) return;
-
-    emit(
-      state.copyWith(questionsState: questionsState.copyWith(isLoading: true)),
-    );
-    final result = await _quizRepository.getUserQuestions(userId);
-    result.fold(
-      (error) {
-        final newQuestionsState = questionsState.copyWith(
-          isLoading: false,
-          error: error.message,
-        );
-        emit(state.copyWith(questionsState: newQuestionsState));
-        _messageHandler.handleDialog(error);
-      },
-      (value) {
-        final newQuestionsState = questionsState.copyWith(
-          questions: value.data,
-          error: null,
-          isLoading: false,
-        );
-        emit(state.copyWith(questionsState: newQuestionsState));
-      },
-    );
-  }
 
   Future<void> followAction() async {
     final userId = state.profile?.user?.id;
@@ -232,5 +163,193 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
   void onShareAction() {
     // TODO implement onShare function
+  }
+
+  // ------------------------------------------------------
+  // Block
+  // ------------------------------------------------------
+  Future<void> getBlocks() async {
+    final userId = state.profile?.user?.id;
+    if (userId == null) return;
+
+    if (state.blockState.isLoading || state.blockState.isLoadingMore) return;
+
+    final blockState = state.blockState;
+    emit(state.copyWith(blockState: blockState.copyWith(isLoading: true)));
+
+    final result = await _quizRepository.getBocksByUserId(
+      userId,
+      pageSize: _pageSize,
+      page: blockState.next,
+    );
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            blockState: state.blockState.copyWith(
+              isLoading: false,
+              error: error.message,
+            ),
+          ),
+        );
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            blockState: state.blockState.copyWith(
+              isLoading: false,
+              blocks: value.data,
+              // next: value.next,
+              // previous: value.previous,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> getBlocksByPage() async {
+    // final userId = state.profile?.user?.id;
+    // if (userId == null) return;
+    // if (state.topicsState.isLoading || state.topicsState.isLoadingMore) return;
+    // final currentPage = state.topicsState.nextPage;
+    // emit(
+    //   state.copyWith(
+    //     topicsState: state.topicsState.copyWith(
+    //       isLoading: currentPage <= 1,
+    //       isLoadingMore: currentPage > 1,
+    //     ),
+    //   ),
+    // );
+    // final result = await _quizRepository.getBocksByUserId(
+    //   userId,
+    //   pageSize: _pageSize,
+    //   page: currentPage,
+    // );
+    // result.fold(
+    //   (error) {
+    //     final newTopicState = state.topicsState.copyWith(
+    //       isLoading: false,
+    //       isLoadingMore: false,
+    //     );
+    //     emit(state.copyWith(topicsState: newTopicState, error: error.message));
+    //   },
+    //   (value) {
+    //     final newTopicState = state.topicsState.copyWith(
+    //       topics: [...state.topicsState.topics, ...value.data],
+    //       nextPage: currentPage + 1,
+    //       previousPage: currentPage > 1 ? currentPage - 1 : 0,
+    //       isLoading: false,
+    //       isLoadingMore: false,
+    //     );
+    //     emit(state.copyWith(topicsState: newTopicState));
+    //   },
+    // );
+  }
+
+  // ------------------------------------------------------
+  // Questions
+  // ------------------------------------------------------
+  Future<void> getQuestions() async {
+    final userId = state.profile?.user?.id;
+    if (userId == null) return;
+
+    final questionsState = state.questionsState;
+
+    if (questionsState.isLoading ||
+        questionsState.isLoadingMore ||
+        questionsState.isLast) {
+      return;
+    }
+
+    emit(
+      state.copyWith(questionsState: questionsState.copyWith(isLoading: true)),
+    );
+    final result = await _quizRepository.getUserQuestions(
+      userId,
+      1,
+      _questionsPageSize,
+    );
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            questionsState: state.questionsState.copyWith(
+              isLoading: false,
+              error: error.message,
+            ),
+          ),
+        );
+        _messageHandler.handleDialog(error);
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            questionsState: state.questionsState.copyWith(
+              isLoading: false,
+              error: null,
+              questions: value.data,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLast:
+                  value.data.length < _questionsPageSize || value.next == null,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> getQuestionsByPage() async {
+    final userId = state.profile?.user?.id;
+    if (userId == null) return;
+
+    final questionsState = state.questionsState;
+    if (questionsState.isLoading ||
+        questionsState.isLoadingMore ||
+        questionsState.isLast) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        questionsState: questionsState.copyWith(isLoadingMore: true),
+      ),
+    );
+    final result = await _quizRepository.getUserQuestions(
+      userId,
+      questionsState.next,
+      _questionsPageSize,
+    );
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(
+          state.copyWith(
+            questionsState: questionsState.copyWith(
+              isLoadingMore: false,
+              error: error.message,
+            ),
+          ),
+        );
+      },
+      (value) {
+        final list = List.of(state.questionsState.questions);
+        list.addAll(value.data);
+        emit(
+          state.copyWith(
+            questionsState: questionsState.copyWith(
+              isLoadingMore: false,
+              error: null,
+              questions: list,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLast:
+                  value.data.length < _questionsPageSize || value.next == null,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -12,29 +12,10 @@ import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
 
 abstract class QuizRepository {
-  Future<Either<AppException, PagedData<String, QuestionModel>>>
-  getFollowedQuestions({required int page, required int pageSize});
-
-  Future<Either<AppException, CheckAnswerModel>> submitAnswer({
-    required int questionId,
-    required Set<int> selectedAnswers,
-    int? duration,
-  });
-
-  Future<Either<AppException, PagedData<String, QuestionModel>>>
-  getUserQuestions(int userId);
-
-  Future<Either<AppException, PagedData<String, BlockModel>>> getBocksByUserId(
-    int userId, {
-    int? page,
-    int? pageSize,
-  });
-
-  Future<Either<AppException, QuestionsBookmarkModel>> getQuestionsBookmark();
-
+  // ------------------------------------------------------
+  // Blocks
+  // ------------------------------------------------------
   Future<Either<AppException, List<MyBlockModel>>> getMyBlocks();
-
-  Future<Either<AppException, List<CategoryModel>>> getCategories();
 
   Future<Either<AppException, BlockDetailModel>> createBlock({
     required String title,
@@ -51,6 +32,17 @@ abstract class QuizRepository {
     required AccessType accessType,
   });
 
+  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId(
+    int userId, {
+    int? page,
+    int? pageSize,
+  });
+
+  Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
+
+  // ------------------------------------------------------
+  // Questions
+  // ------------------------------------------------------
   Future<Either<AppException, QuestionModel>> createQuestion({
     required CreateQuestionModel model,
   });
@@ -60,12 +52,31 @@ abstract class QuizRepository {
     required CreateQuestionModel model,
   });
 
-  Future<Either<AppException, PagedData<String, QuestionModel>>>
-  getMyQuestions({required String page, required int pageSize});
-
-  Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
-
   Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
 
+  Future<Either<AppException, QuestionsBookmarkModel>> getQuestionsBookmark();
+
+  Future<Either<AppException, PagedData<QuestionModel>>> getUserQuestions(
+    int userId,
+    int page,
+    int pageSize,
+  );
+
   Future<Either<AppException, dynamic>> bookmarkQuestion(int questionId);
+
+  // ------------------------------------------------------
+  // Others
+  // ------------------------------------------------------
+  Future<Either<AppException, List<CategoryModel>>> getCategories();
+
+  Future<Either<AppException, PagedData<QuestionModel>>> getFollowedQuestions({
+    required int page,
+    required int pageSize,
+  });
+
+  Future<Either<AppException, CheckAnswerModel>> submitAnswer({
+    required int questionId,
+    required Set<int> selectedAnswers,
+    int? duration,
+  });
 }

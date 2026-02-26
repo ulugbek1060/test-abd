@@ -9,26 +9,24 @@ import 'package:testabd/data/remote_source/quiz/models/followed_questions_respon
 import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/my_block_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
-import 'package:testabd/data/remote_source/quiz/models/questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart';
-import 'package:testabd/data/remote_source/quiz/models/user_question_response.dart';
 import 'package:testabd/core/enums/access_enum.dart';
 import 'models/block_questions_response.dart';
 import 'models/user_questions_response.dart';
 
 abstract class QuizSource {
-  Future<UserQuestionsResponse> getUserQuestions(int userId);
+  Future<UserQuestionsResponse> getUserQuestions(
+    int userId,
+    int page,
+    int pageSize,
+  );
   Future<BlockQuestionsResponse> getBlockTests(int blockId);
   Future<dynamic> bookmarkQuestions(int questionId);
   Future<BookmarkQuestionsResponse> getQuestionsBookmark();
   Future<List<CategoryResponse>> getCategories();
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
   Future<List<MyBlockResponse>> getMyBlocks();
-  Future<QuestionsResponse> getMyQuestions({
-    required String page,
-    required int pageSize,
-  });
   Future<FollowedQuestionsResponse> getFollowedQuestions(
     int page,
     int pageSize,
@@ -88,7 +86,10 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<FollowedQuestionsResponse> getFollowedQuestions(int page, int pageSize) async {
+  Future<FollowedQuestionsResponse> getFollowedQuestions(
+    int page,
+    int pageSize,
+  ) async {
     try {
       final response = await _dio.get(
         '/quiz/recommended/followed-questions/',
@@ -103,7 +104,11 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<AnswerResponse> submitAnswer(int questionId, Set<int> selectedAnswers, int? duration) async {
+  Future<AnswerResponse> submitAnswer(
+    int questionId,
+    Set<int> selectedAnswers,
+    int? duration,
+  ) async {
     try {
       final response = await _dio.post(
         '/quiz/submit-answer/',
@@ -122,7 +127,11 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<UserBlocksResponse> getBlocksByUserId(int userId, {int? page, int? pageSize}) async {
+  Future<UserBlocksResponse> getBlocksByUserId(
+    int userId, {
+    int? page,
+    int? pageSize,
+  }) async {
     try {
       final response = await _dio.get(
         '/quiz/tests/by_user/$userId/',
@@ -141,9 +150,16 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<UserQuestionsResponse> getUserQuestions(int userId) async {
+  Future<UserQuestionsResponse> getUserQuestions(
+    int userId,
+    int page,
+    int pageSize,
+  ) async {
     try {
-      final response = await _dio.get('/quiz/questions/by-user/$userId/');
+      final response = await _dio.get(
+        '/quiz/questions/by-user/$userId/',
+        queryParameters: {'page': page, 'page_size': pageSize},
+      );
       return UserQuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
@@ -221,7 +237,12 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<BlockDetailResponse> createBlock(String title, String description, int categoryId, AccessType accessType) async {
+  Future<BlockDetailResponse> createBlock(
+    String title,
+    String description,
+    int categoryId,
+    AccessType accessType,
+  ) async {
     try {
       final response = await _dio.post(
         '/quiz/tests/',
@@ -291,30 +312,6 @@ class QuizSourceImpl implements QuizSource {
         data: data.toJson(),
       );
       return QuestionResponse.fromJson(response.data);
-    } on DioException catch (error) {
-      throw error.handleDioException();
-    } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
-    }
-  }
-
-  @override
-  Future<QuestionsResponse> getMyQuestions({
-    required String page,
-    required int pageSize,
-  }) async {
-    try {
-      final response = await _dio.get(
-        'quiz/qs/',
-        options: Options(
-          headers: {
-            // "ordering": "-created_at",
-            "page_size": pageSize,
-            if (page.isNotEmpty) "page": page,
-          },
-        ),
-      );
-      return QuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {

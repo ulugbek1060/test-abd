@@ -19,12 +19,10 @@ mixin _$ProfileState {
   String? get error => throw _privateConstructorUsedError;
   MyInfoModel? get myInfoModel => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
-  UserConnectionsState get userConnectionsState =>
+  ConnectionsState get userConnectionsState =>
       throw _privateConstructorUsedError;
-  QuestionsBookmarkState get questionsBookmarkState =>
-      throw _privateConstructorUsedError;
-  MyBlocksState get blocksState => throw _privateConstructorUsedError;
-  MyQuestionsState get questionsState => throw _privateConstructorUsedError;
+  BlocksState get blocksState => throw _privateConstructorUsedError;
+  QuestionsState get questionsState => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileStateCopyWith<ProfileState> get copyWith =>
@@ -41,15 +39,13 @@ abstract class $ProfileStateCopyWith<$Res> {
       {String? error,
       MyInfoModel? myInfoModel,
       bool isLoading,
-      UserConnectionsState userConnectionsState,
-      QuestionsBookmarkState questionsBookmarkState,
-      MyBlocksState blocksState,
-      MyQuestionsState questionsState});
+      ConnectionsState userConnectionsState,
+      BlocksState blocksState,
+      QuestionsState questionsState});
 
-  $UserConnectionsStateCopyWith<$Res> get userConnectionsState;
-  $QuestionsBookmarkStateCopyWith<$Res> get questionsBookmarkState;
-  $MyBlocksStateCopyWith<$Res> get blocksState;
-  $MyQuestionsStateCopyWith<$Res> get questionsState;
+  $ConnectionsStateCopyWith<$Res> get userConnectionsState;
+  $BlocksStateCopyWith<$Res> get blocksState;
+  $QuestionsStateCopyWith<$Res> get questionsState;
 }
 
 /// @nodoc
@@ -69,7 +65,6 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
     Object? myInfoModel = freezed,
     Object? isLoading = null,
     Object? userConnectionsState = null,
-    Object? questionsBookmarkState = null,
     Object? blocksState = null,
     Object? questionsState = null,
   }) {
@@ -89,26 +84,22 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
       userConnectionsState: null == userConnectionsState
           ? _value.userConnectionsState
           : userConnectionsState // ignore: cast_nullable_to_non_nullable
-              as UserConnectionsState,
-      questionsBookmarkState: null == questionsBookmarkState
-          ? _value.questionsBookmarkState
-          : questionsBookmarkState // ignore: cast_nullable_to_non_nullable
-              as QuestionsBookmarkState,
+              as ConnectionsState,
       blocksState: null == blocksState
           ? _value.blocksState
           : blocksState // ignore: cast_nullable_to_non_nullable
-              as MyBlocksState,
+              as BlocksState,
       questionsState: null == questionsState
           ? _value.questionsState
           : questionsState // ignore: cast_nullable_to_non_nullable
-              as MyQuestionsState,
+              as QuestionsState,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserConnectionsStateCopyWith<$Res> get userConnectionsState {
-    return $UserConnectionsStateCopyWith<$Res>(_value.userConnectionsState,
+  $ConnectionsStateCopyWith<$Res> get userConnectionsState {
+    return $ConnectionsStateCopyWith<$Res>(_value.userConnectionsState,
         (value) {
       return _then(_value.copyWith(userConnectionsState: value) as $Val);
     });
@@ -116,25 +107,16 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
 
   @override
   @pragma('vm:prefer-inline')
-  $QuestionsBookmarkStateCopyWith<$Res> get questionsBookmarkState {
-    return $QuestionsBookmarkStateCopyWith<$Res>(_value.questionsBookmarkState,
-        (value) {
-      return _then(_value.copyWith(questionsBookmarkState: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $MyBlocksStateCopyWith<$Res> get blocksState {
-    return $MyBlocksStateCopyWith<$Res>(_value.blocksState, (value) {
+  $BlocksStateCopyWith<$Res> get blocksState {
+    return $BlocksStateCopyWith<$Res>(_value.blocksState, (value) {
       return _then(_value.copyWith(blocksState: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $MyQuestionsStateCopyWith<$Res> get questionsState {
-    return $MyQuestionsStateCopyWith<$Res>(_value.questionsState, (value) {
+  $QuestionsStateCopyWith<$Res> get questionsState {
+    return $QuestionsStateCopyWith<$Res>(_value.questionsState, (value) {
       return _then(_value.copyWith(questionsState: value) as $Val);
     });
   }
@@ -152,19 +134,16 @@ abstract class _$$ProfileStateImplCopyWith<$Res>
       {String? error,
       MyInfoModel? myInfoModel,
       bool isLoading,
-      UserConnectionsState userConnectionsState,
-      QuestionsBookmarkState questionsBookmarkState,
-      MyBlocksState blocksState,
-      MyQuestionsState questionsState});
+      ConnectionsState userConnectionsState,
+      BlocksState blocksState,
+      QuestionsState questionsState});
 
   @override
-  $UserConnectionsStateCopyWith<$Res> get userConnectionsState;
+  $ConnectionsStateCopyWith<$Res> get userConnectionsState;
   @override
-  $QuestionsBookmarkStateCopyWith<$Res> get questionsBookmarkState;
+  $BlocksStateCopyWith<$Res> get blocksState;
   @override
-  $MyBlocksStateCopyWith<$Res> get blocksState;
-  @override
-  $MyQuestionsStateCopyWith<$Res> get questionsState;
+  $QuestionsStateCopyWith<$Res> get questionsState;
 }
 
 /// @nodoc
@@ -182,7 +161,6 @@ class __$$ProfileStateImplCopyWithImpl<$Res>
     Object? myInfoModel = freezed,
     Object? isLoading = null,
     Object? userConnectionsState = null,
-    Object? questionsBookmarkState = null,
     Object? blocksState = null,
     Object? questionsState = null,
   }) {
@@ -202,19 +180,15 @@ class __$$ProfileStateImplCopyWithImpl<$Res>
       userConnectionsState: null == userConnectionsState
           ? _value.userConnectionsState
           : userConnectionsState // ignore: cast_nullable_to_non_nullable
-              as UserConnectionsState,
-      questionsBookmarkState: null == questionsBookmarkState
-          ? _value.questionsBookmarkState
-          : questionsBookmarkState // ignore: cast_nullable_to_non_nullable
-              as QuestionsBookmarkState,
+              as ConnectionsState,
       blocksState: null == blocksState
           ? _value.blocksState
           : blocksState // ignore: cast_nullable_to_non_nullable
-              as MyBlocksState,
+              as BlocksState,
       questionsState: null == questionsState
           ? _value.questionsState
           : questionsState // ignore: cast_nullable_to_non_nullable
-              as MyQuestionsState,
+              as QuestionsState,
     ));
   }
 }
@@ -226,10 +200,9 @@ class _$ProfileStateImpl implements _ProfileState {
       {this.error,
       this.myInfoModel,
       this.isLoading = false,
-      this.userConnectionsState = const UserConnectionsState(),
-      this.questionsBookmarkState = const QuestionsBookmarkState(),
-      this.blocksState = const MyBlocksState(),
-      this.questionsState = const MyQuestionsState()});
+      this.userConnectionsState = const ConnectionsState(),
+      this.blocksState = const BlocksState(),
+      this.questionsState = const QuestionsState()});
 
   @override
   final String? error;
@@ -240,20 +213,17 @@ class _$ProfileStateImpl implements _ProfileState {
   final bool isLoading;
   @override
   @JsonKey()
-  final UserConnectionsState userConnectionsState;
+  final ConnectionsState userConnectionsState;
   @override
   @JsonKey()
-  final QuestionsBookmarkState questionsBookmarkState;
+  final BlocksState blocksState;
   @override
   @JsonKey()
-  final MyBlocksState blocksState;
-  @override
-  @JsonKey()
-  final MyQuestionsState questionsState;
+  final QuestionsState questionsState;
 
   @override
   String toString() {
-    return 'ProfileState(error: $error, myInfoModel: $myInfoModel, isLoading: $isLoading, userConnectionsState: $userConnectionsState, questionsBookmarkState: $questionsBookmarkState, blocksState: $blocksState, questionsState: $questionsState)';
+    return 'ProfileState(error: $error, myInfoModel: $myInfoModel, isLoading: $isLoading, userConnectionsState: $userConnectionsState, blocksState: $blocksState, questionsState: $questionsState)';
   }
 
   @override
@@ -268,8 +238,6 @@ class _$ProfileStateImpl implements _ProfileState {
                 other.isLoading == isLoading) &&
             (identical(other.userConnectionsState, userConnectionsState) ||
                 other.userConnectionsState == userConnectionsState) &&
-            (identical(other.questionsBookmarkState, questionsBookmarkState) ||
-                other.questionsBookmarkState == questionsBookmarkState) &&
             (identical(other.blocksState, blocksState) ||
                 other.blocksState == blocksState) &&
             (identical(other.questionsState, questionsState) ||
@@ -277,15 +245,8 @@ class _$ProfileStateImpl implements _ProfileState {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      error,
-      myInfoModel,
-      isLoading,
-      userConnectionsState,
-      questionsBookmarkState,
-      blocksState,
-      questionsState);
+  int get hashCode => Object.hash(runtimeType, error, myInfoModel, isLoading,
+      userConnectionsState, blocksState, questionsState);
 
   @JsonKey(ignore: true)
   @override
@@ -299,10 +260,9 @@ abstract class _ProfileState implements ProfileState {
       {final String? error,
       final MyInfoModel? myInfoModel,
       final bool isLoading,
-      final UserConnectionsState userConnectionsState,
-      final QuestionsBookmarkState questionsBookmarkState,
-      final MyBlocksState blocksState,
-      final MyQuestionsState questionsState}) = _$ProfileStateImpl;
+      final ConnectionsState userConnectionsState,
+      final BlocksState blocksState,
+      final QuestionsState questionsState}) = _$ProfileStateImpl;
 
   @override
   String? get error;
@@ -311,13 +271,11 @@ abstract class _ProfileState implements ProfileState {
   @override
   bool get isLoading;
   @override
-  UserConnectionsState get userConnectionsState;
+  ConnectionsState get userConnectionsState;
   @override
-  QuestionsBookmarkState get questionsBookmarkState;
+  BlocksState get blocksState;
   @override
-  MyBlocksState get blocksState;
-  @override
-  MyQuestionsState get questionsState;
+  QuestionsState get questionsState;
   @override
   @JsonKey(ignore: true)
   _$$ProfileStateImplCopyWith<_$ProfileStateImpl> get copyWith =>
@@ -325,30 +283,29 @@ abstract class _ProfileState implements ProfileState {
 }
 
 /// @nodoc
-mixin _$UserConnectionsState {
+mixin _$ConnectionsState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   UserConnectionsModel get connections => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $UserConnectionsStateCopyWith<UserConnectionsState> get copyWith =>
+  $ConnectionsStateCopyWith<ConnectionsState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserConnectionsStateCopyWith<$Res> {
-  factory $UserConnectionsStateCopyWith(UserConnectionsState value,
-          $Res Function(UserConnectionsState) then) =
-      _$UserConnectionsStateCopyWithImpl<$Res, UserConnectionsState>;
+abstract class $ConnectionsStateCopyWith<$Res> {
+  factory $ConnectionsStateCopyWith(
+          ConnectionsState value, $Res Function(ConnectionsState) then) =
+      _$ConnectionsStateCopyWithImpl<$Res, ConnectionsState>;
   @useResult
   $Res call({bool isLoading, String? error, UserConnectionsModel connections});
 }
 
 /// @nodoc
-class _$UserConnectionsStateCopyWithImpl<$Res,
-        $Val extends UserConnectionsState>
-    implements $UserConnectionsStateCopyWith<$Res> {
-  _$UserConnectionsStateCopyWithImpl(this._value, this._then);
+class _$ConnectionsStateCopyWithImpl<$Res, $Val extends ConnectionsState>
+    implements $ConnectionsStateCopyWith<$Res> {
+  _$ConnectionsStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -380,22 +337,22 @@ class _$UserConnectionsStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$UserConnectionsStateImplCopyWith<$Res>
-    implements $UserConnectionsStateCopyWith<$Res> {
-  factory _$$UserConnectionsStateImplCopyWith(_$UserConnectionsStateImpl value,
-          $Res Function(_$UserConnectionsStateImpl) then) =
-      __$$UserConnectionsStateImplCopyWithImpl<$Res>;
+abstract class _$$ConnectionsStateImplCopyWith<$Res>
+    implements $ConnectionsStateCopyWith<$Res> {
+  factory _$$ConnectionsStateImplCopyWith(_$ConnectionsStateImpl value,
+          $Res Function(_$ConnectionsStateImpl) then) =
+      __$$ConnectionsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isLoading, String? error, UserConnectionsModel connections});
 }
 
 /// @nodoc
-class __$$UserConnectionsStateImplCopyWithImpl<$Res>
-    extends _$UserConnectionsStateCopyWithImpl<$Res, _$UserConnectionsStateImpl>
-    implements _$$UserConnectionsStateImplCopyWith<$Res> {
-  __$$UserConnectionsStateImplCopyWithImpl(_$UserConnectionsStateImpl _value,
-      $Res Function(_$UserConnectionsStateImpl) _then)
+class __$$ConnectionsStateImplCopyWithImpl<$Res>
+    extends _$ConnectionsStateCopyWithImpl<$Res, _$ConnectionsStateImpl>
+    implements _$$ConnectionsStateImplCopyWith<$Res> {
+  __$$ConnectionsStateImplCopyWithImpl(_$ConnectionsStateImpl _value,
+      $Res Function(_$ConnectionsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -405,7 +362,7 @@ class __$$UserConnectionsStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? connections = null,
   }) {
-    return _then(_$UserConnectionsStateImpl(
+    return _then(_$ConnectionsStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -424,8 +381,8 @@ class __$$UserConnectionsStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$UserConnectionsStateImpl implements _UserConnectionsState {
-  const _$UserConnectionsStateImpl(
+class _$ConnectionsStateImpl implements _ConnectionsState {
+  const _$ConnectionsStateImpl(
       {this.isLoading = false,
       this.error,
       this.connections = const UserConnectionsModel()});
@@ -441,14 +398,14 @@ class _$UserConnectionsStateImpl implements _UserConnectionsState {
 
   @override
   String toString() {
-    return 'UserConnectionsState(isLoading: $isLoading, error: $error, connections: $connections)';
+    return 'ConnectionsState(isLoading: $isLoading, error: $error, connections: $connections)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserConnectionsStateImpl &&
+            other is _$ConnectionsStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
@@ -462,17 +419,16 @@ class _$UserConnectionsStateImpl implements _UserConnectionsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$UserConnectionsStateImplCopyWith<_$UserConnectionsStateImpl>
-      get copyWith =>
-          __$$UserConnectionsStateImplCopyWithImpl<_$UserConnectionsStateImpl>(
-              this, _$identity);
+  _$$ConnectionsStateImplCopyWith<_$ConnectionsStateImpl> get copyWith =>
+      __$$ConnectionsStateImplCopyWithImpl<_$ConnectionsStateImpl>(
+          this, _$identity);
 }
 
-abstract class _UserConnectionsState implements UserConnectionsState {
-  const factory _UserConnectionsState(
+abstract class _ConnectionsState implements ConnectionsState {
+  const factory _ConnectionsState(
       {final bool isLoading,
       final String? error,
-      final UserConnectionsModel connections}) = _$UserConnectionsStateImpl;
+      final UserConnectionsModel connections}) = _$ConnectionsStateImpl;
 
   @override
   bool get isLoading;
@@ -482,384 +438,45 @@ abstract class _UserConnectionsState implements UserConnectionsState {
   UserConnectionsModel get connections;
   @override
   @JsonKey(ignore: true)
-  _$$UserConnectionsStateImplCopyWith<_$UserConnectionsStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$QuestionsBookmarkState {
-  bool get isLoading => throw _privateConstructorUsedError;
-  String? get error => throw _privateConstructorUsedError;
-  QuestionsBookmarkModel get questionsBookmark =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $QuestionsBookmarkStateCopyWith<QuestionsBookmarkState> get copyWith =>
+  _$$ConnectionsStateImplCopyWith<_$ConnectionsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $QuestionsBookmarkStateCopyWith<$Res> {
-  factory $QuestionsBookmarkStateCopyWith(QuestionsBookmarkState value,
-          $Res Function(QuestionsBookmarkState) then) =
-      _$QuestionsBookmarkStateCopyWithImpl<$Res, QuestionsBookmarkState>;
-  @useResult
-  $Res call(
-      {bool isLoading,
-      String? error,
-      QuestionsBookmarkModel questionsBookmark});
-}
-
-/// @nodoc
-class _$QuestionsBookmarkStateCopyWithImpl<$Res,
-        $Val extends QuestionsBookmarkState>
-    implements $QuestionsBookmarkStateCopyWith<$Res> {
-  _$QuestionsBookmarkStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isLoading = null,
-    Object? error = freezed,
-    Object? questionsBookmark = null,
-  }) {
-    return _then(_value.copyWith(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      questionsBookmark: null == questionsBookmark
-          ? _value.questionsBookmark
-          : questionsBookmark // ignore: cast_nullable_to_non_nullable
-              as QuestionsBookmarkModel,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$QuestionsBookmarkStateImplCopyWith<$Res>
-    implements $QuestionsBookmarkStateCopyWith<$Res> {
-  factory _$$QuestionsBookmarkStateImplCopyWith(
-          _$QuestionsBookmarkStateImpl value,
-          $Res Function(_$QuestionsBookmarkStateImpl) then) =
-      __$$QuestionsBookmarkStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {bool isLoading,
-      String? error,
-      QuestionsBookmarkModel questionsBookmark});
-}
-
-/// @nodoc
-class __$$QuestionsBookmarkStateImplCopyWithImpl<$Res>
-    extends _$QuestionsBookmarkStateCopyWithImpl<$Res,
-        _$QuestionsBookmarkStateImpl>
-    implements _$$QuestionsBookmarkStateImplCopyWith<$Res> {
-  __$$QuestionsBookmarkStateImplCopyWithImpl(
-      _$QuestionsBookmarkStateImpl _value,
-      $Res Function(_$QuestionsBookmarkStateImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isLoading = null,
-    Object? error = freezed,
-    Object? questionsBookmark = null,
-  }) {
-    return _then(_$QuestionsBookmarkStateImpl(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      questionsBookmark: null == questionsBookmark
-          ? _value.questionsBookmark
-          : questionsBookmark // ignore: cast_nullable_to_non_nullable
-              as QuestionsBookmarkModel,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$QuestionsBookmarkStateImpl implements _QuestionsBookmarkState {
-  const _$QuestionsBookmarkStateImpl(
-      {this.isLoading = false,
-      this.error,
-      this.questionsBookmark = const QuestionsBookmarkModel()});
-
-  @override
-  @JsonKey()
-  final bool isLoading;
-  @override
-  final String? error;
-  @override
-  @JsonKey()
-  final QuestionsBookmarkModel questionsBookmark;
-
-  @override
-  String toString() {
-    return 'QuestionsBookmarkState(isLoading: $isLoading, error: $error, questionsBookmark: $questionsBookmark)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$QuestionsBookmarkStateImpl &&
-            (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading) &&
-            (identical(other.error, error) || other.error == error) &&
-            (identical(other.questionsBookmark, questionsBookmark) ||
-                other.questionsBookmark == questionsBookmark));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, isLoading, error, questionsBookmark);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$QuestionsBookmarkStateImplCopyWith<_$QuestionsBookmarkStateImpl>
-      get copyWith => __$$QuestionsBookmarkStateImplCopyWithImpl<
-          _$QuestionsBookmarkStateImpl>(this, _$identity);
-}
-
-abstract class _QuestionsBookmarkState implements QuestionsBookmarkState {
-  const factory _QuestionsBookmarkState(
-          {final bool isLoading,
-          final String? error,
-          final QuestionsBookmarkModel questionsBookmark}) =
-      _$QuestionsBookmarkStateImpl;
-
-  @override
-  bool get isLoading;
-  @override
-  String? get error;
-  @override
-  QuestionsBookmarkModel get questionsBookmark;
-  @override
-  @JsonKey(ignore: true)
-  _$$QuestionsBookmarkStateImplCopyWith<_$QuestionsBookmarkStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$MyBlocksState {
-  bool get isLoading => throw _privateConstructorUsedError;
-  String? get error => throw _privateConstructorUsedError;
-  List<MyBlockModel> get myQuestions => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $MyBlocksStateCopyWith<MyBlocksState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MyBlocksStateCopyWith<$Res> {
-  factory $MyBlocksStateCopyWith(
-          MyBlocksState value, $Res Function(MyBlocksState) then) =
-      _$MyBlocksStateCopyWithImpl<$Res, MyBlocksState>;
-  @useResult
-  $Res call({bool isLoading, String? error, List<MyBlockModel> myQuestions});
-}
-
-/// @nodoc
-class _$MyBlocksStateCopyWithImpl<$Res, $Val extends MyBlocksState>
-    implements $MyBlocksStateCopyWith<$Res> {
-  _$MyBlocksStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isLoading = null,
-    Object? error = freezed,
-    Object? myQuestions = null,
-  }) {
-    return _then(_value.copyWith(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      myQuestions: null == myQuestions
-          ? _value.myQuestions
-          : myQuestions // ignore: cast_nullable_to_non_nullable
-              as List<MyBlockModel>,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$MyBlocksStateImplCopyWith<$Res>
-    implements $MyBlocksStateCopyWith<$Res> {
-  factory _$$MyBlocksStateImplCopyWith(
-          _$MyBlocksStateImpl value, $Res Function(_$MyBlocksStateImpl) then) =
-      __$$MyBlocksStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({bool isLoading, String? error, List<MyBlockModel> myQuestions});
-}
-
-/// @nodoc
-class __$$MyBlocksStateImplCopyWithImpl<$Res>
-    extends _$MyBlocksStateCopyWithImpl<$Res, _$MyBlocksStateImpl>
-    implements _$$MyBlocksStateImplCopyWith<$Res> {
-  __$$MyBlocksStateImplCopyWithImpl(
-      _$MyBlocksStateImpl _value, $Res Function(_$MyBlocksStateImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? isLoading = null,
-    Object? error = freezed,
-    Object? myQuestions = null,
-  }) {
-    return _then(_$MyBlocksStateImpl(
-      isLoading: null == isLoading
-          ? _value.isLoading
-          : isLoading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as String?,
-      myQuestions: null == myQuestions
-          ? _value._myQuestions
-          : myQuestions // ignore: cast_nullable_to_non_nullable
-              as List<MyBlockModel>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$MyBlocksStateImpl implements _MyBlocksState {
-  const _$MyBlocksStateImpl(
-      {this.isLoading = false,
-      this.error,
-      final List<MyBlockModel> myQuestions = const []})
-      : _myQuestions = myQuestions;
-
-  @override
-  @JsonKey()
-  final bool isLoading;
-  @override
-  final String? error;
-  final List<MyBlockModel> _myQuestions;
-  @override
-  @JsonKey()
-  List<MyBlockModel> get myQuestions {
-    if (_myQuestions is EqualUnmodifiableListView) return _myQuestions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_myQuestions);
-  }
-
-  @override
-  String toString() {
-    return 'MyBlocksState(isLoading: $isLoading, error: $error, myQuestions: $myQuestions)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MyBlocksStateImpl &&
-            (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading) &&
-            (identical(other.error, error) || other.error == error) &&
-            const DeepCollectionEquality()
-                .equals(other._myQuestions, _myQuestions));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, isLoading, error,
-      const DeepCollectionEquality().hash(_myQuestions));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MyBlocksStateImplCopyWith<_$MyBlocksStateImpl> get copyWith =>
-      __$$MyBlocksStateImplCopyWithImpl<_$MyBlocksStateImpl>(this, _$identity);
-}
-
-abstract class _MyBlocksState implements MyBlocksState {
-  const factory _MyBlocksState(
-      {final bool isLoading,
-      final String? error,
-      final List<MyBlockModel> myQuestions}) = _$MyBlocksStateImpl;
-
-  @override
-  bool get isLoading;
-  @override
-  String? get error;
-  @override
-  List<MyBlockModel> get myQuestions;
-  @override
-  @JsonKey(ignore: true)
-  _$$MyBlocksStateImplCopyWith<_$MyBlocksStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$MyQuestionsState {
+mixin _$BlocksState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadingMore => throw _privateConstructorUsedError;
   bool get isLastPage => throw _privateConstructorUsedError;
-  String? get previous => throw _privateConstructorUsedError;
-  String? get next => throw _privateConstructorUsedError;
+  int get previous => throw _privateConstructorUsedError;
+  int get next => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
-  List<QuestionModel> get questions => throw _privateConstructorUsedError;
+  List<MyBlockModel> get blocks => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $MyQuestionsStateCopyWith<MyQuestionsState> get copyWith =>
+  $BlocksStateCopyWith<BlocksState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MyQuestionsStateCopyWith<$Res> {
-  factory $MyQuestionsStateCopyWith(
-          MyQuestionsState value, $Res Function(MyQuestionsState) then) =
-      _$MyQuestionsStateCopyWithImpl<$Res, MyQuestionsState>;
+abstract class $BlocksStateCopyWith<$Res> {
+  factory $BlocksStateCopyWith(
+          BlocksState value, $Res Function(BlocksState) then) =
+      _$BlocksStateCopyWithImpl<$Res, BlocksState>;
   @useResult
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
       bool isLastPage,
-      String? previous,
-      String? next,
+      int previous,
+      int next,
       String? error,
-      List<QuestionModel> questions});
+      List<MyBlockModel> blocks});
 }
 
 /// @nodoc
-class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
-    implements $MyQuestionsStateCopyWith<$Res> {
-  _$MyQuestionsStateCopyWithImpl(this._value, this._then);
+class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
+    implements $BlocksStateCopyWith<$Res> {
+  _$BlocksStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -872,8 +489,273 @@ class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
     Object? isLoading = null,
     Object? isLoadingMore = null,
     Object? isLastPage = null,
-    Object? previous = freezed,
-    Object? next = freezed,
+    Object? previous = null,
+    Object? next = null,
+    Object? error = freezed,
+    Object? blocks = null,
+  }) {
+    return _then(_value.copyWith(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
+              as bool,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      blocks: null == blocks
+          ? _value.blocks
+          : blocks // ignore: cast_nullable_to_non_nullable
+              as List<MyBlockModel>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$BlocksStateImplCopyWith<$Res>
+    implements $BlocksStateCopyWith<$Res> {
+  factory _$$BlocksStateImplCopyWith(
+          _$BlocksStateImpl value, $Res Function(_$BlocksStateImpl) then) =
+      __$$BlocksStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {bool isLoading,
+      bool isLoadingMore,
+      bool isLastPage,
+      int previous,
+      int next,
+      String? error,
+      List<MyBlockModel> blocks});
+}
+
+/// @nodoc
+class __$$BlocksStateImplCopyWithImpl<$Res>
+    extends _$BlocksStateCopyWithImpl<$Res, _$BlocksStateImpl>
+    implements _$$BlocksStateImplCopyWith<$Res> {
+  __$$BlocksStateImplCopyWithImpl(
+      _$BlocksStateImpl _value, $Res Function(_$BlocksStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLastPage = null,
+    Object? previous = null,
+    Object? next = null,
+    Object? error = freezed,
+    Object? blocks = null,
+  }) {
+    return _then(_$BlocksStateImpl(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
+              as bool,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      blocks: null == blocks
+          ? _value._blocks
+          : blocks // ignore: cast_nullable_to_non_nullable
+              as List<MyBlockModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BlocksStateImpl implements _BlocksState {
+  const _$BlocksStateImpl(
+      {this.isLoading = false,
+      this.isLoadingMore = false,
+      this.isLastPage = false,
+      this.previous = 0,
+      this.next = 1,
+      this.error,
+      final List<MyBlockModel> blocks = const []})
+      : _blocks = blocks;
+
+  @override
+  @JsonKey()
+  final bool isLoading;
+  @override
+  @JsonKey()
+  final bool isLoadingMore;
+  @override
+  @JsonKey()
+  final bool isLastPage;
+  @override
+  @JsonKey()
+  final int previous;
+  @override
+  @JsonKey()
+  final int next;
+  @override
+  final String? error;
+  final List<MyBlockModel> _blocks;
+  @override
+  @JsonKey()
+  List<MyBlockModel> get blocks {
+    if (_blocks is EqualUnmodifiableListView) return _blocks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_blocks);
+  }
+
+  @override
+  String toString() {
+    return 'BlocksState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLastPage: $isLastPage, previous: $previous, next: $next, error: $error, blocks: $blocks)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BlocksStateImpl &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore) &&
+            (identical(other.isLastPage, isLastPage) ||
+                other.isLastPage == isLastPage) &&
+            (identical(other.previous, previous) ||
+                other.previous == previous) &&
+            (identical(other.next, next) || other.next == next) &&
+            (identical(other.error, error) || other.error == error) &&
+            const DeepCollectionEquality().equals(other._blocks, _blocks));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      isLoadingMore,
+      isLastPage,
+      previous,
+      next,
+      error,
+      const DeepCollectionEquality().hash(_blocks));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BlocksStateImplCopyWith<_$BlocksStateImpl> get copyWith =>
+      __$$BlocksStateImplCopyWithImpl<_$BlocksStateImpl>(this, _$identity);
+}
+
+abstract class _BlocksState implements BlocksState {
+  const factory _BlocksState(
+      {final bool isLoading,
+      final bool isLoadingMore,
+      final bool isLastPage,
+      final int previous,
+      final int next,
+      final String? error,
+      final List<MyBlockModel> blocks}) = _$BlocksStateImpl;
+
+  @override
+  bool get isLoading;
+  @override
+  bool get isLoadingMore;
+  @override
+  bool get isLastPage;
+  @override
+  int get previous;
+  @override
+  int get next;
+  @override
+  String? get error;
+  @override
+  List<MyBlockModel> get blocks;
+  @override
+  @JsonKey(ignore: true)
+  _$$BlocksStateImplCopyWith<_$BlocksStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$QuestionsState {
+  bool get isLoading => throw _privateConstructorUsedError;
+  bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get isLastPage => throw _privateConstructorUsedError;
+  int get previous => throw _privateConstructorUsedError;
+  int get next => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
+  List<QuestionModel> get questions => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $QuestionsStateCopyWith<QuestionsState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QuestionsStateCopyWith<$Res> {
+  factory $QuestionsStateCopyWith(
+          QuestionsState value, $Res Function(QuestionsState) then) =
+      _$QuestionsStateCopyWithImpl<$Res, QuestionsState>;
+  @useResult
+  $Res call(
+      {bool isLoading,
+      bool isLoadingMore,
+      bool isLastPage,
+      int previous,
+      int next,
+      String? error,
+      List<QuestionModel> questions});
+}
+
+/// @nodoc
+class _$QuestionsStateCopyWithImpl<$Res, $Val extends QuestionsState>
+    implements $QuestionsStateCopyWith<$Res> {
+  _$QuestionsStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLastPage = null,
+    Object? previous = null,
+    Object? next = null,
     Object? error = freezed,
     Object? questions = null,
   }) {
@@ -890,14 +772,14 @@ class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
           ? _value.isLastPage
           : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
-      previous: freezed == previous
+      previous: null == previous
           ? _value.previous
           : previous // ignore: cast_nullable_to_non_nullable
-              as String?,
-      next: freezed == next
+              as int,
+      next: null == next
           ? _value.next
           : next // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -911,29 +793,29 @@ class _$MyQuestionsStateCopyWithImpl<$Res, $Val extends MyQuestionsState>
 }
 
 /// @nodoc
-abstract class _$$MyQuestionsStateImplCopyWith<$Res>
-    implements $MyQuestionsStateCopyWith<$Res> {
-  factory _$$MyQuestionsStateImplCopyWith(_$MyQuestionsStateImpl value,
-          $Res Function(_$MyQuestionsStateImpl) then) =
-      __$$MyQuestionsStateImplCopyWithImpl<$Res>;
+abstract class _$$QuestionsStateImplCopyWith<$Res>
+    implements $QuestionsStateCopyWith<$Res> {
+  factory _$$QuestionsStateImplCopyWith(_$QuestionsStateImpl value,
+          $Res Function(_$QuestionsStateImpl) then) =
+      __$$QuestionsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
       bool isLastPage,
-      String? previous,
-      String? next,
+      int previous,
+      int next,
       String? error,
       List<QuestionModel> questions});
 }
 
 /// @nodoc
-class __$$MyQuestionsStateImplCopyWithImpl<$Res>
-    extends _$MyQuestionsStateCopyWithImpl<$Res, _$MyQuestionsStateImpl>
-    implements _$$MyQuestionsStateImplCopyWith<$Res> {
-  __$$MyQuestionsStateImplCopyWithImpl(_$MyQuestionsStateImpl _value,
-      $Res Function(_$MyQuestionsStateImpl) _then)
+class __$$QuestionsStateImplCopyWithImpl<$Res>
+    extends _$QuestionsStateCopyWithImpl<$Res, _$QuestionsStateImpl>
+    implements _$$QuestionsStateImplCopyWith<$Res> {
+  __$$QuestionsStateImplCopyWithImpl(
+      _$QuestionsStateImpl _value, $Res Function(_$QuestionsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -942,12 +824,12 @@ class __$$MyQuestionsStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? isLoadingMore = null,
     Object? isLastPage = null,
-    Object? previous = freezed,
-    Object? next = freezed,
+    Object? previous = null,
+    Object? next = null,
     Object? error = freezed,
     Object? questions = null,
   }) {
-    return _then(_$MyQuestionsStateImpl(
+    return _then(_$QuestionsStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -960,14 +842,14 @@ class __$$MyQuestionsStateImplCopyWithImpl<$Res>
           ? _value.isLastPage
           : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
-      previous: freezed == previous
+      previous: null == previous
           ? _value.previous
           : previous // ignore: cast_nullable_to_non_nullable
-              as String?,
-      next: freezed == next
+              as int,
+      next: null == next
           ? _value.next
           : next // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -982,13 +864,13 @@ class __$$MyQuestionsStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MyQuestionsStateImpl implements _MyQuestionsState {
-  const _$MyQuestionsStateImpl(
+class _$QuestionsStateImpl implements _QuestionsState {
+  const _$QuestionsStateImpl(
       {this.isLoading = false,
       this.isLoadingMore = false,
       this.isLastPage = false,
-      this.previous,
-      this.next,
+      this.previous = 0,
+      this.next = 1,
       this.error,
       final List<QuestionModel> questions = const []})
       : _questions = questions;
@@ -1003,9 +885,11 @@ class _$MyQuestionsStateImpl implements _MyQuestionsState {
   @JsonKey()
   final bool isLastPage;
   @override
-  final String? previous;
+  @JsonKey()
+  final int previous;
   @override
-  final String? next;
+  @JsonKey()
+  final int next;
   @override
   final String? error;
   final List<QuestionModel> _questions;
@@ -1019,14 +903,14 @@ class _$MyQuestionsStateImpl implements _MyQuestionsState {
 
   @override
   String toString() {
-    return 'MyQuestionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLastPage: $isLastPage, previous: $previous, next: $next, error: $error, questions: $questions)';
+    return 'QuestionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLastPage: $isLastPage, previous: $previous, next: $next, error: $error, questions: $questions)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$MyQuestionsStateImpl &&
+            other is _$QuestionsStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.isLoadingMore, isLoadingMore) ||
@@ -1055,20 +939,20 @@ class _$MyQuestionsStateImpl implements _MyQuestionsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$MyQuestionsStateImplCopyWith<_$MyQuestionsStateImpl> get copyWith =>
-      __$$MyQuestionsStateImplCopyWithImpl<_$MyQuestionsStateImpl>(
+  _$$QuestionsStateImplCopyWith<_$QuestionsStateImpl> get copyWith =>
+      __$$QuestionsStateImplCopyWithImpl<_$QuestionsStateImpl>(
           this, _$identity);
 }
 
-abstract class _MyQuestionsState implements MyQuestionsState {
-  const factory _MyQuestionsState(
+abstract class _QuestionsState implements QuestionsState {
+  const factory _QuestionsState(
       {final bool isLoading,
       final bool isLoadingMore,
       final bool isLastPage,
-      final String? previous,
-      final String? next,
+      final int previous,
+      final int next,
       final String? error,
-      final List<QuestionModel> questions}) = _$MyQuestionsStateImpl;
+      final List<QuestionModel> questions}) = _$QuestionsStateImpl;
 
   @override
   bool get isLoading;
@@ -1077,15 +961,15 @@ abstract class _MyQuestionsState implements MyQuestionsState {
   @override
   bool get isLastPage;
   @override
-  String? get previous;
+  int get previous;
   @override
-  String? get next;
+  int get next;
   @override
   String? get error;
   @override
   List<QuestionModel> get questions;
   @override
   @JsonKey(ignore: true)
-  _$$MyQuestionsStateImplCopyWith<_$MyQuestionsStateImpl> get copyWith =>
+  _$$QuestionsStateImplCopyWith<_$QuestionsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
