@@ -17,24 +17,24 @@ import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 enum PageType {
-  block,
   questions,
+  block,
   books;
 
   static Iterable<Widget> getTabs(BuildContext context) {
     return [
       Tab(
-        text: context.l10n.blockTest,
-        icon: Icon(Icons.library_add_check, size: 20),
-      ),
-      Tab(
         text: context.l10n.questions,
         icon: Icon(Icons.question_mark_rounded, size: 20),
       ),
       Tab(
-        text: context.l10n.books,
-        icon: Icon(Icons.menu_book_rounded, size: 20),
+        text: context.l10n.blockTest,
+        icon: Icon(Icons.library_add_check, size: 20),
       ),
+      // Tab(
+      //   text: context.l10n.books,
+      //   icon: Icon(Icons.menu_book_rounded, size: 20),
+      // ),
     ];
   }
 }
@@ -60,7 +60,7 @@ class _View extends StatefulWidget {
 
 class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late var pageTye = PageType.block;
+  late var pageTye = PageType.questions;
   late var _blockKey;
   late var _questionsKey;
   late var _booksKey;
@@ -817,57 +817,69 @@ class _QuestionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// for disabled state
     if (!isEnabled) {
-      return SliverToBoxAdapter(child: const SizedBox.shrink());
+      return SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     /// loading state
     if (state.isLoading) {
-      return SliverPadding(
-        padding: const EdgeInsets.all(8),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            childAspectRatio: 1.0,
-          ),
-          delegate: SliverChildBuilderDelegate((
-            BuildContext context,
-            int index,
-          ) {
-            return Center(child: ProgressView());
-          }, childCount: 4),
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height,
+          child: ProgressView(),
         ),
       );
     }
 
     /// for active state
-    return SliverPadding(
-      padding: const EdgeInsets.all(8),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 1.0,
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverList.separated(
+          itemCount: state.questions.length,
+          itemBuilder: (_, index) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: index == 0 ? 16 : 0,
+              ),
+              child: ListTile(
+                onTap: () => context.push(
+                  AppRouter.userQuestionDetailWithBlockId(state.questions[index].id),
+                ),
+                tileColor: Theme.of(context).colorScheme.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                title: Text(
+                  state.questions[index].testTitle ?? '',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                subtitle: Text(
+                  state.questions[index].testDescription ?? '',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                trailing: _DifficultyChip(
+                  label: Difficulty.easy.name.toUpperCase(),
+                  color: Difficulty.easy.color,
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (_, __) => const SizedBox(height: 8),
         ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final question = state.questions[index];
-          return QuestionCard(
-            title: question.testTitle ?? '',
-            description: question.testDescription ?? '',
-            createdAt: question.createdAt,
-            correctAnswers: question.correctCount,
-            wrongAnswers: question.wrongCount,
-            difficulty: question.difficultyPercentage.toDifficulty(),
-            onTap: () => context.push(
-              AppRouter.userQuestionDetailWithBlockId(question.id ?? -1),
-            ),
-          );
-        }, childCount: state.questions.length),
-      ),
+
+        if (state.isLoadingMore)
+          SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: const SliverToBoxAdapter(child: ProgressView()),
+          ),
+      ],
     );
   }
 }
@@ -901,13 +913,6 @@ class QuestionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-          //     blurRadius: 12,
-          //     offset: const Offset(0, 0),
-          //   ),
-          // ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),

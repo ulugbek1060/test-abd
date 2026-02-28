@@ -55,7 +55,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileState());
     fetchUserInfo();
     getBlocks();
-    fetchQuestionsByPage();
+    getQuestions();
   }
 
   Future<void> refresh() async => await load();
@@ -186,7 +186,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             questionsState: state.questionsState.copyWith(
               isLoading: false,
               error: null,
-              questions: value.data,
+              questions: value.data..insert(0, QuestionModel(id: -1)),
               next: value.nextPage(),
               previous: value.previousPage(),
               isLastPage:
@@ -253,6 +253,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
   }
+
 }
 
 abstract class UpdateListener {

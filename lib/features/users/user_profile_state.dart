@@ -23,7 +23,7 @@ class BlocksState with _$BlocksState {
   const factory BlocksState({
     @Default(false) bool isLoading,
     @Default(false) bool isLoadingMore,
-    @Default(false) bool isLast,
+    @Default(false) bool isLastPage,
     @Default([]) List<BlockModel> blocks,
     @Default(1) int next,
     @Default(0) int previous,

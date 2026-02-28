@@ -21,7 +21,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   late StreamSubscription<UserFollowEvent> _followSubscription;
   final String username;
 
-  final int _pageSize = 10;
+  static const int _blockPageSize = 10;
   static const int _questionsPageSize = 10;
 
   @factoryMethod
@@ -84,7 +84,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         );
 
         /// load topics
-        getBlocksByPage();
+        getBlocks();
         getQuestions();
       },
     );
@@ -171,15 +171,15 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   Future<void> getBlocks() async {
     final userId = state.profile?.user?.id;
     if (userId == null) return;
-
-    if (state.blockState.isLoading || state.blockState.isLoadingMore) return;
-
     final blockState = state.blockState;
+
+    if (blockState.isLoading || blockState.isLoadingMore) return;
+
     emit(state.copyWith(blockState: blockState.copyWith(isLoading: true)));
 
     final result = await _quizRepository.getBocksByUserId(
       userId,
-      pageSize: _pageSize,
+      pageSize: _blockPageSize,
       page: blockState.next,
     );
     result.fold(
@@ -199,8 +199,10 @@ class UserProfileCubit extends Cubit<UserProfileState> {
             blockState: state.blockState.copyWith(
               isLoading: false,
               blocks: value.data,
-              // next: value.next,
-              // previous: value.previous,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage:
+                  value.data.length < _blockPageSize || value.next == null,
             ),
           ),
         );
@@ -209,42 +211,49 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   }
 
   Future<void> getBlocksByPage() async {
-    // final userId = state.profile?.user?.id;
-    // if (userId == null) return;
-    // if (state.topicsState.isLoading || state.topicsState.isLoadingMore) return;
-    // final currentPage = state.topicsState.nextPage;
-    // emit(
-    //   state.copyWith(
-    //     topicsState: state.topicsState.copyWith(
-    //       isLoading: currentPage <= 1,
-    //       isLoadingMore: currentPage > 1,
-    //     ),
-    //   ),
-    // );
-    // final result = await _quizRepository.getBocksByUserId(
-    //   userId,
-    //   pageSize: _pageSize,
-    //   page: currentPage,
-    // );
-    // result.fold(
-    //   (error) {
-    //     final newTopicState = state.topicsState.copyWith(
-    //       isLoading: false,
-    //       isLoadingMore: false,
-    //     );
-    //     emit(state.copyWith(topicsState: newTopicState, error: error.message));
-    //   },
-    //   (value) {
-    //     final newTopicState = state.topicsState.copyWith(
-    //       topics: [...state.topicsState.topics, ...value.data],
-    //       nextPage: currentPage + 1,
-    //       previousPage: currentPage > 1 ? currentPage - 1 : 0,
-    //       isLoading: false,
-    //       isLoadingMore: false,
-    //     );
-    //     emit(state.copyWith(topicsState: newTopicState));
-    //   },
-    // );
+    final userId = state.profile?.user?.id;
+    if (userId == null) return;
+    final blockState = state.blockState;
+
+    if (blockState.isLoading || blockState.isLoadingMore) return;
+
+    emit(state.copyWith(blockState: blockState.copyWith(isLoadingMore: true)));
+
+    final result = await _quizRepository.getBocksByUserId(
+      userId,
+      pageSize: blockState.next,
+      page: _blockPageSize,
+    );
+
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            blockState: state.blockState.copyWith(
+              isLoadingMore: false,
+              error: error.message,
+            ),
+          ),
+        );
+      },
+      (value) {
+        final list = List.of(state.blockState.blocks);
+        list.addAll(value.data);
+        emit(
+          state.copyWith(
+            blockState: state.blockState.copyWith(
+              isLoadingMore: false,
+              error: null,
+              blocks: list,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage:
+                  value.data.length < _blockPageSize || value.next == null,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // ------------------------------------------------------

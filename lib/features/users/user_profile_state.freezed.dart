@@ -317,7 +317,7 @@ abstract class _UserProfileState implements UserProfileState {
 mixin _$BlocksState {
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadingMore => throw _privateConstructorUsedError;
-  bool get isLast => throw _privateConstructorUsedError;
+  bool get isLastPage => throw _privateConstructorUsedError;
   List<BlockModel> get blocks => throw _privateConstructorUsedError;
   int get next => throw _privateConstructorUsedError;
   int get previous => throw _privateConstructorUsedError;
@@ -337,7 +337,7 @@ abstract class $BlocksStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
-      bool isLast,
+      bool isLastPage,
       List<BlockModel> blocks,
       int next,
       int previous,
@@ -359,7 +359,7 @@ class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
   $Res call({
     Object? isLoading = null,
     Object? isLoadingMore = null,
-    Object? isLast = null,
+    Object? isLastPage = null,
     Object? blocks = null,
     Object? next = null,
     Object? previous = null,
@@ -374,9 +374,9 @@ class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
           ? _value.isLoadingMore
           : isLoadingMore // ignore: cast_nullable_to_non_nullable
               as bool,
-      isLast: null == isLast
-          ? _value.isLast
-          : isLast // ignore: cast_nullable_to_non_nullable
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
       blocks: null == blocks
           ? _value.blocks
@@ -409,7 +409,7 @@ abstract class _$$BlocksStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       bool isLoadingMore,
-      bool isLast,
+      bool isLastPage,
       List<BlockModel> blocks,
       int next,
       int previous,
@@ -429,7 +429,7 @@ class __$$BlocksStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? isLoadingMore = null,
-    Object? isLast = null,
+    Object? isLastPage = null,
     Object? blocks = null,
     Object? next = null,
     Object? previous = null,
@@ -444,9 +444,9 @@ class __$$BlocksStateImplCopyWithImpl<$Res>
           ? _value.isLoadingMore
           : isLoadingMore // ignore: cast_nullable_to_non_nullable
               as bool,
-      isLast: null == isLast
-          ? _value.isLast
-          : isLast // ignore: cast_nullable_to_non_nullable
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
               as bool,
       blocks: null == blocks
           ? _value._blocks
@@ -474,7 +474,7 @@ class _$BlocksStateImpl implements _BlocksState {
   const _$BlocksStateImpl(
       {this.isLoading = false,
       this.isLoadingMore = false,
-      this.isLast = false,
+      this.isLastPage = false,
       final List<BlockModel> blocks = const [],
       this.next = 1,
       this.previous = 0,
@@ -489,7 +489,7 @@ class _$BlocksStateImpl implements _BlocksState {
   final bool isLoadingMore;
   @override
   @JsonKey()
-  final bool isLast;
+  final bool isLastPage;
   final List<BlockModel> _blocks;
   @override
   @JsonKey()
@@ -510,7 +510,7 @@ class _$BlocksStateImpl implements _BlocksState {
 
   @override
   String toString() {
-    return 'BlocksState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLast: $isLast, blocks: $blocks, next: $next, previous: $previous, error: $error)';
+    return 'BlocksState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLastPage: $isLastPage, blocks: $blocks, next: $next, previous: $previous, error: $error)';
   }
 
   @override
@@ -522,7 +522,8 @@ class _$BlocksStateImpl implements _BlocksState {
                 other.isLoading == isLoading) &&
             (identical(other.isLoadingMore, isLoadingMore) ||
                 other.isLoadingMore == isLoadingMore) &&
-            (identical(other.isLast, isLast) || other.isLast == isLast) &&
+            (identical(other.isLastPage, isLastPage) ||
+                other.isLastPage == isLastPage) &&
             const DeepCollectionEquality().equals(other._blocks, _blocks) &&
             (identical(other.next, next) || other.next == next) &&
             (identical(other.previous, previous) ||
@@ -531,8 +532,15 @@ class _$BlocksStateImpl implements _BlocksState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading, isLoadingMore, isLast,
-      const DeepCollectionEquality().hash(_blocks), next, previous, error);
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      isLoadingMore,
+      isLastPage,
+      const DeepCollectionEquality().hash(_blocks),
+      next,
+      previous,
+      error);
 
   @JsonKey(ignore: true)
   @override
@@ -545,7 +553,7 @@ abstract class _BlocksState implements BlocksState {
   const factory _BlocksState(
       {final bool isLoading,
       final bool isLoadingMore,
-      final bool isLast,
+      final bool isLastPage,
       final List<BlockModel> blocks,
       final int next,
       final int previous,
@@ -556,7 +564,7 @@ abstract class _BlocksState implements BlocksState {
   @override
   bool get isLoadingMore;
   @override
-  bool get isLast;
+  bool get isLastPage;
   @override
   List<BlockModel> get blocks;
   @override
