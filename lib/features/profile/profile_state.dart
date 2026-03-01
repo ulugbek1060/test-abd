@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:testabd/domain/account/entities/my_info_model.dart';
 import 'package:testabd/domain/account/entities/user_connections_model.dart';
+import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
@@ -37,7 +38,7 @@ class BlocksState with _$BlocksState {
     @Default(0) int previous,
     @Default(1) int next,
     String? error,
-    @Default([]) List<MyBlockModel> blocks,
+    @Default([]) List<BlockModel> blocks,
   }) = _BlocksState;
 }
 

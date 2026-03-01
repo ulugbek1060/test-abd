@@ -64,8 +64,8 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId(
-    int userId, {
+  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId({
+    required int userId,
     int? page,
     int? pageSize,
   }) async {

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/account/account_repository.dart';
+import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
@@ -20,7 +21,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   late final StreamSubscription _themeSubscription;
   late final StreamSubscription _myInfoSubscription;
 
-  static const int _pageSize = 10;
+  static const int _blocksPageSize = 10;
   static const int _questionsPageSize = 10;
 
   ProfileCubit(
@@ -38,7 +39,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(state.copyWith(myInfoModel: event));
     });
 
-    _questionsUpdateListener.listen(() => fetchQuestionsByPage());
+    _questionsUpdateListener.listen(() => getQuestionsByPage());
     _blocksUpdateListener.listen(() => getBlocks());
 
     load();
@@ -111,13 +112,22 @@ class ProfileCubit extends Cubit<ProfileState> {
   // ------------------------------------------------------
   Future<void> getBlocks() async {
     final current = state.blocksState;
-    if (current.isLoading || current.isLastPage || current.isLoadingMore) {
+    final user = await _accountRepository.userInfoStream.first;
+    final userId = user?.id;
+    if (current.isLoading ||
+        current.isLastPage ||
+        current.isLoadingMore ||
+        userId == null) {
       return;
     }
 
     emit(state.copyWith(blocksState: current.copyWith(isLoading: true)));
 
-    final result = await _quizRepository.getMyBlocks();
+    final result = await _quizRepository.getBocksByUserId(
+      userId: userId,
+      page: 1,
+      pageSize: _blocksPageSize,
+    );
 
     result.fold(
       (error) {
@@ -131,13 +141,64 @@ class ProfileCubit extends Cubit<ProfileState> {
           ),
         );
       },
-      (questions) {
+      (value) {
         emit(
           state.copyWith(
             blocksState: current.copyWith(
               isLoading: false,
-              blocks: questions..insert(0, MyBlockModel(id: -1)),
+              blocks: value.data..insert(0, BlockModel(id: -1)),
               error: null,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> getBlockByPage() async {
+    final current = state.blocksState;
+    final user = await _accountRepository.userInfoStream.first;
+    final userId = user?.id;
+    if (current.isLoading ||
+        current.isLastPage ||
+        current.isLoadingMore ||
+        userId == null) {
+      return;
+    }
+
+    emit(state.copyWith(blocksState: current.copyWith(isLoadingMore: true)));
+
+    final result = await _quizRepository.getBocksByUserId(
+      userId: userId,
+      page: current.next,
+      pageSize: _blocksPageSize,
+    );
+
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(
+          state.copyWith(
+            blocksState: state.blocksState.copyWith(
+              isLoadingMore: false,
+              error: error.message,
+            ),
+          ),
+        );
+      },
+      (value) {
+        final list = List.of(state.blocksState.blocks);
+        list.addAll(value.data);
+        emit(
+          state.copyWith(
+            blocksState: current.copyWith(
+              isLoadingMore: false,
+              blocks: list,
+              error: null,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage:
+                  value.data.length < _blocksPageSize || value.next == null,
             ),
           ),
         );
@@ -198,7 +259,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  Future<void> fetchQuestionsByPage() async {
+  Future<void> getQuestionsByPage() async {
     final user = await _accountRepository.userInfoStream.first;
     final userId = user?.id;
     final questionsState = state.questionsState;
@@ -253,7 +314,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
   }
-
 }
 
 abstract class UpdateListener {

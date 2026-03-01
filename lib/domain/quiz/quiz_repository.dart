@@ -32,8 +32,8 @@ abstract class QuizRepository {
     required AccessType accessType,
   });
 
-  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId(
-    int userId, {
+  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId({
+    required int userId,
     int? page,
     int? pageSize,
   });
@@ -79,4 +79,5 @@ abstract class QuizRepository {
     required Set<int> selectedAnswers,
     int? duration,
   });
+
 }

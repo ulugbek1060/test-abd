@@ -173,12 +173,16 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     if (userId == null) return;
     final blockState = state.blockState;
 
-    if (blockState.isLoading || blockState.isLoadingMore) return;
+    if (blockState.isLoading ||
+        blockState.isLoadingMore ||
+        blockState.isLastPage) {
+      return;
+    }
 
     emit(state.copyWith(blockState: blockState.copyWith(isLoading: true)));
 
     final result = await _quizRepository.getBocksByUserId(
-      userId,
+      userId: userId,
       pageSize: _blockPageSize,
       page: blockState.next,
     );
@@ -215,12 +219,16 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     if (userId == null) return;
     final blockState = state.blockState;
 
-    if (blockState.isLoading || blockState.isLoadingMore) return;
+    if (blockState.isLoading ||
+        blockState.isLoadingMore ||
+        blockState.isLastPage) {
+      return;
+    }
 
     emit(state.copyWith(blockState: blockState.copyWith(isLoadingMore: true)));
 
     final result = await _quizRepository.getBocksByUserId(
-      userId,
+      userId: userId,
       pageSize: blockState.next,
       page: _blockPageSize,
     );

@@ -242,5 +242,7 @@ class AccountSourceImpl implements AccountSource {
   }
 
   @override
-  Future<dynamic> search(String? query) async {}
+  Future<dynamic> search(String? query) async {
+
+  }
 }

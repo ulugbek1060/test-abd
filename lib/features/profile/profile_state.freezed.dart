@@ -450,7 +450,7 @@ mixin _$BlocksState {
   int get previous => throw _privateConstructorUsedError;
   int get next => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
-  List<MyBlockModel> get blocks => throw _privateConstructorUsedError;
+  List<BlockModel> get blocks => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BlocksStateCopyWith<BlocksState> get copyWith =>
@@ -470,7 +470,7 @@ abstract class $BlocksStateCopyWith<$Res> {
       int previous,
       int next,
       String? error,
-      List<MyBlockModel> blocks});
+      List<BlockModel> blocks});
 }
 
 /// @nodoc
@@ -522,7 +522,7 @@ class _$BlocksStateCopyWithImpl<$Res, $Val extends BlocksState>
       blocks: null == blocks
           ? _value.blocks
           : blocks // ignore: cast_nullable_to_non_nullable
-              as List<MyBlockModel>,
+              as List<BlockModel>,
     ) as $Val);
   }
 }
@@ -542,7 +542,7 @@ abstract class _$$BlocksStateImplCopyWith<$Res>
       int previous,
       int next,
       String? error,
-      List<MyBlockModel> blocks});
+      List<BlockModel> blocks});
 }
 
 /// @nodoc
@@ -592,7 +592,7 @@ class __$$BlocksStateImplCopyWithImpl<$Res>
       blocks: null == blocks
           ? _value._blocks
           : blocks // ignore: cast_nullable_to_non_nullable
-              as List<MyBlockModel>,
+              as List<BlockModel>,
     ));
   }
 }
@@ -607,7 +607,7 @@ class _$BlocksStateImpl implements _BlocksState {
       this.previous = 0,
       this.next = 1,
       this.error,
-      final List<MyBlockModel> blocks = const []})
+      final List<BlockModel> blocks = const []})
       : _blocks = blocks;
 
   @override
@@ -627,10 +627,10 @@ class _$BlocksStateImpl implements _BlocksState {
   final int next;
   @override
   final String? error;
-  final List<MyBlockModel> _blocks;
+  final List<BlockModel> _blocks;
   @override
   @JsonKey()
-  List<MyBlockModel> get blocks {
+  List<BlockModel> get blocks {
     if (_blocks is EqualUnmodifiableListView) return _blocks;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_blocks);
@@ -685,7 +685,7 @@ abstract class _BlocksState implements BlocksState {
       final int previous,
       final int next,
       final String? error,
-      final List<MyBlockModel> blocks}) = _$BlocksStateImpl;
+      final List<BlockModel> blocks}) = _$BlocksStateImpl;
 
   @override
   bool get isLoading;
@@ -700,7 +700,7 @@ abstract class _BlocksState implements BlocksState {
   @override
   String? get error;
   @override
-  List<MyBlockModel> get blocks;
+  List<BlockModel> get blocks;
   @override
   @JsonKey(ignore: true)
   _$$BlocksStateImplCopyWith<_$BlocksStateImpl> get copyWith =>

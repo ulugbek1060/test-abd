@@ -31,13 +31,13 @@ class _View extends StatefulWidget {
 }
 
 class _ViewState extends State<_View> {
-  final _scrollController = ScrollController();
+  late final ScrollController _scrollController;
   final _scrollThreshold = 200.0;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _scrollController = ScrollController()..addListener(_onScroll);
   }
 
   void _onScroll() {

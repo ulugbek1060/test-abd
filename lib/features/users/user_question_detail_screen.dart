@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/theme/app_colors.dart';
+import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
@@ -83,6 +85,9 @@ class _ViewState extends State<_View> {
                             state.question?.correctCount?.toString() ?? "",
                         wrongCount:
                             state.question?.wrongCount?.toString() ?? "",
+                        createdAt: state.question?.createdAt,
+                        difficultyPercentage:
+                            state.question?.difficultyPercentage,
                       ),
                       const SizedBox(height: 20),
 
@@ -99,45 +104,100 @@ class _ViewState extends State<_View> {
 class _Header extends StatelessWidget {
   final String correctCount;
   final String wrongCount;
+  final double? difficultyPercentage;
+  final DateTime? createdAt;
 
-  const _Header({required this.correctCount, required this.wrongCount});
+  const _Header({
+    super.key,
+    required this.correctCount,
+    required this.wrongCount,
+    this.difficultyPercentage,
+    this.createdAt,
+  });
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.blue.withAlpha(50),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          "${context.l10n.correctCount}: $correctCount",
-          style: TextStyle(
-            color: Colors.blue,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        // Correct
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.blue.withAlpha(50),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            "${context.l10n.correctCount}: $correctCount",
+            style: const TextStyle(
+              color: Colors.blue,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
-      const SizedBox(width: 8),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.red.withAlpha(50),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          "${context.l10n.wrongCount}: $wrongCount",
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+
+        // Wrong
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.red.withAlpha(50),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            "${context.l10n.wrongCount}: $wrongCount",
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
-    ],
-  );
+
+        // Difficulty % (modern colored badge)
+        if (difficultyPercentage != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: difficultyPercentage?.toDifficulty().color.withAlpha(50),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              difficultyPercentage?.toDifficulty().name.toUpperCase() ?? '',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: difficultyPercentage?.toDifficulty().color,
+              ),
+            ),
+          ),
+
+        // Created At
+        if (createdAt != null)
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  formatDate(createdAt),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
 }
 
 class _QuestionCard extends StatelessWidget {

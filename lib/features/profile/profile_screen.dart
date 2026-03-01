@@ -9,6 +9,7 @@ import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
 import 'package:testabd/l10n/l10n_extension.dart';
@@ -60,10 +61,9 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   void _onScroll() {
     if (_shouldLoadNextPage()) {
       if (pageTye == PageType.questions) {
-        context.read<ProfileCubit>().fetchQuestionsByPage();
-      }
-      if (pageTye == PageType.block) {
-        // context.read<ProfileCubit>().fetchMyBlocks();
+        context.read<ProfileCubit>().getQuestionsByPage();
+      } else if (pageTye == PageType.block) {
+        context.read<ProfileCubit>().getBlockByPage();
       }
     }
   }
@@ -92,7 +92,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
       buildWhen: (s1, s2) =>
-      s1.isLoading != s2.isLoading ||
+          s1.isLoading != s2.isLoading ||
           s1.myInfoModel != s2.myInfoModel ||
           s1.userConnectionsState != s2.userConnectionsState,
 
@@ -281,10 +281,10 @@ class _Header extends StatelessWidget {
                               level.getText(context),
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimary,
-                              ),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
                             ),
                           ),
                         ),
@@ -362,11 +362,11 @@ class _Header extends StatelessWidget {
   }
 
   Widget countItem(
-      BuildContext context,
-      String title,
-      String value,
-      VoidCallback onTap,
-      ) => GestureDetector(
+    BuildContext context,
+    String title,
+    String value,
+    VoidCallback onTap,
+  ) => GestureDetector(
     onTap: onTap,
     child: Column(
       children: [
@@ -576,9 +576,9 @@ class _BlocksSection extends StatelessWidget {
             childAspectRatio: 1.0,
           ),
           delegate: SliverChildBuilderDelegate((
-              BuildContext context,
-              int index,
-              ) {
+            BuildContext context,
+            int index,
+          ) {
             return Center(child: ProgressView());
           }, childCount: 4),
         ),
@@ -716,37 +716,13 @@ class _QuestionsSection extends StatelessWidget {
                 ),
               );
             }
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: index == 0 ? 16 : 0,
+            return _QuestionItem(
+              question: state.questions[index],
+              onTap: () => context.push(
+                AppRouter.myQuestionDetailWithArgs(state.questions[index].id),
               ),
-              child: ListTile(
-                onTap: () => context.push(
-                  AppRouter.myQuestionDetailWithArgs(state.questions[index].id),
-                ),
-                tileColor: Theme.of(context).colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                title: Text(
-                  state.questions[index].testTitle ?? '',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                subtitle: Text(
-                  state.questions[index].testDescription ?? '',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                trailing: _DifficultyChip(
-                  label: Difficulty.easy.name.toUpperCase(),
-                  color: Difficulty.easy.color,
-                ),
-              ),
+              isFirst: index == 0,
+              isLast: index == state.questions.length - 1,
             );
           },
           separatorBuilder: (_, __) => const SizedBox(height: 8),
@@ -758,6 +734,152 @@ class _QuestionsSection extends StatelessWidget {
             sliver: const SliverToBoxAdapter(child: ProgressView()),
           ),
       ],
+    );
+  }
+}
+
+class _QuestionItem extends StatelessWidget {
+  final QuestionModel question;
+  final VoidCallback onTap;
+  final bool isFirst;
+  final bool isLast;
+
+  const _QuestionItem({
+    super.key,
+    required this.question,
+    required this.onTap,
+    required this.isFirst,
+    required this.isLast,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(
+          bottom: isLast ? 16 : 8,
+          left: 16,
+          right: 16,
+          top: isFirst ? 16 : 0,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              Text(
+                question.testTitle ?? '',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  height: 1.3,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Description
+              Text(
+                question.testDescription ?? '',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 15, height: 1.4, color: Colors.grey),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Bottom Row (modern spread layout)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Difficulty Badge (colored, modern pill)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                      question.difficultyPercentage
+                          ?.toDifficulty()
+                          .color
+                          .withOpacity(0.12) ??
+                          Colors.transparent,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color:
+                        question.difficultyPercentage
+                            ?.toDifficulty()
+                            .color
+                            .withOpacity(0.3) ??
+                            Colors.transparent,
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      question.difficultyPercentage
+                          ?.toDifficulty()
+                          .name
+                          .toUpperCase() ??
+                          "",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: question.difficultyPercentage
+                            ?.toDifficulty()
+                            .color,
+                      ),
+                    ),
+                  ),
+
+                  // Attempts
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.repeat_rounded,
+                        size: 18,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${question.userAttemptCount} attempts',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Time
+                  Row(
+                    children: [
+                      Icon(Icons.schedule, size: 16, color: Colors.grey[400]),
+                      const SizedBox(width: 6),
+                      Text(
+                        formatDate(question.createdAt),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -809,10 +931,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context,
-      double shrinkOffset,
-      bool overlapsContent,
-      ) => Container(color: backgroundColor, child: _tabBar);
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) => Container(color: backgroundColor, child: _tabBar);
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
@@ -1089,7 +1211,6 @@ class _PerformanceItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-
           Row(
             children: [
               Container(

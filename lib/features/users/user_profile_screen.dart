@@ -11,6 +11,7 @@ import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/domain/books/entities/book_model.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/users/user_profile_cubit.dart';
 import 'package:testabd/features/users/user_profile_state.dart';
 import 'package:testabd/l10n/l10n_extension.dart';
@@ -60,6 +61,9 @@ class _View extends StatefulWidget {
 
 class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late final ScrollController _scrollController;
+  final _scrollThreshold = 200.0;
+
   late var pageTye = PageType.questions;
   late var _blockKey;
   late var _questionsKey;
@@ -72,6 +76,26 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
     _questionsKey = PageStorageKey('questionsSection');
     _booksKey = PageStorageKey('booksSection');
     _tabController = TabController(length: 3, vsync: this);
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_shouldLoadNextPage()) {
+      if (pageTye == PageType.questions) {
+        context.read<UserProfileCubit>().getQuestionsByPage();
+      } else if (pageTye == PageType.block) {
+        context.read<UserProfileCubit>().getBlocksByPage();
+      }
+    }
+  }
+
+  bool _shouldLoadNextPage() {
+    final state = context.read<UserProfileCubit>().state;
+    if (state.isLoading) return false;
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    return maxScroll - currentScroll <= _scrollThreshold;
   }
 
   @override
@@ -106,6 +130,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
             body: state.isLoading
                 ? ProgressView()
                 : CustomScrollView(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
                       /// Profile Header Section Profile image and following and followers
                       _Header(
@@ -589,48 +615,51 @@ class _BlocksSection extends StatelessWidget {
 
     /// loading state
     if (state.isLoading) {
-      return SliverPadding(
-        padding: const EdgeInsets.all(8),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            childAspectRatio: 1.0,
-          ),
-          delegate: SliverChildBuilderDelegate((
-            BuildContext context,
-            int index,
-          ) {
-            return Center(child: ProgressView());
-          }, childCount: 4),
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height,
+          child: ProgressView(),
         ),
       );
     }
 
     /// for active state
-    return SliverPadding(
-      padding: const EdgeInsets.all(8),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          childAspectRatio: 1.0,
-        ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final topic = state.blocks[index];
-          return QuestionCollectionCard(
-            title: topic.title ?? '',
-            description: topic.description ?? '',
-            questionCount: topic.totalQuestions ?? 0,
-            createdAt: topic.createdAt ?? DateTime.now(),
-            onTap: () => context.push(
-              AppRouter.userBlockDetailWithBlockId(topic.id ?? 0),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(8),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0,
+              childAspectRatio: 1.0,
             ),
-          );
-        }, childCount: state.blocks.length),
-      ),
+            delegate: SliverChildBuilderDelegate((
+              BuildContext context,
+              int index,
+            ) {
+              final topic = state.blocks[index];
+              return QuestionCollectionCard(
+                title: topic.title ?? '',
+                description: topic.description ?? '',
+                questionCount: topic.totalQuestions ?? 0,
+                createdAt: topic.createdAt ?? DateTime.now(),
+                onTap: () => context.push(
+                  AppRouter.userBlockDetailWithBlockId(topic.id ?? 0),
+                ),
+              );
+            }, childCount: state.blocks.length),
+          ),
+        ),
+
+        if (state.isLoadingMore)
+          SliverPadding(
+            padding: const EdgeInsets.all(16.0),
+            sliver: const SliverToBoxAdapter(child: ProgressView()),
+          ),
+      ],
     );
   }
 }
@@ -803,7 +832,7 @@ class _StatItem extends StatelessWidget {
 }
 
 // ------------------------------------------------------
-// Book section
+// Questions section
 // ------------------------------------------------------
 class _QuestionsSection extends StatelessWidget {
   final QuestionsState state;
@@ -837,43 +866,18 @@ class _QuestionsSection extends StatelessWidget {
       slivers: [
         SliverList.separated(
           itemCount: state.questions.length,
-          itemBuilder: (_, index) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: index == 0 ? 16 : 0,
+          itemBuilder: (_, index) => QuestionItem(
+            onTap: () => context.push(
+              AppRouter.userQuestionDetailWithBlockId(
+                state.questions[index].id,
               ),
-              child: ListTile(
-                onTap: () => context.push(
-                  AppRouter.userQuestionDetailWithBlockId(state.questions[index].id),
-                ),
-                tileColor: Theme.of(context).colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                title: Text(
-                  state.questions[index].testTitle ?? '',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                subtitle: Text(
-                  state.questions[index].testDescription ?? '',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                trailing: _DifficultyChip(
-                  label: Difficulty.easy.name.toUpperCase(),
-                  color: Difficulty.easy.color,
-                ),
-              ),
-            );
-          },
+            ),
+            question: state.questions[index],
+            isFirst: index == 0,
+            isLast: index == state.questions.length - 1,
+          ),
           separatorBuilder: (_, __) => const SizedBox(height: 8),
         ),
-
         if (state.isLoadingMore)
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
@@ -884,32 +888,31 @@ class _QuestionsSection extends StatelessWidget {
   }
 }
 
-class QuestionCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final DateTime? createdAt;
-  final int? correctAnswers;
-  final int? wrongAnswers;
-  final Difficulty difficulty;
-  final void Function()? onTap;
+class QuestionItem extends StatelessWidget {
+  final QuestionModel question;
+  final VoidCallback onTap;
+  final bool isFirst;
+  final bool isLast;
 
-  const QuestionCard({
+  const QuestionItem({
     super.key,
-    required this.title,
-    required this.description,
-    this.createdAt,
-    required this.correctAnswers,
-    required this.wrongAnswers,
-    required this.difficulty,
-    this.onTap,
+    required this.question,
+    required this.onTap,
+    required this.isFirst,
+    required this.isLast,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsets.only(
+          bottom: isLast ? 16 : 8,
+          left: 16,
+          right: 16,
+          top: isFirst ? 16 : 0,
+        ),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
@@ -919,61 +922,110 @@ class QuestionCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// Title row + difficulty
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  _DifficultyChip(
-                    label: difficulty.name.toUpperCase(),
-                    color: difficulty.color,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-
-              /// Description
+              // Title
               Text(
-                description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                  height: 1.4,
+                question.testTitle ?? '',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  height: 1.3,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 12),
 
-              /// Stats row
+              // Description
+              Text(
+                question.testDescription ?? '',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 15, height: 1.4, color: Colors.grey),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Bottom Row (modern spread layout)
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _QuestionStatItem(
-                    icon: Icons.check_circle_outline,
-                    value: correctAnswers,
-                    color: const Color(0xFF4CAF50),
+                  // Difficulty Badge (colored, modern pill)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          question.difficultyPercentage
+                              ?.toDifficulty()
+                              .color
+                              .withOpacity(0.12) ??
+                          Colors.transparent,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color:
+                            question.difficultyPercentage
+                                ?.toDifficulty()
+                                .color
+                                .withOpacity(0.3) ??
+                            Colors.transparent,
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      question.difficultyPercentage
+                              ?.toDifficulty()
+                              .name
+                              .toUpperCase() ??
+                          "",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: question.difficultyPercentage
+                            ?.toDifficulty()
+                            .color,
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 8),
-                  _QuestionStatItem(
-                    icon: Icons.cancel_outlined,
-                    value: wrongAnswers,
-                    color: const Color(0xFFF44336),
+
+                  // Attempts
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.repeat_rounded,
+                        size: 18,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${question.userAttemptCount} attempts',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Time
+                  Row(
+                    children: [
+                      Icon(Icons.schedule, size: 16, color: Colors.grey[400]),
+                      const SizedBox(width: 6),
+                      Text(
+                        formatDate(question.createdAt),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              _DateChip(date: formatDate(createdAt)),
             ],
           ),
         ),
