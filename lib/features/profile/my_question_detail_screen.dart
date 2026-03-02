@@ -137,7 +137,6 @@ class _ViewState extends State<_View> {
 //   );
 // }
 
-
 class _Header extends StatelessWidget {
   final String correctCount;
   final String wrongCount;
@@ -427,7 +426,6 @@ class _QuestionCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   e.answerText ?? "",
-                  // "klasdmklasmdakslndaksndjkasdnakjdnsakjdnaskjdnaskjdnaskjdnsakjdnsakjdnsakdnjkas",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

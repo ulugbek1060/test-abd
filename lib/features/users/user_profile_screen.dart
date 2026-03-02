@@ -641,7 +641,7 @@ class _BlocksSection extends StatelessWidget {
               int index,
             ) {
               final topic = state.blocks[index];
-              return QuestionCollectionCard(
+              return _BlockCard(
                 title: topic.title ?? '',
                 description: topic.description ?? '',
                 questionCount: topic.totalQuestions ?? 0,
@@ -664,14 +664,14 @@ class _BlocksSection extends StatelessWidget {
   }
 }
 
-class QuestionCollectionCard extends StatelessWidget {
+class _BlockCard extends StatelessWidget {
   final String title;
   final String description;
   final int questionCount;
   final DateTime createdAt;
   final VoidCallback onTap;
 
-  const QuestionCollectionCard({
+  const _BlockCard({
     super.key,
     required this.title,
     required this.description,
@@ -1029,102 +1029,6 @@ class QuestionItem extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _DifficultyChip extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _DifficultyChip({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.4)),
-      ),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: color,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-class _QuestionStatItem extends StatelessWidget {
-  final IconData icon;
-  final int? value;
-  final Color color;
-
-  const _QuestionStatItem({
-    required this.icon,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 6),
-          Text(
-            value?.toString() ?? '0',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DateChip extends StatelessWidget {
-  final String date;
-
-  const _DateChip({required this.date});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppColors.onSurfaceColor(context),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.schedule,
-            size: 14,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            date,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ],
       ),
     );
   }

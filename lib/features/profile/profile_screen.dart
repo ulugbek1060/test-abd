@@ -961,62 +961,6 @@ class _GridCard extends StatelessWidget {
   }
 }
 
-/// ---------- SUBHEADER ITEM ----------
-class _SubheaderItem extends StatelessWidget {
-  final Color backgroundColor;
-  final String title;
-  final String value;
-  final Widget leading;
-
-  const _SubheaderItem({
-    super.key,
-    required this.backgroundColor,
-    required this.title,
-    required this.value,
-    required this.leading,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              leading,
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// ----------- ITEMS -----------
 class _QuestionCard extends StatelessWidget {
   final String title;

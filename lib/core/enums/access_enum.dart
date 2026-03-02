@@ -24,4 +24,16 @@ extension AccessTypeX on AccessType {
         return Icons.lock_rounded;
     }
   }
+
+  String getName(BuildContext context){
+    // TODO get name of Visibility
+    switch (this) {
+      case AccessType.public:
+        return name;
+      case AccessType.unlisted:
+        return name;
+      case AccessType.private:
+        return name;
+    }
+  }
 }
