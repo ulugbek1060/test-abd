@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
@@ -26,129 +25,245 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<ReferralsCubit, ReferralsState>(
       builder: (context, state) {
         return Scaffold(
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
-            title: const Text("Referral Dasturi"),
+            title: const Text(
+              "Referral Dasturi",
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 21),
+            ),
             centerTitle: true,
           ),
           body: state.isLoading
               ? const ProgressView()
-              : CustomScrollView(
-                  slivers: [
-                    _HeaderText(),
-                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 140, 20, 160),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── PREMIUM GRADIENT HEADER ──
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFE1306C), Color(0xFF405DE6)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.card_giftcard_rounded,
+                              color: Colors.white,
+                              size: 42,
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Referral Dasturi",
+                                    style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      height: 1.1,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Do'stlaringizni taklif qiling va bonus oling!",
+                                    style: TextStyle(
+                                      fontSize: 16.5,
+                                      color: Colors.white.withOpacity(0.9),
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                    _StatsRow(),
-                    const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                      const SizedBox(height: 32),
 
-                    const _SectionTitle(
-                      title: "Taklif qilingan foydalanuvchilar",
-                    ),
-                    _ReferralHistoryList(state.referrals?.results ?? []),
-                  ],
+                      // ── STATS ROW ──
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _ModernStatCard(
+                              title: "Jami",
+                              value: (state.referrals?.results.length ?? 0)
+                                  .toString(),
+                              gradient: const [
+                                Color(0xFF3B82F6),
+                                Color(0xFF9333EA),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: _ModernStatCard(
+                              title: "Bu oy",
+                              value: (state.referrals?.results.length ?? 0)
+                                  .toString(),
+                              gradient: const [
+                                Color(0xFF22C55E),
+                                Color(0xFF16A34A),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // ── SECTION TITLE ──
+                      const _ModernLabel("Taklif qilingan foydalanuvchilar"),
+
+                      const SizedBox(height: 14),
+
+                      // ── REFERRAL LIST ──
+                      if ((state.referrals?.results ?? []).isEmpty)
+                        Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 60),
+                              Icon(
+                                Icons.people_outline_rounded,
+                                size: 80,
+                                color: Colors.grey.shade400,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                "Hali hech kimni taklif qilmadingiz",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: scheme.onSurfaceVariant,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        ...(state.referrals?.results ?? []).map(
+                          (user) => _ReferralItem(
+                            username: user.referred?.username ?? '',
+                            profileImage: user.referred?.profileImage ?? '',
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              // TODO: Copy referral link / Share
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Referral link nusxalandi! 🎉")),
+              );
+            },
+            label: const Text(
+              "Do'stni taklif qilish",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            ),
+            icon: const Icon(Icons.share_rounded, size: 26),
+            backgroundColor: scheme.primary,
+            foregroundColor: scheme.onPrimary,
+            elevation: 12,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
         );
       },
     );
   }
 }
 
-class _HeaderText extends StatelessWidget {
-  const _HeaderText();
+// ─────────────────────────────────────────────────────────────
+//                     MODERN LABEL
+// ─────────────────────────────────────────────────────────────
+class _ModernLabel extends StatelessWidget {
+  final String text;
+
+  const _ModernLabel(this.text);
 
   @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Referral Dasturi",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            SizedBox(height: 6),
-            Text(
-              "Do'stlaringizni taklif qiling va bonus oling!",
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Text(
+    text,
+    style: TextStyle(
+      fontSize: 15.5,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.3,
+      color: Theme.of(context).colorScheme.onSurface,
+    ),
+  );
 }
 
-class _StatsRow extends StatelessWidget {
-  const _StatsRow();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverToBoxAdapter(
-        child: Row(
-          children: const [
-            Expanded(
-              child: _StatCard(
-                title: "Jami",
-                value: "0",
-                colors: [Color(0xFF3B82F6), Color(0xFF9333EA)],
-              ),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: _StatCard(
-                title: "Bu oy",
-                value: "0",
-                colors: [Color(0xFF22C55E), Color(0xFF16A34A)],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────
+//                     MODERN STAT CARD
+// ─────────────────────────────────────────────────────────────
+class _ModernStatCard extends StatelessWidget {
   final String title;
   final String value;
-  final List<Color> colors;
+  final List<Color> gradient;
 
-  const _StatCard({
+  const _ModernStatCard({
     required this.title,
     required this.value,
-    required this.colors,
+    required this.gradient,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90,
-      padding: const EdgeInsets.all(16),
+      height: 108,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(colors: colors),
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          colors: gradient,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(color: Colors.white70)),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const Spacer(),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w800,
               color: Colors.white,
+              height: 1,
             ),
           ),
         ],
@@ -157,94 +272,74 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  final String title;
-
-  const _SectionTitle({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverToBoxAdapter(
-        child: Text(
-          title,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ReferralHistoryList extends StatelessWidget {
-  const _ReferralHistoryList(this.list);
-
-  final List<ReferralResult> list;
-
-  @override
-  Widget build(BuildContext context) {
-    if (list.isEmpty) {
-      return SliverFillRemaining(
-        child: Center(
-          child: Text(
-            "No referrals",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverList.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          final user = list[index];
-          return _Item(
-            username: user.referred?.username ?? '',
-            profileImage: user.referred?.profileImage ?? '',
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _Item extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────
+//                     MODERN REFERRAL ITEM
+// ─────────────────────────────────────────────────────────────
+class _ReferralItem extends StatelessWidget {
   final String username;
   final String profileImage;
 
-  const _Item({super.key, required this.username, required this.profileImage});
+  const _ReferralItem({required this.username, required this.profileImage});
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.onSurfaceColor(context),
-        borderRadius: BorderRadius.circular(14),
+        color: scheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
-      child: ListTile(
-        leading: CachedNetworkImage(
-          width: 36,
-          height: 36,
-          imageUrl: profileImage,
-          fit: BoxFit.cover,
-          placeholder: (_, __) =>
-              Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
-          errorWidget: (_, __, ___) =>
-              Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
-        ),
-        title: Text(
-          username,
-          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-        ),
+      child: Row(
+        children: [
+          ClipOval(
+            child: CachedNetworkImage(
+              width: 56,
+              height: 56,
+              imageUrl: profileImage,
+              fit: BoxFit.cover,
+              placeholder: (_, __) =>
+                  Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+              errorWidget: (_, __, ___) =>
+                  Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              username,
+              style: TextStyle(
+                fontSize: 17.5,
+                fontWeight: FontWeight.w600,
+                color: scheme.onSurface,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: scheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: const Text(
+              "+100",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFFE1306C),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -74,21 +74,40 @@ abstract class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppDarkColors.inputFill,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      // contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 18,
+      ),
+      // border: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(6),
+      //   borderSide: BorderSide(color: AppDarkColors.outline),
+      // ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(color: AppDarkColors.outline),
+        borderRadius: BorderRadius.circular(22),
+        borderSide: BorderSide.none,
       ),
+      // enabledBorder: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(6),
+      //   borderSide: BorderSide(color: Colors.transparent),
+      // ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(22),
+        borderSide: BorderSide.none,
       ),
+      // focusedBorder: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(6),
+      //   borderSide: BorderSide(
+      //     // color: AppDarkColors.inputFocusedBorder,
+      //     color: Colors.transparent,
+      //     width: 2,
+      //   ),
+      // ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(22),
         borderSide: BorderSide(
-          // color: AppDarkColors.inputFocusedBorder,
-          color: Colors.transparent,
-          width: 2,
+          color: AppDarkColors.primary, // ← Primary from scheme
+          width: 2.5,
         ),
       ),
       errorBorder: OutlineInputBorder(
@@ -99,7 +118,7 @@ abstract class AppTheme {
         borderRadius: BorderRadius.circular(6),
         borderSide: BorderSide(color: AppDarkColors.error, width: 2),
       ),
-      hintStyle: const TextStyle(color: AppDarkColors.textSecondary),
+      hintStyle: const TextStyle(color: Colors.grey),
     ),
 
     // --------------------------------------------------
@@ -189,21 +208,40 @@ abstract class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColorsLight.inputFill,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      // contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 18,
+      ),
+      // border: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(6),
+      //   borderSide: BorderSide(color: AppDarkColors.outline),
+      // ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(color: AppColorsLight.outline),
+        borderRadius: BorderRadius.circular(22),
+        borderSide: BorderSide.none,
       ),
+      // enabledBorder: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(6),
+      //   borderSide: BorderSide(color: Colors.transparent),
+      // ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
-        borderSide: BorderSide(color: AppColorsLight.outline),
+        borderRadius: BorderRadius.circular(22),
+        borderSide: BorderSide.none,
       ),
+      // focusedBorder: OutlineInputBorder(
+      //   borderRadius: BorderRadius.circular(6),
+      //   borderSide: BorderSide(
+      //     // color: AppDarkColors.inputFocusedBorder,
+      //     color: Colors.transparent,
+      //     width: 2,
+      //   ),
+      // ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(22),
         borderSide: BorderSide(
-          color: AppColorsLight.inputFocusedBorder,
-          // color: AppColorsLight.inputFocusedBorder,
-          width: 2,
+          color: AppColorsLight.primary, // ← Primary from scheme
+          width: 2.5,
         ),
       ),
       errorBorder: OutlineInputBorder(
@@ -214,7 +252,7 @@ abstract class AppTheme {
         borderRadius: BorderRadius.circular(6),
         borderSide: BorderSide(color: AppColorsLight.error, width: 2),
       ),
-      hintStyle: const TextStyle(color: AppColorsLight.textSecondary),
+      hintStyle: const TextStyle(color: Colors.grey),
     ),
 
     // --------------------------------------------------

@@ -16,14 +16,25 @@ class RegionalSettingsScreen extends StatelessWidget {
   );
 }
 
-class _View extends StatelessWidget {
+class _View extends StatefulWidget {
   const _View();
 
   @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+  @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Joylashuv"),
+        title: const Text(
+          "Joylashuv",
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 21),
+        ),
         centerTitle: true,
         actions: [
           BlocBuilder<RegionalSettingsCubit, RegionalSettingsState>(
@@ -31,106 +42,208 @@ class _View extends StatelessWidget {
               onPressed: context
                   .read<RegionalSettingsCubit>()
                   .toggleEditableMode,
-              icon: state.isEditable ? Icon(Icons.close) : Icon(Icons.edit),
+              icon: Icon(
+                state.isEditable ? Icons.close_rounded : Icons.edit_rounded,
+                size: 26,
+              ),
             ),
           ),
         ],
       ),
-
-      bottomNavigationBar:
-          BlocBuilder<RegionalSettingsCubit, RegionalSettingsState>(
-            builder: (context, state) {
-              if (!state.isEditable) return SizedBox.shrink();
-
-              return SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SizedBox(
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: (){
-                        context.read<RegionalSettingsCubit>().save();
-                        context.read<RegionalSettingsCubit>().toggleEditableMode();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        "O‘zgarishlarni saqlash",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-
       body: BlocBuilder<RegionalSettingsCubit, RegionalSettingsState>(
         buildWhen: (s1, s2) => s1.isLoading != s2.isLoading,
         builder: (context, state) {
           return RefreshIndicator(
             onRefresh: context.read<RegionalSettingsCubit>().refresh,
             child: state.isLoading
-                ? ProgressView()
-                : ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      const _Header(),
+                ? const ProgressView()
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 140, 20, 160),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── PREMIUM GRADIENT HEADER ──
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFE1306C), Color(0xFF405DE6)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on_rounded,
+                                color: Colors.white,
+                                size: 36,
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Joylashuv",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      "O‘zingizning joylashuvingizni tanlang",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white.withOpacity(0.85),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
 
-                      // spacer
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 32),
 
-                      CountriesSection(),
+                        CountriesSection(),
 
-                      RegionSection(),
+                        const SizedBox(height: 24),
+                        RegionSection(),
 
-                      DistrictsSection(),
+                        const SizedBox(height: 24),
+                        DistrictsSection(),
 
-                      SettlementSection(),
-                    ],
+                        const SizedBox(height: 24),
+                        SettlementSection(),
+                      ],
+                    ),
                   ),
           );
         },
       ),
+      floatingActionButton:
+          BlocBuilder<RegionalSettingsCubit, RegionalSettingsState>(
+            builder: (context, state) => state.isEditable
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      context.read<RegionalSettingsCubit>().save();
+                      context
+                          .read<RegionalSettingsCubit>()
+                          .toggleEditableMode();
+                    },
+                    label: const Text(
+                      "O‘zgarishlarni saqlash",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    icon: const Icon(Icons.check_rounded, size: 28),
+                    backgroundColor: scheme.primary,
+                    foregroundColor: scheme.onPrimary,
+                    elevation: 12,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  )
+                : SizedBox.shrink(),
+          ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header();
+// ─────────────────────────────────────────────────────────────
+//                     MODERN DROPDOWN (replaces old _DropdownField)
+// ─────────────────────────────────────────────────────────────
+class _ModernDropdown extends StatelessWidget {
+  final String label;
+  final int? value;
+  final String hint;
+  final bool enabled;
+  final bool isLoading;
+  final List<DropdownItem> items;
+  final ValueChanged<int?> onChanged;
+
+  const _ModernDropdown({
+    required this.label,
+    required this.hint,
+    required this.items,
+    required this.onChanged,
+    this.value,
+    this.enabled = true,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Joylashuv",
+          label,
           style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 15.5,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+            color: Colors.grey,
           ),
         ),
-
-        SizedBox(height: 6),
-
-        Text(
-          "O‘zingizning joylashuvingizni tanlang",
-          style: TextStyle(color: Colors.grey),
+        const SizedBox(height: 10),
+        DropdownButtonFormField<int>(
+          value: value,
+          hint: Text(hint, style: const TextStyle(color: Colors.grey)),
+          onChanged: enabled ? onChanged : null,
+          dropdownColor: scheme.surface,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 28),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: scheme.surface,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 18,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(22),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(22),
+              borderSide: BorderSide(color: scheme.primary, width: 2.5),
+            ),
+          ),
+          items: items
+              .map(
+                (e) => DropdownMenuItem<int>(
+                  value: e.id,
+                  child: Text(
+                    e.name,
+                    style: TextStyle(fontSize: 16.5, color: scheme.onSurface),
+                  ),
+                ),
+              )
+              .toList(),
         ),
+        if (isLoading)
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: ProgressView(),
+          ),
       ],
     );
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+//                     SECTIONS (updated to use modern dropdown)
+// ─────────────────────────────────────────────────────────────
 class CountriesSection extends StatelessWidget {
   const CountriesSection({super.key});
 
@@ -140,14 +253,14 @@ class CountriesSection extends StatelessWidget {
       buildWhen: (s1, s2) =>
           s1.countries != s2.countries || s1.isEditable != s2.isEditable,
       builder: (context, state) {
-        final countriesState = state.countries;
-        return _DropdownField(
+        final s = state.countries;
+        return _ModernDropdown(
           label: "Davlat",
           hint: "Davlatni tanlang",
           enabled: state.isEditable,
-          value: countriesState.selected?.id,
-          items: countriesState.countries
-              .map((e) => DropdownItem(name: e.name ?? '', id: e.id))
+          value: s.selected?.id,
+          items: s.countries
+              .map((e) => DropdownItem(id: e.id, name: e.name ?? ''))
               .toList(),
           onChanged: context.read<RegionalSettingsCubit>().selectCountry,
         );
@@ -165,15 +278,15 @@ class RegionSection extends StatelessWidget {
       buildWhen: (s1, s2) =>
           s1.regions != s2.regions || s1.isEditable != s2.isEditable,
       builder: (context, state) {
-        final regionState = state.regions;
-        return _DropdownField(
+        final s = state.regions;
+        return _ModernDropdown(
           label: "Region",
           hint: "Regionni tanlang",
           enabled: state.isEditable,
-          isLoading: regionState.isLoading,
-          value: regionState.selected?.id,
-          items: regionState.regions
-              .map((e) => DropdownItem(name: e.name ?? '', id: e.id))
+          value: s.selected?.id,
+          isLoading: s.isLoading,
+          items: s.regions
+              .map((e) => DropdownItem(id: e.id, name: e.name ?? ''))
               .toList(),
           onChanged: context.read<RegionalSettingsCubit>().selectRegion,
         );
@@ -191,15 +304,15 @@ class DistrictsSection extends StatelessWidget {
       buildWhen: (s1, s2) =>
           s1.districts != s2.districts || s1.isEditable != s2.isEditable,
       builder: (context, state) {
-        final districtState = state.districts;
-        return _DropdownField(
+        final s = state.districts;
+        return _ModernDropdown(
           label: "District",
           hint: "Districtni tanlang",
           enabled: state.isEditable,
-          value: districtState.selected?.id,
-          isLoading: districtState.isLoading,
-          items: districtState.districts
-              .map((e) => DropdownItem(name: e.name ?? '', id: e.id))
+          value: s.selected?.id,
+          isLoading: s.isLoading,
+          items: s.districts
+              .map((e) => DropdownItem(id: e.id, name: e.name ?? ''))
               .toList(),
           onChanged: context.read<RegionalSettingsCubit>().selectDistrict,
         );
@@ -217,15 +330,15 @@ class SettlementSection extends StatelessWidget {
       buildWhen: (s1, s2) =>
           s1.settlement != s2.settlement || s1.isEditable != s2.isEditable,
       builder: (context, state) {
-        final settlementState = state.settlement;
-        return _DropdownField(
+        final s = state.settlement;
+        return _ModernDropdown(
           label: "Settlement",
           hint: "Settlementni tanlang",
           enabled: state.isEditable,
-          value: settlementState.selected?.id,
-          isLoading: settlementState.isLoading,
-          items: settlementState.settlements
-              .map((e) => DropdownItem(name: e.name ?? '', id: e.id))
+          value: s.selected?.id,
+          isLoading: s.isLoading,
+          items: s.settlements
+              .map((e) => DropdownItem(id: e.id, name: e.name ?? ''))
               .toList(),
           onChanged: context.read<RegionalSettingsCubit>().selectSettlement,
         );
@@ -239,80 +352,4 @@ class DropdownItem {
   final String name;
 
   DropdownItem({required this.id, required this.name});
-}
-
-class _DropdownField extends StatelessWidget {
-  final String label;
-  final int? value;
-  final String? hint;
-  final bool enabled;
-  final bool isLoading;
-  final List<DropdownItem> items;
-  final ValueChanged<int?> onChanged;
-
-  const _DropdownField({
-    required this.label,
-    required this.items,
-    required this.onChanged,
-    this.value,
-    this.isLoading = false,
-    this.hint,
-    this.enabled = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: TextStyle(color: scheme.onSurface)),
-          const SizedBox(height: 8),
-
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<int>(
-                    initialValue: value,
-                    hint: hint != null ? Text(hint!) : null,
-                    onChanged: enabled ? onChanged : null,
-                    dropdownColor: scheme.surface,
-                    items: items
-                        .map(
-                          (e) => DropdownMenuItem<int>(
-                            value: e.id,
-                            child: Text(
-                              e.name,
-                              style: TextStyle(color: scheme.onSurface),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    decoration: InputDecoration(
-                      filled: true,
-                      enabled: enabled,
-                      fillColor: scheme.surfaceVariant,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-
-                if (isLoading) const SizedBox(width: 8),
-
-                if (isLoading) ProgressView(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
