@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_icons.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
@@ -12,7 +11,6 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/account/entities/leaderboard_model.dart';
 import 'package:testabd/features/home/leaderboard_cubit.dart';
 import 'package:testabd/features/home/leaderboard_state.dart';
-import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
 class LeaderboardScreen extends StatelessWidget {
@@ -20,8 +18,8 @@ class LeaderboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => locator<LeaderboardCubit>()..loadLeaderboard(),
-    child: _View(),
+    create: (_) => locator<LeaderboardCubit>()..getTopUsers(),
+    child: const _View(),
   );
 }
 
@@ -33,30 +31,14 @@ class _View extends StatefulWidget {
 }
 
 class _ViewState extends State<_View> {
-  final _scrollController = ScrollController();
+  late final ScrollController _scrollController;
+  double _scrollOffset = 0.0;
   final _scrollThreshold = 200.0;
 
   @override
   void initState() {
+    _scrollController = ScrollController()..addListener(_onScroll);
     super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_shouldLoadNextPage()) {
-      context.read<LeaderboardCubit>().loadLeaderboard();
-    }
-  }
-
-  bool _shouldLoadNextPage() {
-    final state = context.read<LeaderboardCubit>().state;
-    if (state.isLoading || state.isLastPage || state.isLoadingMore) {
-      return false;
-    }
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.position.pixels;
-    return maxScroll - currentScroll <= _scrollThreshold;
   }
 
   @override
@@ -65,54 +47,120 @@ class _ViewState extends State<_View> {
     super.dispose();
   }
 
+  void _onScroll() {
+    final offset = _scrollController.offset;
+    if ((offset - _scrollOffset).abs() > 8) {
+      setState(() => _scrollOffset = offset);
+    }
+    if (_shouldLoadNextPage()) {
+      context.read<LeaderboardCubit>().getTopUsersByPage();
+    }
+  }
+
+  bool _shouldLoadNextPage() {
+    final state = context.read<LeaderboardCubit>().state;
+    if (state.isLoading || state.isLastPage || state.isLastPage) {
+      return false;
+    }
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    return maxScroll - currentScroll <= _scrollThreshold;
+  }
+
+  Color _getAppBarBackground() {
+    if (!_scrollController.hasClients) return Colors.transparent;
+    final opacity = (_scrollOffset / 160).clamp(0.0, 1.0);
+    return Theme.of(context).scaffoldBackgroundColor.withOpacity(opacity);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: context.read<LeaderboardCubit>().refresh,
-      child: Scaffold(
-        body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            /// appbar
-            _LeaderboardAppBar(),
+    final scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: _getAppBarBackground(),
+        elevation: _scrollOffset > 80 ? 4 : 0,
+        foregroundColor: _scrollOffset > 120 ? scheme.onSurface : Colors.white,
+        title: const Text(
+          "Leaderboard",
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 21),
+        ),
+        centerTitle: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: context.read<LeaderboardCubit>().refresh,
+        child: BlocBuilder<LeaderboardCubit, LeaderboardState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                // Gradient Header
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 110, 20, 20),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFFE1306C), Color(0xFF405DE6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.emoji_events_rounded,
+                          color: Colors.white,
+                          size: 62,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Top Players",
+                          style: TextStyle(
+                            fontSize: 27,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          "This week's champions",
+                          style: TextStyle(
+                            fontSize: 16.5,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
-            /// top 3 podium
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              sliver: _TopThreeSection(),
-            ),
+                // Top 3 Podium
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  sliver: _TopThreeSection(),
+                ),
 
-            /// leaderboard
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              sliver: _LeaderboardList(),
-            ),
-          ],
+                // Compact Leaderboard List
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: _LeaderboardList(state: state),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 80)),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 }
 
-/* ---------------- APP BAR ---------------- */
-class _LeaderboardAppBar extends StatelessWidget {
-  const _LeaderboardAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      pinned: true,
-      elevation: 0,
-      centerTitle: true,
-      title: const Text(
-        'Leaderboard',
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-}
-
-/* ---------------- TOP 3 PODIUM ---------------- */
+// ─────────────────────────────────────────────────────────────
+//                     TOP 3 PODIUM
+// ─────────────────────────────────────────────────────────────
 class _TopThreeSection extends StatelessWidget {
   const _TopThreeSection();
 
@@ -230,147 +278,132 @@ class TopUser extends StatelessWidget {
   }
 }
 
-/* ---------------- LEADERBOARD LIST ---------------- */
+// ─────────────────────────────────────────────────────────────
+//                     COMPACT LEADERBOARD TILE (now much smaller)
+// ─────────────────────────────────────────────────────────────
 class _LeaderboardList extends StatelessWidget {
-  const _LeaderboardList();
+  final LeaderboardState state;
+
+  const _LeaderboardList({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<LeaderboardCubit>();
-    return BlocBuilder<LeaderboardCubit, LeaderboardState>(
-      builder: (context, state) {
-        // global loading
-        if (state.isLoading) {
-          return SliverFillRemaining(child: Center(child: ProgressView()));
-        }
+    if (state.isLoading) {
+      return const SliverFillRemaining(child: Center(child: ProgressView()));
+    }
 
-        // actual list
-        return SliverMainAxisGroup(
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final item = state.leaderboard[index];
-                return _ListTile(
-                  user: item,
-                  onTap: () => context.push(
-                    AppRouter.userProfileWithUsername(item.username),
-                  ),
-                  onFollowTap: () => cubit.followUser(item.id),
-                );
-              }, childCount: state.leaderboard.length),
+    return SliverList.separated(
+      itemCount: state.leaderboard.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        return _CompactLeaderboardTile(
+          user: state.leaderboard[index],
+          onTap: () => context.push(
+            AppRouter.userProfileWithUsername(
+              state.leaderboard[index].username,
             ),
-
-            // load more loading
-            if (state.isLoadingMore)
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: 16,
-                    left: 16,
-                    right: 16,
-                    bottom: MediaQuery.of(context).viewPadding.bottom + 16,
-                  ),
-                  height: 56,
-                  child: Center(child: ProgressView()),
-                ),
-              ),
-          ],
+          ),
         );
       },
     );
   }
 }
 
-class _ListTile extends StatelessWidget {
+class _CompactLeaderboardTile extends StatelessWidget {
   final LeaderboardUser user;
   final VoidCallback onTap;
-  final VoidCallback onFollowTap;
 
-  const _ListTile({
-    required this.user,
-    required this.onTap,
-    required this.onFollowTap,
-  });
+  const _CompactLeaderboardTile({required this.user, required this.onTap});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    child: Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        // very compact
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          color: scheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            Text(
-              user.todayRank.toString(),
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(width: 12),
-            ClipOval(
-              child: CachedNetworkImage(
-                width: 36,
-                height: 36,
-                imageUrl: user.profileImage ?? '',
-                fit: BoxFit.cover,
-                placeholder: (_, __) =>
-                    Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
-                errorWidget: (_, __, ___) =>
-                    Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+            // Rank
+            Container(
+              width: 26,
+              height: 26,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: scheme.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                user.todayRank.toString(),
+                style: TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: scheme.primary,
+                ),
               ),
             ),
+
             const SizedBox(width: 12),
+
+            // Avatar (smaller)
+            ClipOval(
+              child: CachedNetworkImage(
+                width: 42,
+                height: 42,
+                imageUrl: user.profileImage ?? '',
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Image.asset(AppImages.defaultAvatar),
+                errorWidget: (_, __, ___) =>
+                    Image.asset(AppImages.defaultAvatar),
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
             Expanded(
               child: Text(
                 user.username,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: scheme.onSurface,
                 ),
-                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            SizedBox(width: 12, height: 12, child: Image.asset(AppIcons.coin)),
-            const SizedBox(width: 4),
-            Text(
-              user.coins.toString(),
-              style: const TextStyle(
-                color: Colors.amber,
-                fontWeight: FontWeight.w600,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              height: 32,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: user.isFollowing
-                      ? AppColors.onSurfaceColor(context)
-                      : Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+
+            // Coins (compact)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(AppIcons.coin, width: 18),
+                const SizedBox(width: 4),
+                Text(
+                  user.coins.toString(),
+                  style: const TextStyle(
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.amber,
                   ),
                 ),
-                onPressed: user.isLoading ? null : onFollowTap,
-                child: user.isLoading
-                    ? const ProgressView()
-                    : Text(
-                        user.isFollowing
-                            ? context.l10n.followed
-                            : context.l10n.follow,
-                        style: TextStyle(color: Colors.white),
-                      ),
-              ),
+              ],
             ),
           ],
         ),
       ),
-    ),
-  );
+    );
+  }
 }

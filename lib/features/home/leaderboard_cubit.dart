@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/core/utils/follow_listeners.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/main.dart';
@@ -13,24 +15,20 @@ class LeaderboardCubit extends Cubit<LeaderboardState> {
   final LeaderboardRepository _leaderboardRepository;
   final AccountRepository _accountRepository;
   final ConnectionFollowEventListener _followListener;
+  final AppMessageHandler _messageHandler;
   late StreamSubscription _subscription;
   static const int _pageSize = 20;
 
   LeaderboardCubit(
     this._accountRepository,
     this._leaderboardRepository,
+    this._messageHandler,
     @Named.from(LeaderboardFollowListener) this._followListener,
   ) : super(LeaderboardState()) {
     /// listen the changes from user_profile_cubit
     _subscription = _followListener.followStream.listen((event) {
       final newList = state.followUser(event.userId, event.isFollowing);
       emit(state.copyWith(leaderboard: newList));
-    });
-
-
-    /// listen the leader bord websocket
-    _leaderboardRepository.openWebSocket((data){
-      logger.d(data);
     });
   }
 
@@ -41,36 +39,38 @@ class LeaderboardCubit extends Cubit<LeaderboardState> {
     return super.close();
   }
 
-  Future<void> refresh() async {
-    emit(LeaderboardState()..copyWith(isLoading: true));
+  Future<void> refresh() async => getTopUsers();
+
+  Future<void> getTopUsers() async {
+    if (state.isLoading || state.isLoadingMore || state.isLastPage) return;
+
+    emit(state.copyWith(isLoading: true));
+
     final result = await _accountRepository.getLeaderboard(1, _pageSize);
     result.fold(
       (error) {
-        // TODO show error silently
+        _messageHandler.handleDialog(error);
         emit(state.copyWith(error: error.message, isLoading: false));
       },
       (value) {
         emit(
           state.copyWith(
+            error: null,
             isLoading: false,
-            nextPage: 2,
-            previousPage: 1,
-            isLastPage: value.next == null,
-            leaderboard: value.users,
+            leaderboard: value.data,
+            nextPage: value.nextPage(),
+            previousPage: value.previousPage(),
+            isLastPage: value.next == null || _pageSize > value.data.length,
           ),
         );
       },
     );
   }
 
-  Future<void> loadLeaderboard() async {
-    if (state.isLoading || state.isLastPage || state.isLoadingMore) return;
+  Future<void> getTopUsersByPage() async {
+    if (state.isLoading || state.isLoadingMore || state.isLastPage) return;
 
-    if (state.leaderboard.isEmpty) {
-      emit(state.copyWith(isLoading: true));
-    } else {
-      emit(state.copyWith(isLoadingMore: true));
-    }
+    emit(state.copyWith(isLoadingMore: true));
 
     final result = await _accountRepository.getLeaderboard(
       state.nextPage,
@@ -79,27 +79,20 @@ class LeaderboardCubit extends Cubit<LeaderboardState> {
 
     result.fold(
       (error) {
-        // TODO show error silently
-        emit(
-          state.copyWith(
-            error: error.message,
-            isLoading: false,
-            isLoadingMore: false,
-          ),
-        );
+        _messageHandler.handleDialog(error);
+        emit(state.copyWith(error: error.message, isLoadingMore: false));
       },
       (value) {
+        final list = List.of(state.leaderboard);
+        list.addAll(value.data);
         emit(
           state.copyWith(
-            isLoading: false,
+            error: null,
             isLoadingMore: false,
-            nextPage: state.nextPage + 1,
-            previousPage: state.nextPage,
-            isLastPage:
-                value.next == null ||
-                value.users.isEmpty ||
-                value.users.length < _pageSize,
-            leaderboard: [...state.leaderboard, ...value.users],
+            leaderboard: list,
+            nextPage: value.nextPage(),
+            previousPage: value.previousPage(),
+            isLastPage: value.next == null || _pageSize > value.data.length,
           ),
         );
       },

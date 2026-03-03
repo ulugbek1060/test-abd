@@ -117,6 +117,26 @@ class LeaderboardUser extends Equatable {
     );
   }
 
+  static LeaderboardUser fromResponse(LeaderboardUserResponse response) {
+    return LeaderboardUser(
+      id: response.id ?? 0,
+      username: response.username ?? '',
+      profileImage: response.profile_image,
+      createdTests: response.created_tests ?? 0,
+      coins: response.coins ?? 0,
+      todayRank: response.today_rank ?? 0,
+      yesterdayRank: response.yesterday_rank ?? 0,
+      rankChange: response.rank_change,
+      rankChangeValue: response.rank_change_value ?? 0,
+      testsSolved: response.tests_solved ?? 0,
+      avgTime: response.avg_time ?? 0.0,
+      followers: response.followers ?? 0,
+      following: response.following ?? 0,
+      isFollowing: response.is_following ?? false,
+      isLoading: false,
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

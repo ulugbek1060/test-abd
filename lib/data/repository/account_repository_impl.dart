@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/data/local_source/my_info_hive_service.dart';
 import 'package:testabd/data/remote_source/account/account_source.dart';
 import 'package:testabd/data/remote_source/account/models/change_pswd_request.dart';
@@ -118,13 +119,19 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<AppException, LeaderboardModel>> getLeaderboard(
+  Future<Either<AppException, PagedData<LeaderboardUser>>> getLeaderboard(
     int page,
     int pageSize,
   ) async {
     try {
       final result = await _leaderboardSource.getLeaderboard(page, pageSize);
-      return Right(LeaderboardModel.fromResponse(result));
+      final data = PagedData(
+        data: result.results.map(LeaderboardUser.fromResponse).toList(),
+        next: result.next,
+        previous: result.previous,
+        count: result.count,
+      );
+      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

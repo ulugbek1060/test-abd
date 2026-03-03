@@ -223,6 +223,13 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i877.AppMessageHandler>(),
           gh<_i156.QuizRepository>(),
         ));
+    gh.factory<_i279.LeaderboardCubit>(() => _i279.LeaderboardCubit(
+          gh<_i575.AccountRepository>(),
+          gh<_i575.LeaderboardRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'LeaderboardFollowListener'),
+        ));
     gh.factory<_i570.ProfileConnectionCubit>(() => _i570.ProfileConnectionCubit(
           gh<_i575.AccountRepository>(),
           gh<_i244.ConnectionFollowEventListener>(
@@ -235,12 +242,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i877.AppMessageHandler>(),
           gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
           gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
-        ));
-    gh.factory<_i279.LeaderboardCubit>(() => _i279.LeaderboardCubit(
-          gh<_i575.AccountRepository>(),
-          gh<_i575.LeaderboardRepository>(),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'LeaderboardFollowListener'),
         ));
     gh.factoryParam<_i297.UserConnectionCubit, int, dynamic>((
       userId,
