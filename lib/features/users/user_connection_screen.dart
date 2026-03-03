@@ -76,7 +76,6 @@ class _ViewState extends State<_View> {
             if (state.isLoading) {
               return Center(child: ProgressView());
             }
-
             return TabBarView(
               children: [
                 _ConnectionsList(

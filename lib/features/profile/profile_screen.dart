@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testabd/core/enums/connections_enum.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
+import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
@@ -19,12 +20,10 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => locator<ProfileCubit>(),
-      child: const _View(),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider(
+    create: (context) => locator<ProfileCubit>(),
+    child: const _View(),
+  );
 }
 
 enum PageType { questions, block, books }
@@ -38,157 +37,197 @@ class _View extends StatefulWidget {
 
 class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
   late ScrollController _scrollController;
-  final _scrollThreshold = 200.0;
+  double _scrollOffset = 0.0;
 
-  late var pageTye;
-  late var _blockKey;
-  late var _questionsKey;
-  late var _booksKey;
+  PageType _currentPage = PageType.questions;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
-    pageTye = PageType.questions;
-    _blockKey = PageStorageKey('blocksSection');
-    _questionsKey = PageStorageKey('questionsSection');
-    _booksKey = PageStorageKey('booksSection');
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
   }
 
   void _onScroll() {
+    final offset = _scrollController.offset;
+    if ((offset - _scrollOffset).abs() > 8) {
+      setState(() => _scrollOffset = offset);
+    }
+
+    // Infinite scroll
     if (_shouldLoadNextPage()) {
-      if (pageTye == PageType.questions) {
-        context.read<ProfileCubit>().getQuestionsByPage();
-      } else if (pageTye == PageType.block) {
-        context.read<ProfileCubit>().getBlockByPage();
-      }
+      final cubit = context.read<ProfileCubit>();
+      if (_currentPage == PageType.questions) cubit.getQuestionsByPage();
+      if (_currentPage == PageType.block) cubit.getBlockByPage();
     }
   }
 
   bool _shouldLoadNextPage() {
     final state = context.read<ProfileCubit>().state;
-    if (state.isLoading) {
-      return false;
-    }
+    if (state.isLoading) return false;
     if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.position.pixels;
-    return maxScroll - currentScroll <= _scrollThreshold;
+
+    final max = _scrollController.position.maxScrollExtent;
+    final current = _scrollController.position.pixels;
+    return max - current <= 300;
   }
 
   @override
   void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
+    _scrollController.dispose();
     _tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<ProfileCubit, ProfileState>(
-      buildWhen: (s1, s2) =>
-          s1.isLoading != s2.isLoading ||
-          s1.myInfoModel != s2.myInfoModel ||
-          s1.userConnectionsState != s2.userConnectionsState,
-
       builder: (context, state) {
-        return RefreshIndicator(
-          onRefresh: context.read<ProfileCubit>().refresh,
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text("@${state.myInfoModel?.username ?? ""}"),
-              centerTitle: true,
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: _getAppBarBackground(),
+            elevation: _scrollOffset > 80 ? 4 : 0,
+            foregroundColor: _scrollOffset > 120
+                ? scheme.onSurface
+                : Colors.white,
+            title: Text(
+              "@${state.myInfoModel?.username ?? ''}",
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 21),
             ),
+            centerTitle: true,
+          ),
+          body: RefreshIndicator(
+            onRefresh: context.read<ProfileCubit>().refresh,
+            child: state.isLoading && state.myInfoModel == null
+                ? const ProgressView()
+                : CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      // ── PREMIUM PROFILE HEADER ──
+                      SliverToBoxAdapter(
+                        child: _PremiumHeader(
+                          imageUrl: state.myInfoModel?.profileImage ?? '',
+                          level:
+                              state.myInfoModel?.level ?? KnowledgeLevel.none,
+                          fullName: state.myInfoModel?.fullName ?? '',
+                          bio: state.myInfoModel?.bio ?? '',
+                          followers: state
+                              .userConnectionsState
+                              .connections
+                              .followers
+                              .length
+                              .toString(),
+                          following: state
+                              .userConnectionsState
+                              .connections
+                              .following
+                              .length
+                              .toString(),
+                          onEdit: () => context.push(AppRouter.editProfile),
+                          onFollowers: () => context.push(
+                            AppRouter.profileConnectionWithUserId(
+                              connectionType: ConnectionsEnum.followers.name,
+                            ),
+                          ),
+                          onFollowing: () => context.push(
+                            AppRouter.profileConnectionWithUserId(
+                              connectionType: ConnectionsEnum.following.name,
+                            ),
+                          ),
+                        ),
+                      ),
 
-            body: CustomScrollView(
-              slivers: [
-                /// HEADER
-                _Header(
-                  imageUrl: state.myInfoModel?.profileImage ?? "",
-                  level: state.myInfoModel?.level ?? KnowledgeLevel.none,
-                  fullName: state.myInfoModel?.fullName ?? "",
-                  bio: state.myInfoModel?.bio ?? "",
-                  followers: state
-                      .userConnectionsState
-                      .connections
-                      .followers
-                      .length
-                      .toString(),
-                  following: state
-                      .userConnectionsState
-                      .connections
-                      .following
-                      .length
-                      .toString(),
-                  onEdit: () => context.push(AppRouter.editProfile),
-                  onFollowers: () => context.push(
-                    AppRouter.profileConnectionWithUserId(
-                      connectionType: ConnectionsEnum.followers.name,
-                    ),
+                      const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                      // ── STATISTICS ──
+                      _Statistics(
+                        coins: state.myInfoModel?.coins?.toString() ?? "0",
+                        correct: "12",
+                        wrong: state.myInfoModel?.wrongCount?.toString() ?? "0",
+                        accuracy:
+                            state.myInfoModel?.findAccuracy().toString() ?? "0",
+                        accuracyPer: state.myInfoModel?.findAccuracy() ?? 0,
+                        onBookmark: () =>
+                            context.push(AppRouter.bookmarkQuestions),
+                      ),
+
+                      const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                      // ── MODERN TABS ──
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _ModernTabDelegate(
+                          TabBar(
+                            controller: _tabController,
+                            onTap: (index) => setState(
+                              () => _currentPage = PageType.values[index],
+                            ),
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15.5,
+                            ),
+                            unselectedLabelStyle: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            labelColor: scheme.onSurface,
+                            unselectedLabelColor: scheme.onSurface.withOpacity(
+                              0.6,
+                            ),
+                            indicatorColor: scheme.primary,
+                            indicatorWeight: 3,
+                            tabs: [
+                              Tab(text: context.l10n.questions),
+                              Tab(text: context.l10n.blockTest),
+                              Tab(text: context.l10n.books),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // ── DYNAMIC CONTENT ──
+                      if (_currentPage == PageType.block)
+                        _BlocksSection(state: state.blocksState),
+                      if (_currentPage == PageType.questions)
+                        _QuestionsSection(state: state.questionsState),
+                      if (_currentPage == PageType.books) const _BooksSection(),
+                    ],
                   ),
-                  onFollowing: () => context.push(
-                    AppRouter.profileConnectionWithUserId(
-                      connectionType: ConnectionsEnum.following.name,
-                    ),
-                  ),
-                ),
-
-                /// SUBHEADER
-                _Statistics(
-                  coins: state.myInfoModel?.coins?.toString() ?? "0",
-                  correct: state.myInfoModel?.correctCount?.toString() ?? "0",
-                  wrong: state.myInfoModel?.wrongCount?.toString() ?? "0",
-                  accuracy: state.myInfoModel?.findAccuracy().toString() ?? "0",
-                  accuracyPer: state.myInfoModel?.findAccuracy() ?? 0,
-                  onBookmark: () => context.push(AppRouter.bookmarkQuestions),
-                ),
-
-                /// CONTENT
-                _Tabs(
-                  pageTye: pageTye,
-                  onTabChange: (index) => setState(() {
-                    pageTye = PageType.values[index];
-                  }),
-                  controller: _tabController,
-                ),
-
-                BlocBuilder<ProfileCubit, ProfileState>(
-                  buildWhen: (s1, s2) => s1.blocksState != s2.blocksState,
-                  builder: (_, s) => _BlocksSection(
-                    key: _blockKey,
-                    isEnabled: pageTye == PageType.block,
-                    state: s.blocksState,
-                  ),
-                ),
-
-                BlocBuilder<ProfileCubit, ProfileState>(
-                  buildWhen: (s1, s2) => s1.questionsState != s2.questionsState,
-                  builder: (_, s) => _QuestionsSection(
-                    key: _questionsKey,
-                    isEnabled: pageTye == PageType.questions,
-                    state: s.questionsState,
-                  ),
-                ),
-
-                _BooksSection(
-                  key: _booksKey,
-                  isEnabled: pageTye == PageType.books,
-                ),
-              ],
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              if (_currentPage == PageType.questions) {
+                context.push(AppRouter.createQuestions);
+              } else if (_currentPage == PageType.block) {
+                context.push(AppRouter.createBlock);
+              }
+            },
+            label: Text(
+              _currentPage == PageType.questions ? "Yangi savol" : "Yangi blok",
             ),
+            icon: const Icon(Icons.add_rounded),
+            backgroundColor: scheme.primary,
+            foregroundColor: scheme.onPrimary,
           ),
         );
       },
     );
   }
+
+  Color _getAppBarBackground() {
+    if (!_scrollController.hasClients) return Colors.transparent;
+    final opacity = (_scrollOffset / 160).clamp(0.0, 1.0);
+    return Theme.of(context).scaffoldBackgroundColor.withOpacity(opacity);
+  }
 }
 
-class _Header extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────
+//                     PREMIUM HEADER
+// ─────────────────────────────────────────────────────────────
+class _PremiumHeader extends StatelessWidget {
   final String imageUrl;
   final KnowledgeLevel level;
   final String fullName;
@@ -199,8 +238,7 @@ class _Header extends StatelessWidget {
   final VoidCallback onFollowers;
   final VoidCallback onFollowing;
 
-  const _Header({
-    super.key,
+  const _PremiumHeader({
     required this.imageUrl,
     required this.level,
     required this.fullName,
@@ -214,181 +252,186 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 90,
-                  height: 90,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.purple, width: 3),
-                            gradient: const LinearGradient(
-                              colors: [Colors.purple, Colors.blue],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: CachedNetworkImage(
-                              width: 46,
-                              height: 46,
-                              imageUrl: imageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (_, __) => Image.asset(
-                                AppImages.defaultAvatar,
-                                fit: BoxFit.cover,
-                              ),
-                              errorWidget: (_, __, ___) => Image.asset(
-                                AppImages.defaultAvatar,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+    final scheme = Theme.of(context).colorScheme;
 
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        left: 0,
-                        child: Container(
-                          width: 80,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            gradient: const LinearGradient(
-                              colors: [Colors.purple, Colors.blue],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              level.getText(context),
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 120, 20, 24),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFE1306C), Color(0xFF405DE6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        children: [
+          // Avatar with gradient ring + level badge
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                width: 132,
+                height: 132,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFE1306C), Color(0xFF405DE6)],
                   ),
                 ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      countItem(
-                        context,
-                        context.l10n.followers,
-                        followers,
-                        onFollowers,
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Image.asset(
+                        AppImages.defaultAvatar,
+                        fit: BoxFit.cover,
                       ),
-                      countItem(
-                        context,
-                        context.l10n.following,
-                        following,
-                        onFollowing,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // full name
-            Text(
-              fullName,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 4),
-
-            // bio
-            Text(
-              bio,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                height: 1.5,
-                overflow: TextOverflow.ellipsis,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onEdit,
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      errorWidget: (_, __, ___) => Image.asset(
+                        AppImages.defaultAvatar,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    child: Text(context.l10n.editProfile),
                   ),
                 ),
-              ],
+              ),
+              Positioned(
+                bottom: 4,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFE1306C), Color(0xFF405DE6)],
+                    ),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    level.getText(context),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          Text(
+            fullName,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
-          ],
-        ),
+          ),
+
+          const SizedBox(height: 6),
+          Text(
+            bio.isEmpty ? "Bio mavjud emas" : bio,
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.white.withOpacity(0.85),
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Followers / Following
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _CountPill(
+                title: context.l10n.followers,
+                value: followers,
+                onTap: onFollowers,
+              ),
+              const SizedBox(width: 32),
+              _CountPill(
+                title: context.l10n.following,
+                value: following,
+                onTap: onFollowing,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onEdit,
+              icon: const Icon(Icons.edit_rounded, color: Colors.white),
+              label: Text(
+                context.l10n.editProfile,
+                style: const TextStyle(color: Colors.white),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.white, width: 1.5),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
-
-  Widget countItem(
-    BuildContext context,
-    String title,
-    String value,
-    VoidCallback onTap,
-  ) => GestureDetector(
-    onTap: onTap,
-    child: Column(
-      children: [
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          ),
-        ),
-      ],
-    ),
-  );
 }
 
+class _CountPill extends StatelessWidget {
+  final String title;
+  final String value;
+  final VoidCallback onTap;
+
+  const _CountPill({
+    required this.title,
+    required this.value,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.white.withOpacity(0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+//                     STATISTICS (modern cards)
+// ─────────────────────────────────────────────────────────────
 class _Statistics extends StatelessWidget {
   final String coins;
   final String correct;
@@ -408,733 +451,55 @@ class _Statistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-          sliver: SliverToBoxAdapter(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.analytics_rounded, color: Colors.blue),
-                    const SizedBox(width: 8),
-                    Text(
-                      context.l10n.quizPerformance,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withAlpha(120),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-              ],
-            ),
-          ),
-        ),
-
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 6, left: 16, right: 16),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.5,
-            ),
-            delegate: SliverChildListDelegate([
-              _PerformanceItem(
-                title: context.l10n.totalTests,
-                value: coins,
-                icon: Icons.monetization_on_rounded,
-                color: Colors.orange,
-              ),
-              _PerformanceItem(
-                title: context.l10n.correctAnswers,
-                value: correct,
-                icon: Icons.check_circle,
-                color: Colors.green,
-              ),
-              _PerformanceItem(
-                title: context.l10n.wrongAnswers,
-                value: wrong,
-                icon: Icons.cancel,
-                color: Colors.red,
-              ),
-              _PerformanceItem(
-                title: context.l10n.accuracy,
-                value: accuracy,
-                icon: Icons.balance,
-                color: Colors.blue,
-                progress: accuracyPer,
-              ),
-            ]),
-          ),
-        ),
-
-        SliverPadding(
-          padding: const EdgeInsets.all(16),
-          sliver: SliverToBoxAdapter(
-            child: ElevatedButton.icon(
-              onPressed: onBookmark,
-              icon: const Icon(Icons.bookmark),
-              label: Text(context.l10n.bookmarkedQuestions),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                minimumSize: const Size(double.infinity, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Tabs extends StatelessWidget {
-  final PageType pageTye;
-  final void Function(int index) onTabChange;
-  final TabController controller;
-
-  const _Tabs({
-    super.key,
-    required this.pageTye,
-    required this.onTabChange,
-    required this.controller,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: _SliverAppBarDelegate(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        TabBar(
-          unselectedLabelColor: Theme.of(
-            context,
-          ).colorScheme.onSurface.withValues(alpha: 0.6),
-          labelColor: Theme.of(context).colorScheme.onSurface,
-          labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          onTap: onTabChange,
-          controller: controller,
-          tabs: [
-            Tab(
-              text: context.l10n.questions,
-              icon: Icon(Icons.question_mark_rounded, size: 20),
-            ),
-            Tab(
-              text: context.l10n.blockTest,
-              icon: Icon(Icons.library_add_check, size: 20),
-            ),
-            Tab(
-              text: context.l10n.books,
-              icon: Icon(Icons.menu_book_rounded, size: 20),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// ---------------- Questions block section ----------------
-class _BlocksSection extends StatelessWidget {
-  final bool isEnabled;
-  final BlocksState state;
-
-  const _BlocksSection({
-    super.key,
-    required this.isEnabled,
-    required this.state,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
-
-    /// loading state
-    if (state.isLoading) {
-      return SliverPadding(
-        padding: const EdgeInsets.all(8),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            childAspectRatio: 1.0,
-          ),
-          delegate: SliverChildBuilderDelegate((
-            BuildContext context,
-            int index,
-          ) {
-            return Center(child: ProgressView());
-          }, childCount: 4),
-        ),
-      );
-    }
-
-    /// for active state
     return SliverPadding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 1.0,
+          crossAxisSpacing: 14,
+          mainAxisSpacing: 14,
+          childAspectRatio: 1.5,
         ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final question = state.blocks[index];
-
-          if (question.id == -1) {
-            return GestureDetector(
-              onTap: () {
-                context.push(AppRouter.createBlock);
-              },
-              child: Container(
-                margin: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.1),
-                      blurRadius: 12,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        context.l10n.addQuestion,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return _QuestionCard(
-            title: question.title ?? '',
-            description: question.description ?? '',
-            createdAt: question.createdAt,
-            correctAnswers: 2,
-            wrongAnswers: 2,
-            difficulty: Difficulty.easy,
-            onTap: () => context.push(
-              AppRouter.blockDetailWithBlockId(question.id ?? -1),
-            ),
-          );
-        }, childCount: state.blocks.length),
-      ),
-    );
-  }
-}
-
-/// ---------------- My questions section ----------------
-class _QuestionsSection extends StatelessWidget {
-  final bool isEnabled;
-  final QuestionsState state;
-
-  const _QuestionsSection({
-    super.key,
-    required this.isEnabled,
-    required this.state,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
-
-    /// loading state
-    if (state.isLoading) return SliverToBoxAdapter(child: ProgressView());
-
-    /// for active state
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverList.separated(
-          itemCount: state.questions.length,
-          itemBuilder: (_, index) {
-            if (state.questions[index].id == -1) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  top: index == 0 ? 16 : 0,
-                ),
-                child: ListTile(
-                  onTap: () => context.push(AppRouter.createQuestions),
-                  tileColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  title: Row(
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        context.l10n.addQuestion,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            }
-            return _QuestionItem(
-              question: state.questions[index],
-              onTap: () => context.push(
-                AppRouter.myQuestionDetailWithArgs(state.questions[index].id),
-              ),
-              isFirst: index == 0,
-              isLast: index == state.questions.length - 1,
-            );
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
-        ),
-
-        if (state.isLoadingMore)
-          SliverPadding(
-            padding: const EdgeInsets.all(16.0),
-            sliver: const SliverToBoxAdapter(child: ProgressView()),
+        delegate: SliverChildListDelegate([
+          _StatCard(
+            title: context.l10n.totalTests,
+            value: coins,
+            icon: Icons.monetization_on_rounded,
+            color: Colors.orange,
           ),
-      ],
-    );
-  }
-}
-
-class _QuestionItem extends StatelessWidget {
-  final QuestionModel question;
-  final VoidCallback onTap;
-  final bool isFirst;
-  final bool isLast;
-
-  const _QuestionItem({
-    super.key,
-    required this.question,
-    required this.onTap,
-    required this.isFirst,
-    required this.isLast,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(
-          bottom: isLast ? 16 : 8,
-          left: 16,
-          right: 16,
-          top: isFirst ? 16 : 0,
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title
-              Text(
-                question.testTitle ?? '',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  height: 1.3,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Description
-              Text(
-                question.testDescription ?? '',
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15, height: 1.4, color: Colors.grey),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Bottom Row (modern spread layout)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Difficulty Badge (colored, modern pill)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                      question.difficultyPercentage
-                          ?.toDifficulty()
-                          .color
-                          .withOpacity(0.12) ??
-                          Colors.transparent,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color:
-                        question.difficultyPercentage
-                            ?.toDifficulty()
-                            .color
-                            .withOpacity(0.3) ??
-                            Colors.transparent,
-                        width: 1,
-                      ),
-                    ),
-                    child: Text(
-                      question.difficultyPercentage
-                          ?.toDifficulty()
-                          .name
-                          .toUpperCase() ??
-                          "",
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: question.difficultyPercentage
-                            ?.toDifficulty()
-                            .color,
-                      ),
-                    ),
-                  ),
-
-                  // Attempts
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.repeat_rounded,
-                        size: 18,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${question.userAttemptCount} attempts',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Time
-                  Row(
-                    children: [
-                      Icon(Icons.schedule, size: 16, color: Colors.grey[400]),
-                      const SizedBox(width: 6),
-                      Text(
-                        formatDate(question.createdAt),
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+          _StatCard(
+            title: context.l10n.correctAnswers,
+            value: correct,
+            icon: Icons.check_circle_rounded,
+            color: Colors.green,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// ---------------- My books section ----------------
-class _BooksSection extends StatelessWidget {
-  final bool isEnabled;
-
-  const _BooksSection({super.key, required this.isEnabled});
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isEnabled) return const SliverToBoxAdapter(child: SizedBox.shrink());
-    return SliverFillRemaining(child: Center(child: Text('My books')));
-  }
-}
-
-class _BooksTab extends StatelessWidget {
-  const _BooksTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: 4,
-      itemBuilder: (_, index) => _GridCard(title: "Book ${index + 1}"),
-    );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final Color backgroundColor;
-
-  _SliverAppBarDelegate(this._tabBar, {required this.backgroundColor});
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) => Container(color: backgroundColor, child: _tabBar);
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return true;
-  }
-}
-
-/// ---------- COMPONENTS ----------
-class _GridCard extends StatelessWidget {
-  final String title;
-
-  const _GridCard({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-    );
-  }
-}
-
-/// ----------- ITEMS -----------
-class _QuestionCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final DateTime? createdAt;
-  final int? correctAnswers;
-  final int? wrongAnswers;
-  final Difficulty difficulty;
-  final void Function()? onTap;
-
-  const _QuestionCard({
-    super.key,
-    required this.title,
-    required this.description,
-    this.createdAt,
-    required this.correctAnswers,
-    required this.wrongAnswers,
-    required this.difficulty,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// Title row + difficulty
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  _DifficultyChip(
-                    label: difficulty.name.toUpperCase(),
-                    color: difficulty.color,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-
-              /// Description
-              Text(
-                description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                  height: 1.4,
-                ),
-              ),
-
-              const Spacer(),
-
-              /// Stats row
-              Row(
-                children: [
-                  _QuestionStatItem(
-                    icon: Icons.check_circle_outline,
-                    value: correctAnswers,
-                    color: Colors.green,
-                  ),
-                  const SizedBox(width: 8),
-                  _QuestionStatItem(
-                    icon: Icons.cancel_outlined,
-                    value: wrongAnswers,
-                    color: Colors.red,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                formatDate(createdAt),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ],
+          _StatCard(
+            title: context.l10n.wrongAnswers,
+            value: wrong,
+            icon: Icons.cancel_rounded,
+            color: Colors.red,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DifficultyChip extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _DifficultyChip({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.onPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-class _QuestionStatItem extends StatelessWidget {
-  final IconData icon;
-  final int? value;
-  final Color color;
-
-  const _QuestionStatItem({
-    required this.icon,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 6),
-          Text(
-            value?.toString() ?? '0',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
+          _StatCard(
+            title: context.l10n.accuracy,
+            value: "$accuracy%",
+            icon: Icons.leaderboard_rounded,
+            color: Colors.blue,
+            progress: accuracyPer / 100,
           ),
-        ],
+        ]),
       ),
     );
   }
 }
 
-class _PerformanceItem extends StatelessWidget {
+class _StatCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
   final Color color;
   final double? progress;
 
-  const _PerformanceItem({
+  const _StatCard({
     required this.title,
     required this.value,
     required this.icon,
@@ -1144,58 +509,452 @@ class _PerformanceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
+        color: scheme.surface,
+        borderRadius: BorderRadius.circular(24),
       ),
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withAlpha(50),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  size: 30,
-                ),
-              ),
+              Icon(icon, color: color, size: 28),
               const Spacer(),
               Text(
                 value,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
           ),
-
+          const Spacer(),
           Text(
             title,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 14,
+              fontSize: 14.5,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           if (progress != null)
             LinearProgressIndicator(
-              value: (progress ?? 1) / 100,
-              backgroundColor: Colors.white,
-              valueColor: AlwaysStoppedAnimation(Colors.lightGreen),
-              borderRadius: BorderRadius.circular(4),
+              value: progress,
+              backgroundColor: scheme.surfaceVariant,
+              valueColor: AlwaysStoppedAnimation(color),
+              borderRadius: BorderRadius.circular(6),
+              minHeight: 6,
             ),
         ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+//                     MODERN TABS DELEGATE
+// ─────────────────────────────────────────────────────────────
+class _ModernTabDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar tabBar;
+
+  _ModernTabDelegate(this.tabBar);
+
+  @override
+  double get minExtent => tabBar.preferredSize.height + 8;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height + 8;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: const EdgeInsets.only(top: 8),
+      child: tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
+}
+
+// ─────────────────────────────────────────────────────────────
+//                     BLOCKS, QUESTIONS, BOOKS SECTIONS
+// ─────────────────────────────────────────────────────────────
+class _BlocksSection extends StatelessWidget {
+  final BlocksState state;
+
+  const _BlocksSection({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    if (state.isLoading) {
+      return const SliverToBoxAdapter(child: Center(child: ProgressView()));
+    }
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverGrid(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 14,
+          mainAxisSpacing: 14,
+          childAspectRatio: 1.05,
+        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final block = state.blocks[index];
+          return _ModernBlockCard(
+            title: block.title ?? '',
+            description: block.description ?? '',
+            onTap: () =>
+                context.push(AppRouter.blockDetailWithBlockId(block.id ?? -1)),
+          );
+        }, childCount: state.blocks.length),
+      ),
+    );
+  }
+}
+
+class _ModernBlockCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final VoidCallback onTap;
+
+  const _ModernBlockCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: scheme.surface,
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top row: subtle icon + title
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: scheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    Icons.library_books_rounded,
+                    color: scheme.primary,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.3,
+                      fontWeight: FontWeight.w700,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Description
+            Expanded(
+              child: Text(
+                description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.45,
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Bottom "View" pill with arrow
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 9,
+                ),
+                decoration: BoxDecoration(
+                  color: scheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Ko‘rish",
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                        color: scheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      size: 18,
+                      color: scheme.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// (You can continue with _QuestionsSection and _BooksSection in the same modern card style – let me know if you want the full expanded version for those too)
+class _QuestionsSection extends StatelessWidget {
+  final QuestionsState state;
+
+  const _QuestionsSection({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    if (state.isLoading) return const SliverToBoxAdapter(child: ProgressView());
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverList.separated(
+        itemCount: state.questions.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 14),
+        itemBuilder: (context, index) {
+          final q = state.questions[index];
+          return _ModernQuestionCard(
+            question: q,
+            isLast: index == state.questions.length,
+            isFirst: index == 0,
+            onTap: () => context.push(AppRouter.myQuestionDetailWithArgs(q.id)),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ModernQuestionCard extends StatelessWidget {
+  final QuestionModel question;
+  final VoidCallback onTap;
+  final bool isLast;
+  final bool isFirst;
+
+  const _ModernQuestionCard({
+    super.key,
+    required this.question,
+    required this.onTap,
+    required this.isFirst,
+    required this.isLast,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final difficulty =
+        question.difficultyPercentage?.toDifficulty() ?? Difficulty.easy;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(top: isFirst ? 16 : 0),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: scheme.surface,
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top row: Difficulty badge + Date
+            Row(
+              children: [
+                _DifficultyBadge(difficulty: difficulty),
+                const Spacer(),
+                Text(
+                  formatDate(question.createdAt),
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Question Text (big & bold)
+            Text(
+              question.questionText ?? '',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18.5,
+                height: 1.35,
+                fontWeight: FontWeight.w700,
+                color: scheme.onSurface,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Bottom stats row
+            Row(
+              children: [
+                // Correct / Wrong (if available)
+                if (question.correctCount != null ||
+                    question.wrongCount != null)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "${question.correctCount ?? 0}",
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.green,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Icon(
+                        Icons.cancel_rounded,
+                        color: Colors.redAccent,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "${question.wrongCount ?? 0}",
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                const Spacer(),
+
+                // View button pill
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 9,
+                  ),
+                  decoration: BoxDecoration(
+                    color: scheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Ko‘rish",
+                        style: TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                          color: scheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 18,
+                        color: scheme.primary,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DifficultyBadge extends StatelessWidget {
+  final Difficulty difficulty;
+
+  const _DifficultyBadge({required this.difficulty});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      decoration: BoxDecoration(
+        color: difficulty.color.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: difficulty.color.withOpacity(0.3), width: 1),
+      ),
+      child: Text(
+        difficulty.name.toUpperCase(),
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
+          color: difficulty.color,
+        ),
+      ),
+    );
+  }
+}
+
+class _BooksSection extends StatelessWidget {
+  const _BooksSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverFillRemaining(
+      child: Center(
+        child: Text(
+          "Books section coming soon...",
+          style: TextStyle(fontSize: 17, color: Colors.grey),
+        ),
       ),
     );
   }

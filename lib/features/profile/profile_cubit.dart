@@ -146,7 +146,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           state.copyWith(
             blocksState: current.copyWith(
               isLoading: false,
-              blocks: value.data..insert(0, BlockModel(id: -1)),
+              blocks: value.data,
               error: null,
             ),
           ),
@@ -247,7 +247,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             questionsState: state.questionsState.copyWith(
               isLoading: false,
               error: null,
-              questions: value.data..insert(0, QuestionModel(id: -1)),
+              questions: value.data,
               next: value.nextPage(),
               previous: value.previousPage(),
               isLastPage:
