@@ -1,11 +1,15 @@
+import 'dart:ffi';
+
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/account/account_repository.dart';
+import 'package:testabd/domain/account/entities/user_profile_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
+import 'package:testabd/domain/entity/user_item_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
-import 'package:testabd/main.dart';
 import 'home_state.dart';
 
 @injectable
@@ -20,20 +24,9 @@ class HomeCubit extends Cubit<HomeState> {
     _fetchUserInfo();
   }
 
-  Future<void> refresh() async {
-    // update follow state to new empty state
-    _updateFollowedState(FollowedQuizState());
+  Future<void> refresh() async => getQuestions();
 
-    // load quiz
-    await loadQuiz();
-  }
-
-  Future<void> _fetchUserInfo() async {
-    final result = await _accountRepository.fetchMyInfo();
-    result.fold((error) {
-      _messageHandler.handleDialog(error);
-    }, (value) {});
-  }
+  Future<void> _fetchUserInfo() => _accountRepository.fetchMyInfo();
 
   // ---------------------------------------------------------------------------
   // Toggle bookmark
@@ -75,47 +68,71 @@ class HomeCubit extends Cubit<HomeState> {
     list[index] = updatedQuestion;
     emit(
       state.copyWith(
-        followedQuizStata: fQuestionsState.copyWith(
-          questions: list,
-        ),
+        followedQuizStata: fQuestionsState.copyWith(questions: list),
       ),
     );
   }
 
-
   // ---------------------------------------------------------------------------
   // Pagination
   // ---------------------------------------------------------------------------
-  Future<void> loadQuiz() async {
-    final followedQuizState = state.followedQuizStata;
+  Future<void> getQuestions() async {
+    final current = state.followedQuizStata;
+    if (current.isLoading || current.isLoadMore || current.isLastPage) return;
 
-    if (followedQuizState.questions.isEmpty) {
-      _updateFollowedState(followedQuizState.copyWith(isLoading: true));
-    } else {
-      _updateFollowedState(followedQuizState.copyWith(isLoadMore: true));
-    }
-
-    // delay
-    await Future.delayed(Duration(microseconds: 300));
-
+    emit(state.copyWith(followedQuizStata: current.copyWith(isLoading: true)));
     final result = await _quizRepository.getFollowedQuestions(
-      page: followedQuizState.nextPage,
+      page: 1,
       pageSize: _pageSize,
     );
-
     result.fold(
-      // set new state
-      (err) {
-        _updateFollowedState(
-          followedQuizState.copyWith(
-            isLoading: false,
-            isLoadMore: false,
-            error: err.message,
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(
+          state.copyWith(
+            followedQuizStata: state.followedQuizStata.copyWith(
+              isLoading: false,
+              error: error.message,
+            ),
           ),
         );
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            followedQuizStata: state.followedQuizStata.copyWith(
+              isLoading: false,
+              error: null,
+              questions: value.data,
+              nextPage: value.nextPage(),
+              previousPage: value.previousPage(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-        // handle message
-        _messageHandler.handleDialog(err);
+  Future<void> getQuestionsByPage() async {
+    final current = state.followedQuizStata;
+    if (current.isLoading || current.isLoadMore || current.isLastPage) return;
+
+    emit(state.copyWith(followedQuizStata: current.copyWith(isLoadMore: true)));
+    final result = await _quizRepository.getFollowedQuestions(
+      page: state.followedQuizStata.nextPage,
+      pageSize: _pageSize,
+    );
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(
+          state.copyWith(
+            followedQuizStata: state.followedQuizStata.copyWith(
+              isLoading: false,
+              error: error.message,
+            ),
+          ),
+        );
       },
       (value) {
         final followedState = state.followedQuizStata;
@@ -124,16 +141,12 @@ class HomeCubit extends Cubit<HomeState> {
           isLoading: false,
           isLoadMore: false,
           questions: [...followedState.questions, ...fetched],
-          isLastPage: fetched.length < _pageSize,
-          nextPage: followedState.nextPage + 1,
-          previousPage: followedState.nextPage > 1
-              ? followedState.nextPage - 1
-              : 1,
+          isLastPage: fetched.length < _pageSize || value.next == null,
+          nextPage: value.nextPage(),
+          previousPage: value.previousPage(),
           error: null,
         );
-
-        // set new state
-        _updateFollowedState(newFollowedState);
+        emit(state.copyWith(followedQuizStata: newFollowedState));
       },
     );
   }
@@ -144,8 +157,11 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> submitAnswer(int questionId, Set<int> answers) async {
     final index = _findQuestionIndex(questionId);
     if (index == -1) return;
+    if (state.followedQuizStata.questions[index].isLoading) return;
 
     _setQuestionLoading(index, answers, true);
+
+    await Future.delayed(Duration(seconds: 1));
 
     final result = await _quizRepository.submitAnswer(
       questionId: questionId,
@@ -217,7 +233,11 @@ class HomeCubit extends Cubit<HomeState> {
   void _replaceQuestion(int index, QuestionModel updated) {
     final list = List.of(state.followedQuizStata.questions);
     list[index] = updated;
-    _updateFollowedState(state.followedQuizStata.copyWith(questions: list));
+    emit(
+      state.copyWith(
+        followedQuizStata: state.followedQuizStata.copyWith(questions: list),
+      ),
+    );
   }
 
   // ---------------- SUBMIT RESULT HANDLING ----------------
@@ -246,10 +266,73 @@ class HomeCubit extends Cubit<HomeState> {
 
     _replaceQuestion(index, updated);
   }
-}
 
-extension HomeCubitX on HomeCubit {
-  void _updateFollowedState(FollowedQuizState updated) {
-    emit(state.copyWith(followedQuizStata: updated));
+  /// Follow/unfollow user with optimistic UI update + proper rollback
+  Future<void> followUser(int? questionId, int? userId) async {
+    if (userId == null)
+      return; // questionId is unused → kept for signature compatibility
+
+    // Optimistic update: show loading spinner immediately
+    _setFollowLoading(userId, isLoading: true);
+
+    final result = await _accountRepository.followUser(userId);
+
+    result.fold(
+      (failure) {
+        _messageHandler.handleDialog(failure);
+
+        // Rollback: only remove loading state
+        _setFollowLoading(userId, isLoading: false);
+      },
+      (_) {
+        // Success: toggle follow status and stop loading
+        _toggleFollowStatus(userId);
+      },
+    );
+  }
+
+  // ====================== PRIVATE HELPERS ======================
+  /// Update loading state for all questions belonging to this user
+  void _setFollowLoading(int userId, {required bool isLoading}) {
+    _updateQuestionsByUser(
+      userId,
+      (user) => user?.copyWith(isFollowInLoading: isLoading),
+    );
+  }
+
+  /// Toggle follow status after successful API call
+  void _toggleFollowStatus(int userId) {
+    _updateQuestionsByUser(
+      userId,
+      (user) => user?.copyWith(
+        isFollowInLoading: false,
+        isFollowing: !(user.isFollowing ?? false),
+      ),
+    );
+  }
+
+  /// Core reusable updater – DRY, readable, and maintainable
+  void _updateQuestionsByUser(
+    int userId,
+    UserItemModel? Function(UserItemModel? current) updateUser,
+  ) {
+    final currentState = state.followedQuizStata;
+
+    final updatedQuestions = currentState.questions.map((question) {
+      if (question.user?.id == userId) {
+        return question.copyWith(
+          user: updateUser(
+            question.user,
+          ), // or simply: updateUser(question.user!)
+        );
+      }
+      return question;
+    }).toList();
+
+    emit(
+      state.copyWith(
+        followedQuizStata: currentState.copyWith(questions: updatedQuestions),
+      ),
+    );
   }
 }

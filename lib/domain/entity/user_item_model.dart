@@ -10,6 +10,9 @@ class UserItemModel extends Equatable {
   final bool? isPremium;
   final bool? isFollowing;
 
+  // loadings
+  final bool isFollowInLoading;
+
   const UserItemModel({
     this.id,
     this.username,
@@ -17,7 +20,26 @@ class UserItemModel extends Equatable {
     this.isBadged,
     this.isPremium,
     this.isFollowing,
+    this.isFollowInLoading = false,
   });
+
+  UserItemModel copyWith({
+    int? id,
+    String? username,
+    String? profileImage,
+    bool? isBadged,
+    bool? isPremium,
+    bool? isFollowing,
+    bool? isFollowInLoading,
+  }) => UserItemModel(
+    id: id ?? this.id,
+    username: username ?? this.username,
+    profileImage: profileImage ?? this.profileImage,
+    isBadged: isBadged ?? this.isBadged,
+    isPremium: isPremium ?? this.isPremium,
+    isFollowing: isFollowing ?? this.isFollowing,
+    isFollowInLoading: isFollowInLoading ?? this.isFollowInLoading,
+  );
 
   @override
   List<Object?> get props => [
@@ -27,6 +49,7 @@ class UserItemModel extends Equatable {
     isBadged,
     isPremium,
     isFollowing,
+    isFollowInLoading,
   ];
 
   static UserItemModel fromResponse1(User? response) {
@@ -39,5 +62,4 @@ class UserItemModel extends Equatable {
       isFollowing: response?.isFollowing,
     );
   }
-
 }

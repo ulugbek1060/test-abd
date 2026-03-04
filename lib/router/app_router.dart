@@ -72,7 +72,7 @@ abstract class AppRouter {
   static String myQuestionDetailWithArgs(int? questionId) =>
       '/my_question_detail/$questionId';
 
-  static String userProfileWithUsername(String username) => '/users/$username';
+  static String userProfileWithUsername(String? username) => '/users/$username';
   static const userConnection = '/user_connection/:user_id/:connection_type';
 
   static String userConnectionWithUserId({
@@ -121,18 +121,18 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.userProfile,
       pageBuilder: (context, state) {
-        final username = state.pathParameters['username']!;
+        final username = state.pathParameters['username'];
         return CupertinoPage(child: UserProfileScreen(username: username));
       },
     ),
     GoRoute(
       path: AppRouter.userConnection,
       pageBuilder: (context, state) {
-        final userId = state.pathParameters['user_id']!;
+        final userId = state.pathParameters['user_id'];
         final connectionType = state.pathParameters['connection_type']!;
         return CupertinoPage(
           child: UserConnectionScreen(
-            userId: int.tryParse(userId) ?? -1,
+            userId: int.tryParse(userId ?? "") ?? -1,
             connectionType: ConnectionsEnum.fromString(connectionType),
           ),
         );

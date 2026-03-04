@@ -18,7 +18,7 @@ import 'package:testabd/router/app_router.dart';
 enum PageType { questions, block }
 
 class UserProfileScreen extends StatelessWidget {
-  final String username;
+  final String? username;
 
   const UserProfileScreen({super.key, required this.username});
 

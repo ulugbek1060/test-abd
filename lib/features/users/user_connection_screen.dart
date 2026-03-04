@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/core/theme/app_colors.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/enums/connections_enum.dart';
 import 'package:testabd/core/utils/formatters.dart';
@@ -27,64 +28,65 @@ class UserConnectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => locator<UserConnectionCubit>(param1: userId)..load(),
-      child: _View(userId: userId, connectionType: connectionType),
+      child: _View(connectionType: connectionType),
     );
   }
 }
 
-class _View extends StatefulWidget {
-  final int userId;
+class _View extends StatelessWidget {
   final ConnectionsEnum connectionType;
 
-  const _View({required this.userId, required this.connectionType});
-
-  @override
-  State<_View> createState() => _ViewState();
-}
-
-class _ViewState extends State<_View> {
-  late PageStorageKey _followersPageKey;
-  late PageStorageKey _followingPageKey;
-
-  @override
-  void initState() {
-    _followersPageKey = PageStorageKey('followersPageKey');
-    _followingPageKey = PageStorageKey('followingPageKey');
-    super.initState();
-  }
+  const _View({required this.connectionType});
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return DefaultTabController(
       length: 2,
-      initialIndex: widget.connectionType == ConnectionsEnum.following ? 1 : 0,
+      initialIndex: connectionType == ConnectionsEnum.following ? 1 : 0,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Connections'),
+          title: Text(
+            connectionType == ConnectionsEnum.followers
+                ? context.l10n.followers
+                : context.l10n.following,
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 21),
+          ),
           centerTitle: true,
-          bottom: TabBar(
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-            labelColor: Theme.of(context).colorScheme.onSurface,
-            tabs: [
-              Tab(text: context.l10n.followers),
-              Tab(text: context.l10n.following),
-            ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48),
+            child: TabBar(
+              labelColor: scheme.onSurface,
+              unselectedLabelColor: scheme.onSurface.withOpacity(0.6),
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15.5,
+              ),
+              indicatorColor: scheme.primary,
+              indicatorWeight: 3,
+              tabs: [
+                Tab(text: context.l10n.followers),
+                Tab(text: context.l10n.following),
+              ],
+            ),
           ),
         ),
         body: BlocBuilder<UserConnectionCubit, UserConnectionState>(
           builder: (context, state) {
-            if (state.isLoading) {
-              return Center(child: ProgressView());
+            if (state.isLoading &&
+                state.connections.followers.isEmpty &&
+                state.connections.following.isEmpty) {
+              return const ProgressView();
             }
             return TabBarView(
               children: [
                 _ConnectionsList(
-                  key: _followersPageKey,
                   users: state.connections.followers,
+                  emptyMessage: "Hali hech kim sizni kuzatmayapti",
                 ),
                 _ConnectionsList(
-                  key: _followingPageKey,
                   users: state.connections.following,
+                  emptyMessage: "Hali hech kimni kuzatmaysiz",
                 ),
               ],
             );
@@ -95,28 +97,56 @@ class _ViewState extends State<_View> {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+//                     COMPACT MODERN USER TILE
+// ─────────────────────────────────────────────────────────────
 class _ConnectionsList extends StatelessWidget {
   final List<UserConnectionModel> users;
+  final String emptyMessage;
 
-  const _ConnectionsList({super.key, required this.users});
+  const _ConnectionsList({
+    super.key,
+    required this.users,
+    required this.emptyMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<UserConnectionCubit>();
+
+    if (users.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.people_outline_rounded,
+              size: 72,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              emptyMessage,
+              style: const TextStyle(fontSize: 16.5, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: cubit.refresh,
-      color: Theme.of(context).colorScheme.secondary,
       child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
         itemCount: users.length,
-        separatorBuilder: (_, __) => const Divider(height: 1),
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
         itemBuilder: (context, index) {
           final user = users[index];
-          return UserTile(
-            isSuperUser: user.isMe,
+          return _CompactUserTile(
             user: user,
             onTap: () =>
                 context.push(AppRouter.userProfileWithUsername(user.username)),
-            onTapFollow: () => cubit.onFollowUser(user.id),
+            onFollowTap: () => cubit.onFollowUser(user.id),
           );
         },
       ),
@@ -124,76 +154,111 @@ class _ConnectionsList extends StatelessWidget {
   }
 }
 
-class UserTile extends StatelessWidget {
+class _CompactUserTile extends StatelessWidget {
   final UserConnectionModel user;
-  final bool isSuperUser;
   final VoidCallback onTap;
-  final VoidCallback onTapFollow;
+  final VoidCallback onFollowTap;
 
-  const UserTile({
+  const _CompactUserTile({
     super.key,
     required this.user,
     required this.onTap,
-    required this.isSuperUser,
-    required this.onTapFollow,
+    required this.onFollowTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: user.isLoading ? null : onTap,
-      leading: ClipOval(
-        child: CachedNetworkImage(
-          width: 36,
-          height: 36,
-          imageUrl: user.profileImage ?? '',
-          fit: BoxFit.cover,
-          placeholder: (_, __) =>
-              Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
-          errorWidget: (_, __, ___) =>
-              Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+    final scheme = Theme.of(context).colorScheme;
+    final isFollowing = user.isFollowing;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: scheme.surface,
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),
-      title: Text(
-        user.username,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-      ),
-      subtitle: Text(
-        capitalize(user.firstName),
-        style: TextStyle(color: Colors.grey),
-      ),
-      trailing: isSuperUser
-          ? null
-          : SizedBox(
-              height: 32,
+        child: Row(
+          children: [
+            // Smaller Avatar
+            ClipOval(
+              child: CachedNetworkImage(
+                width: 52,
+                height: 52,
+                imageUrl: user.profileImage ?? '',
+                fit: BoxFit.cover,
+                placeholder: (_, __) =>
+                    Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+                errorWidget: (_, __, ___) =>
+                    Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+              ),
+            ),
+
+            const SizedBox(width: 14),
+
+            // Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.username,
+                    style: TextStyle(
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.w700,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  Text(
+                    capitalize(user.firstName),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Compact Follow Button
+            SizedBox(
+              height: 34,
               child: ElevatedButton(
+                onPressed: user.isLoading ? null : onFollowTap,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: user.isFollowing
-                      ? Theme.of(context).colorScheme.surface
-                      : Colors.blue,
+                  backgroundColor: isFollowing
+                      ? AppColors.onSurfaceColor(context)
+                      : scheme.primary,
+                  foregroundColor: isFollowing
+                      ? scheme.onSurface
+                      : scheme.onPrimary,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                onPressed: user.isLoading ? null : onTapFollow,
                 child: user.isLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: const ProgressView(),
+                        child: ProgressView(),
                       )
                     : Text(
-                        user.isFollowing
+                        isFollowing
                             ? context.l10n.followed
                             : context.l10n.follow,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 }

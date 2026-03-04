@@ -35,7 +35,6 @@ class QuestionModel extends Equatable {
   final DateTime? createdAt;
   final String? roundImage;
   final bool isBookmarked;
-  final bool? isFollowing;
   final CategoryModel? category;
 
   // additional
@@ -65,7 +64,6 @@ class QuestionModel extends Equatable {
     this.createdAt,
     this.roundImage,
     this.isBookmarked = false,
-    this.isFollowing,
     this.category,
     this.isLoading = false,
     this.isBookmarkLoading = false,
@@ -95,7 +93,6 @@ class QuestionModel extends Equatable {
     createdAt,
     roundImage,
     isBookmarked,
-    isFollowing,
     category,
     isLoading,
     isBookmarkLoading,
@@ -124,7 +121,6 @@ class QuestionModel extends Equatable {
     DateTime? createdAt,
     String? roundImage,
     bool? isBookmarked,
-    bool? isFollowing,
     CategoryModel? category,
     bool? isLoading,
     bool? isBookmarkLoading,
@@ -152,7 +148,6 @@ class QuestionModel extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       roundImage: roundImage ?? this.roundImage,
       isBookmarked: isBookmarked ?? this.isBookmarked,
-      isFollowing: isFollowing ?? this.isFollowing,
       category: category ?? this.category,
       isLoading: isLoading ?? this.isLoading,
       isBookmarkLoading: isBookmarkLoading ?? this.isBookmarkLoading,
@@ -191,7 +186,6 @@ class QuestionModel extends Equatable {
       difficultyPercentage: response.difficultyPercentage?.toDouble(),
       userAttemptCount: response.userAttemptCount,
       isBookmarked: response.isBookmarked ?? false,
-      isFollowing: response.isFollowing ?? false,
       category: CategoryModel(
         id: response.category?.id,
         totalQuestions: response.category?.totalQuestions,

@@ -1,7 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProgressView extends StatelessWidget {
-
   const ProgressView({super.key, this.strokeWidth, this.color, this.padding});
 
   final Color? color;
@@ -13,13 +15,15 @@ class ProgressView extends StatelessWidget {
     return Padding(
       padding: padding ?? EdgeInsets.zero,
       child: Center(
-        child: CircularProgressIndicator.adaptive(
-          strokeCap: StrokeCap.round,
-          strokeWidth: strokeWidth ?? 4,
-          valueColor: AlwaysStoppedAnimation<Color>(
-            color ?? Theme.of(context).colorScheme.secondary,
-          ),
-        ),
+        child: Platform.isIOS && color != null
+            ? CupertinoActivityIndicator(color: color)
+            : CircularProgressIndicator.adaptive(
+                strokeCap: StrokeCap.round,
+                strokeWidth: strokeWidth ?? 4,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  color ?? Theme.of(context).colorScheme.secondary,
+                ),
+              ),
       ),
     );
   }
