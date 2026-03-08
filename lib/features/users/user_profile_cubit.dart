@@ -6,6 +6,7 @@ import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/core/utils/follow_listeners.dart';
 import 'package:testabd/domain/account/account_repository.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
+import 'package:testabd/features/home/home_cubit.dart' hide ConnectionFollowListener;
 import 'package:testabd/features/users/user_profile_state.dart';
 import 'package:testabd/main.dart';
 
@@ -19,6 +20,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   final ConnectionFollowEventListener _leaderboardFollowListener;
   final ConnectionFollowEventListener _profileFollowListener;
   late StreamSubscription<UserFollowEvent> _followSubscription;
+  final HomeFollowListener _homeFollowListener;
   final String username;
 
   static const int _blockPageSize = 10;
@@ -30,6 +32,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     this._accountRepository,
     this._quizRepository,
     this._messageHandler,
+    this._homeFollowListener,
     @Named.from(ConnectionFollowListener) this._connectionFollowListener,
     @Named.from(UserFollowListener) this._userProfileFollowListener,
     @Named.from(LeaderboardFollowListener) this._leaderboardFollowListener,
@@ -130,6 +133,9 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         );
 
         emit(newState);
+
+        /// home follow listener
+        _homeFollowListener.publish(FollowData(userId, isFollowing));
 
         /// publish follow event to [profile_connection_cubit]
         _connectionFollowListener.publish(UserFollowEvent(userId, isFollowing));

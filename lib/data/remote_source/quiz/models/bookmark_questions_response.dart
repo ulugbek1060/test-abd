@@ -24,7 +24,7 @@ class BookmarkedQuizResult with _$BookmarkedQuizResult {
     int? id,
     QuizUser? user,
     @JsonKey(name: 'question_detail') QuestionDetail? questionDetail,
-    @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
   }) = _BookmarkedQuizResult;
 
   factory BookmarkedQuizResult.fromJson(Map<String, dynamic> json) =>
@@ -56,7 +56,7 @@ class QuestionDetail with _$QuestionDetail {
     @JsonKey(name: 'question_text') String? questionText,
     @JsonKey(name: 'question_type') String? questionType,
     @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
-    @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'test_title') String? testTitle,
     Category? category,
   }) = _QuestionDetail;

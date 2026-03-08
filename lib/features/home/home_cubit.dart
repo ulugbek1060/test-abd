@@ -1,27 +1,83 @@
-import 'dart:ffi';
-
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/account/account_repository.dart';
-import 'package:testabd/domain/account/entities/user_profile_model.dart';
 import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 import 'home_state.dart';
 
+class FollowData {
+  final int userId;
+  final bool isFollowed;
+  FollowData(this.userId, this.isFollowed);
+}
+
+abstract class HomeFollowListener {
+  Stream<FollowData> get followStream;
+  void publish(FollowData data);
+  void dispose();
+}
+
+@LazySingleton(as: HomeFollowListener, dispose: disposeFollowListener)
+class ConnectionFollowListener implements HomeFollowListener {
+  final PublishSubject<FollowData> _followSubject =
+      PublishSubject<FollowData>();
+  @override
+  Stream<FollowData> get followStream => _followSubject.stream;
+  @override
+  void publish(FollowData data) => _followSubject.add(data);
+  @override
+  void dispose() => _followSubject.close();
+}
+
+void disposeFollowListener(HomeFollowListener listener){
+  listener.dispose();
+}
+
 @injectable
 class HomeCubit extends Cubit<HomeState> {
   final QuizRepository _quizRepository;
   final AccountRepository _accountRepository;
-  final int _pageSize = 10;
   final AppMessageHandler _messageHandler;
+  final HomeFollowListener _followListener;
 
-  HomeCubit(this._quizRepository, this._accountRepository, this._messageHandler)
-    : super(HomeState()) {
+  final int _pageSize = 10;
+
+  HomeCubit(
+    this._followListener,
+    this._quizRepository,
+    this._accountRepository,
+    this._messageHandler,
+  ) : super(HomeState()) {
     _fetchUserInfo();
+
+    // listen the followers
+    _followListener.followStream.listen((data) {
+      final updatedQuestions = state.followedQuizStata.questions.map((e) {
+        if (e.user?.id == data.userId) {
+          return e.copyWith(
+            user: e.user?.copyWith(isFollowing: data.isFollowed),
+          );
+        }
+        return e;
+      }).toList();
+      emit(
+        state.copyWith(
+          followedQuizStata: state.followedQuizStata.copyWith(
+            questions: updatedQuestions,
+          ),
+        ),
+      );
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _followListener.dispose();
+    return super.close();
   }
 
   Future<void> refresh() async => getQuestions();

@@ -3,9 +3,6 @@ import 'package:testabd/domain/account/entities/my_info_model.dart';
 import 'package:testabd/domain/account/entities/user_connections_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
-import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
-import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
-
 part 'profile_state.freezed.dart';
 
 @freezed

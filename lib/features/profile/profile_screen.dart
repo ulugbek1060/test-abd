@@ -127,6 +127,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                               .length
                               .toString(),
                           onEdit: () => context.push(AppRouter.editProfile),
+                          onBookmarkNavigate: () =>
+                              context.push(AppRouter.bookmarkQuestions),
                           onFollowers: () => context.push(
                             AppRouter.profileConnectionWithUserId(
                               connectionType: ConnectionsEnum.followers.name,
@@ -234,6 +236,7 @@ class _PremiumHeader extends StatelessWidget {
   final String followers;
   final String following;
   final VoidCallback onEdit;
+  final VoidCallback onBookmarkNavigate;
   final VoidCallback onFollowers;
   final VoidCallback onFollowing;
 
@@ -245,14 +248,13 @@ class _PremiumHeader extends StatelessWidget {
     required this.followers,
     required this.following,
     required this.onEdit,
+    required this.onBookmarkNavigate,
     required this.onFollowers,
     required this.onFollowing,
   });
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 120, 20, 24),
       decoration: const BoxDecoration(
@@ -373,6 +375,26 @@ class _PremiumHeader extends StatelessWidget {
               icon: const Icon(Icons.edit_rounded, color: Colors.white),
               label: Text(
                 context.l10n.editProfile,
+                style: const TextStyle(color: Colors.white),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.white, width: 1.5),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onBookmarkNavigate,
+              icon: const Icon(Icons.bookmark_rounded, color: Colors.white),
+              label: Text(
+                context.l10n.bookmarkedQuestions,
                 style: const TextStyle(color: Colors.white),
               ),
               style: OutlinedButton.styleFrom(
@@ -751,21 +773,31 @@ class _QuestionsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state.isLoading) return const SliverToBoxAdapter(child: ProgressView());
 
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverList.separated(
-        itemCount: state.questions.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 14),
-        itemBuilder: (context, index) {
-          final q = state.questions[index];
-          return _ModernQuestionCard(
-            question: q,
-            isLast: index == state.questions.length,
-            isFirst: index == 0,
-            onTap: () => context.push(AppRouter.myQuestionDetailWithArgs(q.id)),
-          );
-        },
-      ),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverList.separated(
+            itemCount: state.questions.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 14),
+            itemBuilder: (context, index) {
+              final q = state.questions[index];
+              return _ModernQuestionCard(
+                question: q,
+                isLast: index == state.questions.length,
+                isFirst: index == 0,
+                onTap: () =>
+                    context.push(AppRouter.myQuestionDetailWithArgs(q.id)),
+              );
+            },
+          ),
+        ),
+
+        if (state.isLoadingMore)
+          const SliverToBoxAdapter(
+            child: SizedBox(width: 40, height: 40, child: ProgressView()),
+          ),
+      ],
     );
   }
 }

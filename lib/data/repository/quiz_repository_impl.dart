@@ -13,7 +13,6 @@ import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/create_question_data_arg.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
-import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
 import 'package:testabd/domain/quiz/quiz_repository.dart';
 
 @LazySingleton(as: QuizRepository)
@@ -114,11 +113,20 @@ class QuizRepositoryImpl extends QuizRepository {
   }
 
   @override
-  Future<Either<AppException, QuestionsBookmarkModel>>
-  getQuestionsBookmark() async {
+  Future<Either<AppException, PagedData<QuestionModel>>> getQuestionsBookmark({
+    required int pageSize,
+    required int page,
+  }) async {
     try {
-      final result = await _quizSource.getQuestionsBookmark();
-      return Right(QuestionsBookmarkModel.fromResponse(result));
+      final result = await _quizSource.getQuestionsBookmark(page, pageSize);
+      final data = PagedData(
+        data: result.results
+            .map((e) => QuestionModel.fromBookmarkResponse(e))
+            .toList(),
+        next: result.next,
+        previous: result.previous,
+      );
+      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

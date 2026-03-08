@@ -39,7 +39,9 @@ _$BookmarkedQuizResultImpl _$$BookmarkedQuizResultImplFromJson(
           ? null
           : QuestionDetail.fromJson(
               json['question_detail'] as Map<String, dynamic>),
-      createdAt: json['created_at'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$$BookmarkedQuizResultImplToJson(
@@ -48,7 +50,7 @@ Map<String, dynamic> _$$BookmarkedQuizResultImplToJson(
       'id': instance.id,
       'user': instance.user,
       'question_detail': instance.questionDetail,
-      'created_at': instance.createdAt,
+      'created_at': instance.createdAt?.toIso8601String(),
     };
 
 _$QuizUserImpl _$$QuizUserImplFromJson(Map<String, dynamic> json) =>
@@ -77,7 +79,9 @@ _$QuestionDetailImpl _$$QuestionDetailImplFromJson(Map<String, dynamic> json) =>
       questionText: json['question_text'] as String?,
       questionType: json['question_type'] as String?,
       difficultyPercentage: (json['difficulty_percentage'] as num?)?.toDouble(),
-      createdAt: json['created_at'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
       testTitle: json['test_title'] as String?,
       category: json['category'] == null
           ? null
@@ -91,7 +95,7 @@ Map<String, dynamic> _$$QuestionDetailImplToJson(
       'question_text': instance.questionText,
       'question_type': instance.questionType,
       'difficulty_percentage': instance.difficultyPercentage,
-      'created_at': instance.createdAt,
+      'created_at': instance.createdAt?.toIso8601String(),
       'test_title': instance.testTitle,
       'category': instance.category,
     };

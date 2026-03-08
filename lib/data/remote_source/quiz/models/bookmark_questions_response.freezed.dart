@@ -241,7 +241,7 @@ mixin _$BookmarkedQuizResult {
   @JsonKey(name: 'question_detail')
   QuestionDetail? get questionDetail => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  String? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -259,7 +259,7 @@ abstract class $BookmarkedQuizResultCopyWith<$Res> {
       {int? id,
       QuizUser? user,
       @JsonKey(name: 'question_detail') QuestionDetail? questionDetail,
-      @JsonKey(name: 'created_at') String? createdAt});
+      @JsonKey(name: 'created_at') DateTime? createdAt});
 
   $QuizUserCopyWith<$Res>? get user;
   $QuestionDetailCopyWith<$Res>? get questionDetail;
@@ -300,7 +300,7 @@ class _$BookmarkedQuizResultCopyWithImpl<$Res,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
     ) as $Val);
   }
 
@@ -341,7 +341,7 @@ abstract class _$$BookmarkedQuizResultImplCopyWith<$Res>
       {int? id,
       QuizUser? user,
       @JsonKey(name: 'question_detail') QuestionDetail? questionDetail,
-      @JsonKey(name: 'created_at') String? createdAt});
+      @JsonKey(name: 'created_at') DateTime? createdAt});
 
   @override
   $QuizUserCopyWith<$Res>? get user;
@@ -381,7 +381,7 @@ class __$$BookmarkedQuizResultImplCopyWithImpl<$Res>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
     ));
   }
 }
@@ -407,7 +407,7 @@ class _$BookmarkedQuizResultImpl implements _BookmarkedQuizResult {
   final QuestionDetail? questionDetail;
   @override
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
 
   @override
   String toString() {
@@ -454,7 +454,7 @@ abstract class _BookmarkedQuizResult implements BookmarkedQuizResult {
       final QuizUser? user,
       @JsonKey(name: 'question_detail') final QuestionDetail? questionDetail,
       @JsonKey(name: 'created_at')
-      final String? createdAt}) = _$BookmarkedQuizResultImpl;
+      final DateTime? createdAt}) = _$BookmarkedQuizResultImpl;
 
   factory _BookmarkedQuizResult.fromJson(Map<String, dynamic> json) =
       _$BookmarkedQuizResultImpl.fromJson;
@@ -468,7 +468,7 @@ abstract class _BookmarkedQuizResult implements BookmarkedQuizResult {
   QuestionDetail? get questionDetail;
   @override
   @JsonKey(name: 'created_at')
-  String? get createdAt;
+  DateTime? get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$BookmarkedQuizResultImplCopyWith<_$BookmarkedQuizResultImpl>
@@ -746,7 +746,7 @@ mixin _$QuestionDetail {
   @JsonKey(name: 'difficulty_percentage')
   double? get difficultyPercentage => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  String? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'test_title')
   String? get testTitle => throw _privateConstructorUsedError;
   Category? get category => throw _privateConstructorUsedError;
@@ -768,7 +768,7 @@ abstract class $QuestionDetailCopyWith<$Res> {
       @JsonKey(name: 'question_text') String? questionText,
       @JsonKey(name: 'question_type') String? questionType,
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
-      @JsonKey(name: 'created_at') String? createdAt,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'test_title') String? testTitle,
       Category? category});
 
@@ -816,7 +816,7 @@ class _$QuestionDetailCopyWithImpl<$Res, $Val extends QuestionDetail>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       testTitle: freezed == testTitle
           ? _value.testTitle
           : testTitle // ignore: cast_nullable_to_non_nullable
@@ -854,7 +854,7 @@ abstract class _$$QuestionDetailImplCopyWith<$Res>
       @JsonKey(name: 'question_text') String? questionText,
       @JsonKey(name: 'question_type') String? questionType,
       @JsonKey(name: 'difficulty_percentage') double? difficultyPercentage,
-      @JsonKey(name: 'created_at') String? createdAt,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
       @JsonKey(name: 'test_title') String? testTitle,
       Category? category});
 
@@ -901,7 +901,7 @@ class __$$QuestionDetailImplCopyWithImpl<$Res>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       testTitle: freezed == testTitle
           ? _value.testTitle
           : testTitle // ignore: cast_nullable_to_non_nullable
@@ -942,7 +942,7 @@ class _$QuestionDetailImpl implements _QuestionDetail {
   final double? difficultyPercentage;
   @override
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
   @override
   @JsonKey(name: 'test_title')
   final String? testTitle;
@@ -1001,7 +1001,7 @@ abstract class _QuestionDetail implements QuestionDetail {
       @JsonKey(name: 'question_type') final String? questionType,
       @JsonKey(name: 'difficulty_percentage')
       final double? difficultyPercentage,
-      @JsonKey(name: 'created_at') final String? createdAt,
+      @JsonKey(name: 'created_at') final DateTime? createdAt,
       @JsonKey(name: 'test_title') final String? testTitle,
       final Category? category}) = _$QuestionDetailImpl;
 
@@ -1021,7 +1021,7 @@ abstract class _QuestionDetail implements QuestionDetail {
   double? get difficultyPercentage;
   @override
   @JsonKey(name: 'created_at')
-  String? get createdAt;
+  DateTime? get createdAt;
   @override
   @JsonKey(name: 'test_title')
   String? get testTitle;

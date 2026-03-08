@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/data/remote_source/quiz/models/block_detail_response.dart'
     as blockDetail;
+import 'package:testabd/data/remote_source/quiz/models/bookmark_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/followed_questions_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/question_response.dart';
 import 'package:testabd/data/remote_source/quiz/models/random_questions_response.dart';
@@ -10,7 +11,8 @@ import 'package:testabd/data/remote_source/quiz/models/user_blocks_response.dart
     as userBlock;
 import 'package:testabd/data/remote_source/quiz/models/questions_response.dart'
     as questions;
-import 'package:testabd/data/remote_source/quiz/models/user_questions_response.dart' as user_question_by_id;
+import 'package:testabd/data/remote_source/quiz/models/user_questions_response.dart'
+    as user_question_by_id;
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
 import 'package:testabd/domain/entity/user_item_model.dart';
@@ -69,7 +71,7 @@ class QuestionModel extends Equatable {
     this.isBookmarkLoading = false,
     this.isCompleted = false,
     this.isCorrect = false,
-    this.myAnswersId =  const {},
+    this.myAnswersId = const {},
   });
 
   @override
@@ -287,7 +289,9 @@ class QuestionModel extends Equatable {
     );
   }
 
-  static QuestionModel fromUserQuestionsResponse(user_question_by_id.Question response) {
+  static QuestionModel fromUserQuestionsResponse(
+    user_question_by_id.Question response,
+  ) {
     return QuestionModel(
       id: response.id,
       test: response.test,
@@ -299,12 +303,12 @@ class QuestionModel extends Equatable {
       answers: response.answers
           .map(
             (answer) => AnswerItemModel(
-          id: answer.id,
-          letter: answer.letter,
-          answerText: answer.answerText,
-          isCorrect: answer.isCorrect ?? false,
-        ),
-      )
+              id: answer.id,
+              letter: answer.letter,
+              answerText: answer.answerText,
+              isCorrect: answer.isCorrect ?? false,
+            ),
+          )
           .toList(),
       testDescription: response.testDescription,
       correctAnswerText: response.correctAnswerText,
@@ -442,6 +446,27 @@ class QuestionModel extends Equatable {
       ),
       createdAt: response.createdAt,
       roundImage: response.roundImage,
+    );
+  }
+
+  static QuestionModel fromBookmarkResponse(BookmarkedQuizResult response) {
+    return QuestionModel(
+      id: response.id,
+      testTitle: response.questionDetail?.testTitle,
+      questionText: response.questionDetail?.questionText,
+      questionType: QuestionType.fromString(
+        response.questionDetail?.questionType,
+      ),
+      difficultyPercentage: response.questionDetail?.difficultyPercentage,
+      user: UserItemModel(
+        id: response.user?.id,
+        username: response.user?.username,
+        profileImage: response.user?.profileImage,
+        isBadged: response.user?.isBadged,
+        isFollowing: response.user?.isFollowing,
+        isPremium: response.user?.isPremium,
+      ),
+      createdAt: response.createdAt,
     );
   }
 

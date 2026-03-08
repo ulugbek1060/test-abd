@@ -116,6 +116,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i371.SessionServiceImpl(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i1067.WSNotificationsSource>(
         () => _i1067.WSNotificationsSourceImpl());
+    gh.lazySingleton<_i639.HomeFollowListener>(
+      () => _i639.ConnectionFollowListener(),
+      dispose: _i639.disposeFollowListener,
+    );
     gh.lazySingleton<_i244.ConnectionFollowEventListener>(
       () => _i244.ConnectionFollowListener(),
       instanceName: 'ConnectionFollowListener',
@@ -197,6 +201,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i83.BooksSource>(() => _i83.BooksSourceImpl(gh<_i361.Dio>()));
+    gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
+      username,
+      _,
+    ) =>
+        _i445.UserProfileCubit.create(
+          username,
+          gh<_i575.AccountRepository>(),
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i639.HomeFollowListener>(),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'ConnectionFollowListener'),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'UserFollowListener'),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'LeaderboardFollowListener'),
+          gh<_i244.ConnectionFollowEventListener>(
+              instanceName: 'ProfileFollowListener'),
+        ));
     gh.factoryParam<_i420.UserBlockDetailCubit, int?, dynamic>((
       blockId,
       _,
@@ -255,6 +278,12 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i244.ConnectionFollowEventListener>(
               instanceName: 'UserFollowListener'),
         ));
+    gh.factory<_i639.HomeCubit>(() => _i639.HomeCubit(
+          gh<_i639.HomeFollowListener>(),
+          gh<_i156.QuizRepository>(),
+          gh<_i575.AccountRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
     gh.factory<_i688.PersonalInfoCubit>(() => _i688.PersonalInfoCubit(
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
@@ -273,29 +302,6 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.singleton<_i923.BooksRepository>(
         () => _i656.BooksRepositoryImpl(gh<_i83.BooksSource>()));
-    gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
-      username,
-      _,
-    ) =>
-        _i445.UserProfileCubit.create(
-          username,
-          gh<_i575.AccountRepository>(),
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'ConnectionFollowListener'),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'UserFollowListener'),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'LeaderboardFollowListener'),
-          gh<_i244.ConnectionFollowEventListener>(
-              instanceName: 'ProfileFollowListener'),
-        ));
-    gh.factory<_i639.HomeCubit>(() => _i639.HomeCubit(
-          gh<_i156.QuizRepository>(),
-          gh<_i575.AccountRepository>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
     gh.factory<_i46.LibraryCubit>(() => _i46.LibraryCubit(
           gh<_i923.BooksRepository>(),
           gh<_i877.AppMessageHandler>(),

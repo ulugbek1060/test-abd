@@ -16,37 +16,44 @@ import 'models/block_questions_response.dart';
 import 'models/user_questions_response.dart';
 
 abstract class QuizSource {
+  /// ===================== Questions ========================
+  Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
+
+  Future<QuestionResponse> updateQuestion(
+    int questionId,
+    CreateQuestionDataRequest data,
+  );
+
   Future<UserQuestionsResponse> getUserQuestions(
     int userId,
     int page,
     int pageSize,
   );
-  Future<BlockQuestionsResponse> getBlockTests(int blockId);
+
+  Future<QuestionResponse> getQuestionById(int questionId);
+
   Future<dynamic> bookmarkQuestions(int questionId);
-  Future<BookmarkQuestionsResponse> getQuestionsBookmark();
-  Future<List<CategoryResponse>> getCategories();
+
   Future<RandomQuestionModel> getRandomQuestion(int page, int pageSize);
-  Future<List<MyBlockResponse>> getMyBlocks();
+
   Future<FollowedQuestionsResponse> getFollowedQuestions(
     int page,
     int pageSize,
   );
-  Future<AnswerResponse> submitAnswer(
-    int questionId,
-    Set<int> selectedAnswers,
-    int? duration,
+
+  Future<BookmarkQuestionsResponse> getQuestionsBookmark(
+    int page,
+    int pageSize,
   );
-  Future<UserBlocksResponse> getBlocksByUserId(
-    int userId, {
-    int? page,
-    int? pageSize,
-  });
+
+  /// ===================== Blocks ========================
   Future<BlockDetailResponse> createBlock(
     String title,
     String description,
     int categoryId,
     AccessType accessType,
   );
+
   Future<BlockDetailResponse> updateBlock(
     int blockId,
     String title,
@@ -54,13 +61,27 @@ abstract class QuizSource {
     int categoryId,
     AccessType accessType,
   );
-  Future<QuestionResponse> createQuestion(CreateQuestionDataRequest data);
-  Future<QuestionResponse> updateQuestion(
-    int questionId,
-    CreateQuestionDataRequest data,
-  );
+
   Future<BlockDetailResponse> getBlockById(int id);
-  Future<QuestionResponse> getQuestionById(int questionId);
+
+  Future<BlockQuestionsResponse> getBlockTests(int blockId);
+
+  Future<List<MyBlockResponse>> getMyBlocks();
+
+  Future<UserBlocksResponse> getBlocksByUserId(
+    int userId, {
+    int? page,
+    int? pageSize,
+  });
+
+  /// ===================== Others ========================
+  Future<List<CategoryResponse>> getCategories();
+
+  Future<AnswerResponse> submitAnswer(
+    int questionId,
+    Set<int> selectedAnswers,
+    int? duration,
+  );
 }
 
 /// =========================> Source implementation <=========================
@@ -211,9 +232,15 @@ class QuizSourceImpl implements QuizSource {
   }
 
   @override
-  Future<BookmarkQuestionsResponse> getQuestionsBookmark() async {
+  Future<BookmarkQuestionsResponse> getQuestionsBookmark(
+    int page,
+    int pageSize,
+  ) async {
     try {
-      final response = await _dio.get('/quiz/question-bookmarks/');
+      final response = await _dio.get(
+        '/quiz/question-bookmarks/',
+        queryParameters: {'page': page, 'page_size': pageSize},
+      );
       return BookmarkQuestionsResponse.fromJson(response.data);
     } on DioException catch (error) {
       throw error.handleDioException();

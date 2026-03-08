@@ -17,9 +17,12 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BookmarkQuestionsState {
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get isLast => throw _privateConstructorUsedError;
+  List<QuestionModel> get questions => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
-  QuestionsBookmarkModel get bookmarkQuestions =>
-      throw _privateConstructorUsedError;
+  int get next => throw _privateConstructorUsedError;
+  int get previous => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BookmarkQuestionsStateCopyWith<BookmarkQuestionsState> get copyWith =>
@@ -34,8 +37,12 @@ abstract class $BookmarkQuestionsStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isLoading,
+      bool isLoadingMore,
+      bool isLast,
+      List<QuestionModel> questions,
       String? error,
-      QuestionsBookmarkModel bookmarkQuestions});
+      int next,
+      int previous});
 }
 
 /// @nodoc
@@ -53,22 +60,42 @@ class _$BookmarkQuestionsStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLast = null,
+    Object? questions = null,
     Object? error = freezed,
-    Object? bookmarkQuestions = null,
+    Object? next = null,
+    Object? previous = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLast: null == isLast
+          ? _value.isLast
+          : isLast // ignore: cast_nullable_to_non_nullable
+              as bool,
+      questions: null == questions
+          ? _value.questions
+          : questions // ignore: cast_nullable_to_non_nullable
+              as List<QuestionModel>,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
-      bookmarkQuestions: null == bookmarkQuestions
-          ? _value.bookmarkQuestions
-          : bookmarkQuestions // ignore: cast_nullable_to_non_nullable
-              as QuestionsBookmarkModel,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -84,8 +111,12 @@ abstract class _$$BookmarkQuestionsStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool isLoading,
+      bool isLoadingMore,
+      bool isLast,
+      List<QuestionModel> questions,
       String? error,
-      QuestionsBookmarkModel bookmarkQuestions});
+      int next,
+      int previous});
 }
 
 /// @nodoc
@@ -102,22 +133,42 @@ class __$$BookmarkQuestionsStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLast = null,
+    Object? questions = null,
     Object? error = freezed,
-    Object? bookmarkQuestions = null,
+    Object? next = null,
+    Object? previous = null,
   }) {
     return _then(_$BookmarkQuestionsStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLast: null == isLast
+          ? _value.isLast
+          : isLast // ignore: cast_nullable_to_non_nullable
+              as bool,
+      questions: null == questions
+          ? _value._questions
+          : questions // ignore: cast_nullable_to_non_nullable
+              as List<QuestionModel>,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
-      bookmarkQuestions: null == bookmarkQuestions
-          ? _value.bookmarkQuestions
-          : bookmarkQuestions // ignore: cast_nullable_to_non_nullable
-              as QuestionsBookmarkModel,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -127,22 +178,45 @@ class __$$BookmarkQuestionsStateImplCopyWithImpl<$Res>
 class _$BookmarkQuestionsStateImpl implements _BookmarkQuestionsState {
   const _$BookmarkQuestionsStateImpl(
       {this.isLoading = false,
+      this.isLoadingMore = false,
+      this.isLast = false,
+      final List<QuestionModel> questions = const [],
       this.error = null,
-      this.bookmarkQuestions = const QuestionsBookmarkModel()});
+      this.next = 1,
+      this.previous = 1})
+      : _questions = questions;
 
   @override
   @JsonKey()
   final bool isLoading;
   @override
   @JsonKey()
+  final bool isLoadingMore;
+  @override
+  @JsonKey()
+  final bool isLast;
+  final List<QuestionModel> _questions;
+  @override
+  @JsonKey()
+  List<QuestionModel> get questions {
+    if (_questions is EqualUnmodifiableListView) return _questions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_questions);
+  }
+
+  @override
+  @JsonKey()
   final String? error;
   @override
   @JsonKey()
-  final QuestionsBookmarkModel bookmarkQuestions;
+  final int next;
+  @override
+  @JsonKey()
+  final int previous;
 
   @override
   String toString() {
-    return 'BookmarkQuestionsState(isLoading: $isLoading, error: $error, bookmarkQuestions: $bookmarkQuestions)';
+    return 'BookmarkQuestionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLast: $isLast, questions: $questions, error: $error, next: $next, previous: $previous)';
   }
 
   @override
@@ -152,14 +226,20 @@ class _$BookmarkQuestionsStateImpl implements _BookmarkQuestionsState {
             other is _$BookmarkQuestionsStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore) &&
+            (identical(other.isLast, isLast) || other.isLast == isLast) &&
+            const DeepCollectionEquality()
+                .equals(other._questions, _questions) &&
             (identical(other.error, error) || other.error == error) &&
-            (identical(other.bookmarkQuestions, bookmarkQuestions) ||
-                other.bookmarkQuestions == bookmarkQuestions));
+            (identical(other.next, next) || other.next == next) &&
+            (identical(other.previous, previous) ||
+                other.previous == previous));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isLoading, error, bookmarkQuestions);
+  int get hashCode => Object.hash(runtimeType, isLoading, isLoadingMore, isLast,
+      const DeepCollectionEquality().hash(_questions), error, next, previous);
 
   @JsonKey(ignore: true)
   @override
@@ -171,17 +251,28 @@ class _$BookmarkQuestionsStateImpl implements _BookmarkQuestionsState {
 
 abstract class _BookmarkQuestionsState implements BookmarkQuestionsState {
   const factory _BookmarkQuestionsState(
-          {final bool isLoading,
-          final String? error,
-          final QuestionsBookmarkModel bookmarkQuestions}) =
-      _$BookmarkQuestionsStateImpl;
+      {final bool isLoading,
+      final bool isLoadingMore,
+      final bool isLast,
+      final List<QuestionModel> questions,
+      final String? error,
+      final int next,
+      final int previous}) = _$BookmarkQuestionsStateImpl;
 
   @override
   bool get isLoading;
   @override
+  bool get isLoadingMore;
+  @override
+  bool get isLast;
+  @override
+  List<QuestionModel> get questions;
+  @override
   String? get error;
   @override
-  QuestionsBookmarkModel get bookmarkQuestions;
+  int get next;
+  @override
+  int get previous;
   @override
   @JsonKey(ignore: true)
   _$$BookmarkQuestionsStateImplCopyWith<_$BookmarkQuestionsStateImpl>

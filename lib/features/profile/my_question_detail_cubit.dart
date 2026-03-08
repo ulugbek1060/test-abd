@@ -18,7 +18,7 @@ class MyQuestionDetailCubit extends Cubit<MyQuestionDetailState> {
     this._quizRepository,
   ) : super(MyQuestionDetailState());
 
-  Future<void> fetchQuestion() async {
+  Future<void> getQuestion() async {
     if (state.isLoading) return;
 
     emit(state.copyWith(isLoading: true));

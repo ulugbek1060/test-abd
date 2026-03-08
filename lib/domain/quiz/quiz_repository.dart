@@ -9,7 +9,6 @@ import 'package:testabd/domain/entity/check_answer_model.dart';
 import 'package:testabd/domain/entity/create_question_data_arg.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/domain/quiz/entities/my_qursion_model.dart';
-import 'package:testabd/domain/quiz/entities/questions_bookmark_model.dart';
 
 abstract class QuizRepository {
   // ------------------------------------------------------
@@ -54,7 +53,10 @@ abstract class QuizRepository {
 
   Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
 
-  Future<Either<AppException, QuestionsBookmarkModel>> getQuestionsBookmark();
+  Future<Either<AppException, PagedData<QuestionModel>>> getQuestionsBookmark({
+    required int pageSize,
+    required int page,
+  });
 
   Future<Either<AppException, PagedData<QuestionModel>>> getUserQuestions(
     int userId,
@@ -79,5 +81,4 @@ abstract class QuizRepository {
     required Set<int> selectedAnswers,
     int? duration,
   });
-
 }

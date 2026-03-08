@@ -6,6 +6,7 @@ import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
+import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/profile/bookmark_questions_cubit.dart';
 import 'package:testabd/features/profile/bookmark_questions_state.dart';
 import 'package:testabd/router/app_router.dart';
@@ -16,184 +17,317 @@ class BookmarkQuestionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          locator<BookmarkQuestionsCubit>()..fetchQuestionsBookmarks(),
+      create: (context) => locator<BookmarkQuestionsCubit>()..getQuestions(),
       child: const _View(),
     );
   }
 }
 
-class _View extends StatelessWidget {
-  const _View({super.key});
+class _View extends StatefulWidget {
+  const _View();
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<BookmarkQuestionsCubit, BookmarkQuestionsState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('Bookmark Questions')),
-          body: CustomScrollView(slivers: [_QuestionsSection(state: state)]),
-        );
-      },
-    );
-  }
+  State<_View> createState() => _ViewState();
 }
 
-class _QuestionsSection extends StatelessWidget {
-  final BookmarkQuestionsState state;
+class _ViewState extends State<_View> {
+  late final ScrollController _scrollController;
 
-  const _QuestionsSection({super.key, required this.state});
+  static const double _scrollThreshold = 300.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_shouldLoadMore()) {
+      context.read<BookmarkQuestionsCubit>().getQuestionsByPage();
+    }
+  }
+
+  bool _shouldLoadMore() {
+    if (!_scrollController.hasClients) return false;
+    final cubit = context.read<BookmarkQuestionsCubit>();
+    if (cubit.state.isLoadingMore) return false; // prevent duplicate calls
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    return maxScroll - currentScroll <= _scrollThreshold;
+  }
 
   @override
   Widget build(BuildContext context) {
-    /// loading state
-    if (state.isLoading) {
-      return SliverPadding(
-        padding: const EdgeInsets.all(8),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            childAspectRatio: 1.0,
-          ),
-          delegate: SliverChildBuilderDelegate((
-            BuildContext context,
-            int index,
-          ) {
-            return Center(child: ProgressView());
-          }, childCount: 4),
-        ),
-      );
-    }
+    return Scaffold(
+      appBar: AppBar(title: const Text('Saqlangan savollar')),
+      body: BlocBuilder<BookmarkQuestionsCubit, BookmarkQuestionsState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: ProgressView.medium());
+          }
 
-    /// for active state
-    return SliverPadding(
-      padding: const EdgeInsets.all(8),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 1.0,
-        ),
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          final question = state.bookmarkQuestions.results[index];
-          return QuestionCard(
-            title: question.questionDetail?.testTitle ?? '',
-            description: question.questionDetail?.questionText ?? '',
-            createdAt: question.createdAt,
-            correctAnswers: 2,
-            wrongAnswers: 2,
-            difficulty: Difficulty.easy,
-            onTap: () => context.push(
-              AppRouter.userQuestionDetailWithBlockId(question.id ?? -1),
-            ),
+          if (state.questions.isEmpty && !state.isLoadingMore) {
+            return const _EmptyState();
+          }
+
+          return CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              _QuestionsList(state: state),
+              if (state.isLoadingMore)
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Center(child: ProgressView.small()),
+                  ),
+                ),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            ],
           );
-        }, childCount: state.bookmarkQuestions.results.length),
+        },
       ),
     );
   }
 }
 
-// -------------------- Components ---------------------
-class QuestionCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final DateTime? createdAt;
-  final int? correctAnswers;
-  final int? wrongAnswers;
-  final Difficulty difficulty;
-  final void Function()? onTap;
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
 
-  const QuestionCard({
-    super.key,
-    required this.title,
-    required this.description,
-    this.createdAt,
-    required this.correctAnswers,
-    required this.wrongAnswers,
-    required this.difficulty,
-    this.onTap,
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.bookmark_border_rounded,
+            size: 80,
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.4),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            "Hozircha saqlangan savollar yo‘q",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            "Savollarni saqlash uchun bookmark belgisini bosing",
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuestionsList extends StatelessWidget {
+  final BookmarkQuestionsState state;
+
+  const _QuestionsList({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverList.separated(
+        separatorBuilder: (_, __) => const SizedBox(height: 16),
+        itemCount: state.questions.length,
+        itemBuilder: (context, index) {
+          final question = state.questions[index];
+          return _QuestionCard(
+            question: question,
+            isFirst: index == 0,
+            onTap: () {
+              final id = question.id;
+              if (id != null) {
+                context.push(AppRouter.userQuestionDetailWithBlockId(id));
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _QuestionCard extends StatelessWidget {
+  final QuestionModel question;
+  final VoidCallback onTap;
+  final bool isFirst;
+
+  const _QuestionCard({
+    required this.question,
+    required this.onTap,
+    required this.isFirst,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final difficulty =
+        question.difficultyPercentage?.toDifficulty() ?? Difficulty.easy;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsets.only(top: isFirst ? 16 : 0),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-          //     blurRadius: 12,
-          //     offset: const Offset(0, 0),
-          //   ),
-          // ],
+          color: scheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// Title row + difficulty
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top row
+            Row(
+              children: [
+                _DifficultyBadge(difficulty: difficulty),
+                const Spacer(),
+                if (question.createdAt != null)
+                  Text(
+                    formatDate(question.createdAt!),
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      color: scheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  _DifficultyChip(
-                    label: difficulty.name.toUpperCase(),
-                    color: difficulty.color,
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Question
+            Text(
+              question.questionText ?? 'Savol matni mavjud emas',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 18,
+                height: 1.38,
+                fontWeight: FontWeight.w700,
+                color: scheme.onSurface,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Stats + action
+            Row(
+              children: [
+                if (question.correctCount != null ||
+                    question.wrongCount != null) ...[
+                  _StatItem(
+                    icon: Icons.check_circle_rounded,
+                    color: Colors.green,
+                    value: question.correctCount ?? 0,
+                  ),
+                  const SizedBox(width: 24),
+                  _StatItem(
+                    icon: Icons.cancel_rounded,
+                    color: Colors.redAccent,
+                    value: question.wrongCount ?? 0,
                   ),
                 ],
-              ),
-              const SizedBox(height: 4),
+                const Spacer(),
+                _ViewButton(onTap: onTap),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-              /// Description
+class _StatItem extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final int value;
+
+  const _StatItem({
+    required this.icon,
+    required this.color,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 6),
+        Text(
+          '$value',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ViewButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _ViewButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.primary.withOpacity(0.12),
+      borderRadius: BorderRadius.circular(30),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Text(
-                description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                  height: 1.4,
+                "Ko‘rish",
+                style: TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: scheme.primary,
                 ),
               ),
-
-              const Spacer(),
-
-              /// Stats row
-              Row(
-                children: [
-                  _QuestionStatItem(
-                    icon: Icons.check_circle_outline,
-                    value: correctAnswers,
-                    color: const Color(0xFF4CAF50),
-                  ),
-                  const SizedBox(width: 8),
-                  _QuestionStatItem(
-                    icon: Icons.cancel_outlined,
-                    value: wrongAnswers,
-                    color: const Color(0xFFF44336),
-                  ),
-                ],
+              const SizedBox(width: 6),
+              Icon(
+                Icons.arrow_forward_rounded,
+                size: 18,
+                color: scheme.primary,
               ),
-              const SizedBox(height: 8),
-              _DateChip(date: formatDate(createdAt)),
             ],
           ),
         ),
@@ -202,97 +336,31 @@ class QuestionCard extends StatelessWidget {
   }
 }
 
-class _DifficultyChip extends StatelessWidget {
-  final String label;
-  final Color color;
+class _DifficultyBadge extends StatelessWidget {
+  final Difficulty difficulty;
 
-  const _DifficultyChip({required this.label, required this.color});
+  const _DifficultyBadge({required this.difficulty});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.4)),
-      ),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: color,
-          fontWeight: FontWeight.w600,
+        color: difficulty.color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: difficulty.color.withOpacity(0.35),
+          width: 1.2,
         ),
       ),
-    );
-  }
-}
-
-class _QuestionStatItem extends StatelessWidget {
-  final IconData icon;
-  final int? value;
-  final Color color;
-
-  const _QuestionStatItem({
-    required this.icon,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 6),
-          Text(
-            value?.toString() ?? '0',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DateChip extends StatelessWidget {
-  final String date;
-
-  const _DateChip({required this.date});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppColors.onSurfaceColor(context),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.schedule,
-            size: 14,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            date,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ],
+      child: Text(
+        difficulty.name.toUpperCase(),
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.4,
+          color: difficulty.color,
+        ),
       ),
     );
   }
