@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testabd/di/app_config.dart';
+import 'package:testabd/domain/books/entities/book_detail_model.dart';
 import 'package:testabd/features/library/book_detail_cubit.dart';
-import 'package:testabd/features/library/book_detail_state.dart'; // assuming go_router or similar
+import 'package:testabd/features/library/book_detail_state.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final int? bookId;
@@ -16,32 +17,26 @@ class BookDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (bookId == null) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            'No book selected',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+      );
+    }
+
     return BlocProvider(
       create: (context) => locator<BookDetailCubit>(param1: bookId)..getBook(),
-      child: const _BookDetailView(),
+      child: const _View(),
     );
   }
 }
 
-class _BookDetailView extends StatelessWidget {
-  const _BookDetailView();
-
-  // ─── Static demo data ────────────────────────────────────────────────
-  static final _demoBook = {
-    'title': 'Atomic Habits',
-    'author': 'James Clear',
-    'coverUrl':
-    'https://images.unsplash.com/photo-1544947950-fa07a98d4679?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    'description':
-    'No matter your goals, Atomic Habits offers a proven framework for improving—every day. James Clear, one of the world’s leading experts on habit formation, reveals practical strategies that will teach you exactly how to form good habits, break bad ones, and master the tiny behaviors that lead to remarkable results.',
-    'pageCount': 320,
-    'publishedYear': 2018,
-    'language': 'English',
-    'publisher': 'Avery',
-    'isbn': '978-0735211292',
-    'genres': ['Self Help', 'Psychology', 'Personal Development', 'Productivity'],
-    'format': 'Paperback',
-  };
+class _View extends StatelessWidget {
+  const _View();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +52,9 @@ class _BookDetailView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share_rounded, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              // TODO: implement share
+            },
           ),
           const SizedBox(width: 8),
         ],
@@ -73,11 +70,11 @@ class _BookDetailView extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline_rounded, size: 64, color: Colors.red),
+                  const Icon(Icons.error_outline_rounded, size: 64, color: Colors.redAccent),
                   const SizedBox(height: 16),
                   Text(
-                    state.error ?? 'Something went wrong',
-                    style: const TextStyle(fontSize: 18, color: Colors.red),
+                    state.error ?? 'Failed to load book',
+                    style: const TextStyle(fontSize: 18, color: Colors.redAccent),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -90,8 +87,11 @@ class _BookDetailView extends StatelessWidget {
             );
           }
 
-          // We ignore real data → always show demo for now
-          final book = _demoBook;
+          final book = state.data;
+
+          if (book == null) {
+            return const Center(child: Text('Book not found'));
+          }
 
           return CustomScrollView(
             slivers: [
@@ -103,52 +103,55 @@ class _BookDetailView extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 140),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
 
                     Text(
-                      book['title'] as String,
+                      book.title ?? 'Untitled',
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w700,
-                        height: 1.15,
-                        letterSpacing: -0.4,
+                        height: 1.18,
+                        letterSpacing: -0.3,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      book['author'] as String,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.85),
-                        fontWeight: FontWeight.w500,
+
+                    if (book.author?.fullName != null)
+                      Text(
+                        book.author!.fullName!,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.9),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
 
                     const SizedBox(height: 28),
 
                     _BookStatsRow(book: book),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 36),
 
-                    if ((book['description'] as String?)?.isNotEmpty == true) ...[
+                    if (book.description?.isNotEmpty == true) ...[
                       Text(
                         'About the book',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        book['description'] as String,
+                        book.description!,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          height: 1.48,
+                          height: 1.52,
+                          color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.92),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 40),
                     ],
 
-                    if ((book['genres'] as List?)?.isNotEmpty == true) ...[
+                    if (book.tags?.isNotEmpty == true) ...[
                       Text(
-                        'Genres',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        'Tags',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -156,15 +159,20 @@ class _BookDetailView extends StatelessWidget {
                       Wrap(
                         spacing: 10,
                         runSpacing: 10,
-                        children: (book['genres'] as List).map((genre) {
+                        children: book.tags!.map((tag) {
+                          final tagStr = tag is String ? tag : tag.toString();
                           return Chip(
-                            label: Text(genre),
-                            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.12),
-                            labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+                            label: Text(tagStr),
+                            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.14),
+                            labelStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                           );
                         }).toList(),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 40),
                     ],
 
                     _BookInfoTable(book: book),
@@ -179,34 +187,46 @@ class _BookDetailView extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: FilledButton.icon(
-          onPressed: () {
-            // TODO: navigate to reader
+        child: BlocBuilder<BookDetailCubit, BookDetailState>(
+          builder: (context, state) {
+            final book = state.data as BookDetailModel?;
+            if (book == null) return const SizedBox.shrink();
+
+            return FilledButton.icon(
+              onPressed: () {
+                // TODO: navigate to reader screen
+                // Example: context.push('/reader/${book.id}');
+              },
+              icon: const Icon(Icons.menu_book_rounded),
+              label: const Text(
+                'Start Reading',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              ),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(56),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              ),
+            );
           },
-          icon: const Icon(Icons.menu_book_rounded),
-          label: const Text(
-            'Start Reading',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-          ),
-          style: FilledButton.styleFrom(
-            minimumSize: const Size.fromHeight(56),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
         ),
       ),
     );
   }
 }
 
-// ─── Helper widgets (updated to use Map instead of Book class) ───────
+// ────────────────────────────────────────────────
+//               HELPER WIDGETS
+// ────────────────────────────────────────────────
 
 class _BookCoverHeader extends StatelessWidget {
-  final Map<String, dynamic> book;
+  final BookDetailModel book;
 
   const _BookCoverHeader({required this.book});
 
   @override
   Widget build(BuildContext context) {
+    final cover = book.coverImage ?? '';
+
     return Stack(
       children: [
         Container(
@@ -217,14 +237,14 @@ class _BookCoverHeader extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withOpacity(0.1),
-                Colors.black.withOpacity(0.7),
-                Colors.black.withOpacity(0.92),
+                Colors.black.withOpacity(0.12),
+                Colors.black.withOpacity(0.72),
+                Colors.black.withOpacity(0.94),
               ],
             ),
           ),
           child: CachedNetworkImage(
-            imageUrl: book['coverUrl'] as String,
+            imageUrl: cover,
             fit: BoxFit.cover,
             placeholder: (_, __) => Container(color: Colors.grey.shade900),
             errorWidget: (_, __, ___) => Container(
@@ -246,16 +266,16 @@ class _BookCoverHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    blurRadius: 30,
-                    offset: const Offset(0, 20),
+                    color: Colors.black.withOpacity(0.55),
+                    blurRadius: 32,
+                    offset: const Offset(0, 22),
                   ),
                 ],
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: CachedNetworkImage(
-                  imageUrl: book['coverUrl'] as String,
+                  imageUrl: cover,
                   fit: BoxFit.cover,
                   placeholder: (_, __) => Container(color: Colors.grey.shade800),
                   errorWidget: (_, __, ___) => Container(
@@ -273,7 +293,7 @@ class _BookCoverHeader extends StatelessWidget {
 }
 
 class _BookStatsRow extends StatelessWidget {
-  final Map<String, dynamic> book;
+  final BookDetailModel book;
 
   const _BookStatsRow({required this.book});
 
@@ -281,15 +301,22 @@ class _BookStatsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = <Widget>[];
 
-    if (book['pageCount'] != null) {
-      items.add(_StatChip(icon: Icons.menu_book, label: '${book['pageCount']} pages'));
+    if (book.totalPages != null && book.totalPages! > 0) {
+      items.add(_StatChip(
+        icon: Icons.menu_book_rounded,
+        label: '${book.totalPages} pages',
+      ));
     }
-    if (book['publishedYear'] != null) {
-      items.add(_StatChip(icon: Icons.calendar_today_rounded, label: '${book['publishedYear']}'));
+
+    if (book.createdAt != null) {
+      final year = book.createdAt!.year;
+      items.add(_StatChip(
+        icon: Icons.calendar_today_rounded,
+        label: '$year',
+      ));
     }
-    if (book['language'] != null) {
-      items.add(_StatChip(icon: Icons.language, label: book['language'] as String));
-    }
+
+    // You can add language / format if added to model later
 
     return Wrap(
       spacing: 16,
@@ -308,18 +335,25 @@ class _StatChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.12),
+        color: Colors.white.withOpacity(0.13),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.15)),
+        border: Border.all(color: Colors.white.withOpacity(0.18)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: Colors.white70),
-          const SizedBox(width: 6),
-          Text(label, style: const TextStyle(color: Colors.white, fontSize: 14)),
+          Icon(icon, size: 20, color: Colors.white70),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
@@ -327,7 +361,7 @@ class _StatChip extends StatelessWidget {
 }
 
 class _BookInfoTable extends StatelessWidget {
-  final Map<String, dynamic> book;
+  final BookDetailModel book;
 
   const _BookInfoTable({required this.book});
 
@@ -335,9 +369,10 @@ class _BookInfoTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = <({String label, String? value})>[];
 
-    if (book['publisher'] != null) rows.add((label: 'Publisher', value: book['publisher'] as String?));
-    if (book['isbn'] != null) rows.add((label: 'ISBN', value: book['isbn'] as String?));
-    if (book['format'] != null) rows.add((label: 'Format', value: book['format'] as String?));
+    // You can extend this when you add more fields to the model
+    // rows.add((label: 'Publisher', value: book.publisher));
+    // rows.add((label: 'ISBN',      value: book.isbn));
+    // rows.add((label: 'Format',    value: book.format));
 
     if (rows.isEmpty) return const SizedBox.shrink();
 
@@ -346,7 +381,9 @@ class _BookInfoTable extends StatelessWidget {
       children: [
         Text(
           'Book Details',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 12),
         ...rows.map((row) => Padding(
@@ -358,7 +395,11 @@ class _BookInfoTable extends StatelessWidget {
                 width: 100,
                 child: Text(
                   row.label,
-                  style: TextStyle(color: Colors.white70, fontSize: 15),
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               Expanded(

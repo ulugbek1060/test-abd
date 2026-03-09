@@ -27,7 +27,6 @@ class BookDetailCubit extends Cubit<BookDetailState> {
     result.fold(
       (error) {
         _messageHandler.handleDialog(error);
-
         emit(state.copyWith(isLoading: false, error: error.message));
       },
       (value) {

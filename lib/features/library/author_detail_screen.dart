@@ -3,25 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/features/library/author_detail_cubit.dart'; // or your navigation method
+import 'package:testabd/domain/books/entities/author_detail_model.dart';
+import 'package:testabd/features/library/author_detail_cubit.dart';
+import 'package:testabd/features/library/author_detail_state.dart';
 
 class AuthorDetailScreen extends StatelessWidget {
-  final int? authorId; // or String slug, etc.
+  final int? authorId;
 
   const AuthorDetailScreen({super.key, this.authorId});
 
   @override
   Widget build(BuildContext context) {
+    if (authorId == null) {
+      return const Scaffold(
+        body: Center(child: Text('No author selected')),
+      );
+    }
+
     return BlocProvider(
-      create: (context) =>
-          locator<AuthorDetailCubit>(param1: authorId)..getAuthor(),
-      child: const _View(),
+      create: (context) => locator<AuthorDetailCubit>(param1: authorId)..getAuthor(),
+      child: const _AuthorDetailView(),
     );
   }
 }
 
-class _View extends StatelessWidget {
-  const _View({super.key});
+class _AuthorDetailView extends StatelessWidget {
+  const _AuthorDetailView();
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +51,163 @@ class _View extends StatelessWidget {
           const SizedBox(width: 8),
         ],
       ),
-      body: const _AuthorDetailContent(),
+      body: BlocBuilder<AuthorDetailCubit, AuthorDetailState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.error != null) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error_outline_rounded, size: 64, color: Colors.redAccent),
+                  const SizedBox(height: 16),
+                  Text(
+                    state.error ?? 'Failed to load author',
+                    style: const TextStyle(fontSize: 18, color: Colors.redAccent),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  OutlinedButton(
+                    onPressed: () => context.read<AuthorDetailCubit>().getAuthor(),
+                    child: const Text('Try Again'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final author = state.data as AuthorDetailModel?;
+
+          if (author == null) {
+            return const Center(child: Text('Author not found'));
+          }
+
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: _AuthorCoverHeader(author: author),
+              ),
+
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 140),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    const SizedBox(height: 32),
+
+                    // Name + Follow button
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            author.fullName ?? 'Unknown Author',
+                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              height: 1.18,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        OutlinedButton(
+                          onPressed: () {
+                            // TODO: follow/unfollow logic
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white70, width: 1.5),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                          ),
+                          child: const Text(
+                            'Follow',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // You can add born/nationality here later if added to model
+                    // For now we skip it or show something else if available
+
+                    const SizedBox(height: 28),
+
+                    // Stats chips (books count & followers would need model extension)
+                    _AuthorStatsRow(author: author),
+
+                    const SizedBox(height: 36),
+
+                    // Bio
+                    if (author.bio?.isNotEmpty == true) ...[
+                      Text(
+                        'About the Author',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        author.bio!,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          height: 1.52,
+                          color: Colors.white.withOpacity(0.92),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                    ],
+
+                    // ────────────────────────────────────────────────
+                    // Popular Books section → kept static as requested
+                    // ────────────────────────────────────────────────
+                    Text(
+                      'Popular Books',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 220,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _demoPopularBooks.length,
+                        itemBuilder: (context, index) {
+                          final book = _demoPopularBooks[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: _BookMiniCard(
+                              title: book['title'] as String,
+                              cover: book['cover'] as String,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Extra info section (static links)
+                    const _AuthorExtraInfo(),
+                  ]),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: FilledButton.icon(
           onPressed: () {
-            // TODO: navigate to author's books list / library filter
-            // context.push('/books?authorId=$authorId');
+            // TODO: navigate to author's books list
+            // Example: context.push('/books?authorId=${author?.id}');
           },
           icon: const Icon(Icons.library_books_rounded),
           label: const Text(
@@ -60,9 +216,7 @@ class _View extends StatelessWidget {
           ),
           style: FilledButton.styleFrom(
             minimumSize: const Size.fromHeight(56),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
         ),
       ),
@@ -70,178 +224,35 @@ class _View extends StatelessWidget {
   }
 }
 
-class _AuthorDetailContent extends StatelessWidget {
-  const _AuthorDetailContent();
+// ─── Static popular books (kept as requested) ────────────────────────────────
+final _demoPopularBooks = [
+  {
+    'title': 'Atomic Habits',
+    'cover': 'https://images.unsplash.com/photo-1544947950-fa07a98d4679?w=400',
+  },
+  {
+    'title': 'The Power of Habit',
+    'cover': 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400',
+  },
+  {
+    'title': 'Deep Work',
+    'cover': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400',
+  },
+];
 
-  // ─── Static demo data ────────────────────────────────────────────────
-  static final _demoAuthor = {
-    'name': 'James Clear',
-    'photoUrl':
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    'bio':
-        'James Clear is an American writer and habit expert. He is the author of the #1 New York Times bestseller Atomic Habits, which has sold more than 15 million copies worldwide and has been translated into more than 50 languages. His work has appeared in Entrepreneur magazine, Time magazine, the New York Times, the Wall Street Journal, and on CBS This Morning.',
-    'born': '1986',
-    'nationality': 'American',
-    'booksCount': 3,
-    'followers': '1.2M',
-    'popularBooks': [
-      {
-        'title': 'Atomic Habits',
-        'cover':
-            'https://images.unsplash.com/photo-1544947950-fa07a98d4679?w=400',
-      },
-      {
-        'title': 'Habits',
-        'cover':
-            'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400',
-      },
-      {
-        'title': 'Clear Thinking',
-        'cover':
-            'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400',
-      },
-    ],
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    final author = _demoAuthor;
-
-    return CustomScrollView(
-      slivers: [
-        // Hero author image section
-        SliverToBoxAdapter(child: _AuthorCoverHeader(author: author)),
-
-        // Main content
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 140),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              const SizedBox(height: 32),
-
-              // Name + Follow button
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      author['name'] as String,
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            height: 1.15,
-                            letterSpacing: -0.4,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  OutlinedButton(
-                    onPressed: () {
-                      // TODO: follow/unfollow logic
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white70, width: 1.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 28,
-                        vertical: 12,
-                      ),
-                    ),
-                    child: const Text(
-                      'Follow',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-              Text(
-                '${author['nationality']} • Born ${author['born']}',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(color: Colors.white70),
-              ),
-
-              const SizedBox(height: 28),
-
-              // Stats chips
-              _AuthorStatsRow(author: author),
-
-              const SizedBox(height: 36),
-
-              // Bio
-              if ((author['bio'] as String?)?.isNotEmpty == true) ...[
-                Text(
-                  'About the Author',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  author['bio'] as String,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    height: 1.5,
-                    color: Colors.white.withOpacity(0.92),
-                  ),
-                ),
-                const SizedBox(height: 40),
-              ],
-
-              // Popular books section
-              Text(
-                'Popular Books',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 220,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: (author['popularBooks'] as List).length,
-                  itemBuilder: (context, index) {
-                    final book = (author['popularBooks'] as List)[index] as Map;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: _BookMiniCard(
-                        title: book['title'] as String,
-                        cover: book['cover'] as String,
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Extra info (website, twitter, etc.) if you want to add
-              _AuthorExtraInfo(),
-            ]),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ─── Helper Widgets ──────────────────────────────────────────────────
+// ─── Helper Widgets ──────────────────────────────────────────────────────────
 
 class _AuthorCoverHeader extends StatelessWidget {
-  final Map<String, dynamic> author;
+  final AuthorDetailModel author;
 
   const _AuthorCoverHeader({required this.author});
 
   @override
   Widget build(BuildContext context) {
+    final photo = author.image ?? '';
+
     return Stack(
       children: [
-        // Blurred background
         Container(
           height: 380,
           width: double.infinity,
@@ -257,7 +268,7 @@ class _AuthorCoverHeader extends StatelessWidget {
             ),
           ),
           child: CachedNetworkImage(
-            imageUrl: author['photoUrl'] as String,
+            imageUrl: photo,
             fit: BoxFit.cover,
             placeholder: (_, __) => Container(color: Colors.grey.shade900),
             errorWidget: (_, __, ___) => Container(
@@ -267,7 +278,6 @@ class _AuthorCoverHeader extends StatelessWidget {
           ),
         ),
 
-        // Centered circular portrait
         Positioned(
           bottom: 50,
           left: 0,
@@ -285,24 +295,16 @@ class _AuthorCoverHeader extends StatelessWidget {
                     offset: const Offset(0, 20),
                   ),
                 ],
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.4),
-                  width: 4,
-                ),
+                border: Border.all(color: Colors.white.withOpacity(0.4), width: 4),
               ),
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: author['photoUrl'] as String,
+                  imageUrl: photo,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) =>
-                      Container(color: Colors.grey.shade800),
+                  placeholder: (_, __) => Container(color: Colors.grey.shade800),
                   errorWidget: (_, __, ___) => Container(
                     color: Colors.grey.shade800,
-                    child: const Icon(
-                      Icons.person,
-                      size: 80,
-                      color: Colors.white38,
-                    ),
+                    child: const Icon(Icons.person, size: 80, color: Colors.white38),
                   ),
                 ),
               ),
@@ -315,18 +317,25 @@ class _AuthorCoverHeader extends StatelessWidget {
 }
 
 class _AuthorStatsRow extends StatelessWidget {
-  final Map<String, dynamic> author;
+  final AuthorDetailModel author;
 
   const _AuthorStatsRow({required this.author});
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      _StatChip(icon: Icons.menu_book, label: '${author['booksCount']} Books'),
-      _StatChip(icon: Icons.group, label: '${author['followers']} Followers'),
-    ];
+    // Currently model has no booksCount or followers
+    // You can extend the model later or show placeholders
+    final items = <Widget>[];
 
-    return Wrap(spacing: 16, runSpacing: 12, children: items);
+    // Example placeholder until you add real data to model
+    items.add(const _StatChip(icon: Icons.menu_book_rounded, label: 'Books • —'));
+    items.add(const _StatChip(icon: Icons.group, label: 'Followers • —'));
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 12,
+      children: items,
+    );
   }
 }
 
@@ -422,9 +431,7 @@ class _AuthorExtraInfo extends StatelessWidget {
       children: [
         Text(
           'Find more',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         Wrap(
@@ -433,7 +440,6 @@ class _AuthorExtraInfo extends StatelessWidget {
           children: const [
             _LinkChip(icon: Icons.language, label: 'Website'),
             _LinkChip(icon: Icons.import_contacts, label: 'Twitter'),
-            // use actual Icons.twitter if available
             _LinkChip(icon: Icons.article, label: 'Articles'),
           ],
         ),
@@ -456,7 +462,7 @@ class _LinkChip extends StatelessWidget {
       backgroundColor: Colors.white.withOpacity(0.12),
       labelStyle: const TextStyle(color: Colors.white),
       onPressed: () {
-        // TODO: open link
+        // TODO: open link (you can make this dynamic later)
       },
     );
   }

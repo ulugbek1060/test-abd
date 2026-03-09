@@ -4,7 +4,9 @@ import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/data/remote_source/books/books_source.dart';
 import 'package:testabd/domain/books/books_repository.dart';
+import 'package:testabd/domain/books/entities/author_detail_model.dart';
 import 'package:testabd/domain/books/entities/author_model.dart';
+import 'package:testabd/domain/books/entities/book_detail_model.dart';
 import 'package:testabd/domain/books/entities/book_model.dart';
 
 @Singleton(as: BooksRepository)
@@ -49,7 +51,6 @@ class BooksRepositoryImpl implements BooksRepository {
     }
   }
 
-
   ///  -------------------------------------------------------------------------
   @override
   Future<Either<AppException, dynamic>> bookDashboard() async {
@@ -64,10 +65,12 @@ class BooksRepositoryImpl implements BooksRepository {
   }
 
   @override
-  Future<Either<AppException, dynamic>> getAuthorById(int authorId) async {
+  Future<Either<AppException, AuthorDetailModel>> getAuthorById(
+    int authorId,
+  ) async {
     try {
       final result = await _booksSource.getAuthorById(authorId);
-      return Right(result);
+      return Right(AuthorDetailModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
@@ -76,10 +79,10 @@ class BooksRepositoryImpl implements BooksRepository {
   }
 
   @override
-  Future<Either<AppException, dynamic>> getBookById(int bookId) async {
+  Future<Either<AppException, BookDetailModel>> getBookById(int bookId) async {
     try {
       final result = await _booksSource.getBookById(bookId);
-      return Right(result);
+      return Right(BookDetailModel.fromResponse(result));
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

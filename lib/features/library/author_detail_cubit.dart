@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
 import 'package:testabd/domain/books/books_repository.dart';
 import 'package:testabd/features/library/author_detail_state.dart';
+import 'package:testabd/main.dart';
 
 @injectable
 class AuthorDetailCubit extends Cubit<AuthorDetailState> {
@@ -18,20 +19,20 @@ class AuthorDetailCubit extends Cubit<AuthorDetailState> {
     this._booksRepository,
   ) : super(AuthorDetailState.initial());
 
-
   Future<void> getAuthor() async {
     if (state.isLoading || authorId == null) return;
+
+    logger.d(authorId);
 
     emit(state.copyWith(isLoading: true));
 
     final result = await _booksRepository.getAuthorById(authorId!);
     result.fold(
-          (error) {
+      (error) {
         _messageHandler.handleDialog(error);
-
         emit(state.copyWith(isLoading: false, error: error.message));
       },
-          (value) {
+      (value) {
         emit(state.copyWith(isLoading: false, error: null, data: value));
       },
     );

@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BookDetailState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
-  dynamic get data => throw _privateConstructorUsedError;
+  BookDetailModel? get data => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BookDetailStateCopyWith<BookDetailState> get copyWith =>
@@ -31,7 +31,9 @@ abstract class $BookDetailStateCopyWith<$Res> {
           BookDetailState value, $Res Function(BookDetailState) then) =
       _$BookDetailStateCopyWithImpl<$Res, BookDetailState>;
   @useResult
-  $Res call({bool isLoading, String? error, dynamic data});
+  $Res call({bool isLoading, String? error, BookDetailModel? data});
+
+  $BookDetailModelCopyWith<$Res>? get data;
 }
 
 /// @nodoc
@@ -63,8 +65,20 @@ class _$BookDetailStateCopyWithImpl<$Res, $Val extends BookDetailState>
       data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as BookDetailModel?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $BookDetailModelCopyWith<$Res>? get data {
+    if (_value.data == null) {
+      return null;
+    }
+
+    return $BookDetailModelCopyWith<$Res>(_value.data!, (value) {
+      return _then(_value.copyWith(data: value) as $Val);
+    });
   }
 }
 
@@ -76,7 +90,10 @@ abstract class _$$BookDetailStateImplCopyWith<$Res>
       __$$BookDetailStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, String? error, dynamic data});
+  $Res call({bool isLoading, String? error, BookDetailModel? data});
+
+  @override
+  $BookDetailModelCopyWith<$Res>? get data;
 }
 
 /// @nodoc
@@ -106,7 +123,7 @@ class __$$BookDetailStateImplCopyWithImpl<$Res>
       data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as BookDetailModel?,
     ));
   }
 }
@@ -122,7 +139,7 @@ class _$BookDetailStateImpl implements _BookDetailState {
   @override
   final String? error;
   @override
-  final dynamic data;
+  final BookDetailModel? data;
 
   @override
   String toString() {
@@ -137,12 +154,11 @@ class _$BookDetailStateImpl implements _BookDetailState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
-            const DeepCollectionEquality().equals(other.data, data));
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isLoading, error, const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(runtimeType, isLoading, error, data);
 
   @JsonKey(ignore: true)
   @override
@@ -156,14 +172,14 @@ abstract class _BookDetailState implements BookDetailState {
   const factory _BookDetailState(
       {final bool isLoading,
       final String? error,
-      final dynamic data}) = _$BookDetailStateImpl;
+      final BookDetailModel? data}) = _$BookDetailStateImpl;
 
   @override
   bool get isLoading;
   @override
   String? get error;
   @override
-  dynamic get data;
+  BookDetailModel? get data;
   @override
   @JsonKey(ignore: true)
   _$$BookDetailStateImplCopyWith<_$BookDetailStateImpl> get copyWith =>

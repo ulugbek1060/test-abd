@@ -98,7 +98,6 @@ abstract class AppRouter {
   static String bookDetailWithArgs({int? bookId}) => '/book_detail/$bookId';
 
   static const authorDetail = '/author_detail/:author_id';
-
   static String authorDetailWithArgs({int? authorId}) =>
       '/author_detail/$authorId';
 }
@@ -227,28 +226,24 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.regionalInfo,
       pageBuilder: (context, state) {
-        // final connectionType = state.pathParameters['connection_type']!;
         return CupertinoPage(child: RegionalSettingsScreen());
       },
     ),
     GoRoute(
       path: AppRouter.referrals,
       pageBuilder: (context, state) {
-        // final connectionType = state.pathParameters['connection_type']!;
         return CupertinoPage(child: ReferralsScreen());
       },
     ),
     GoRoute(
       path: AppRouter.changePassword,
       pageBuilder: (context, state) {
-        // final connectionType = state.pathParameters['connection_type']!;
         return CupertinoPage(child: ChangePasswordScreen());
       },
     ),
     GoRoute(
       path: AppRouter.personalInfo,
       pageBuilder: (context, state) {
-        // final connectionType = state.pathParameters['connection_type']!;
         return CupertinoPage(child: PersonalInfoScreen());
       },
     ),
@@ -275,18 +270,18 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.bookDetail,
       pageBuilder: (context, state) {
-        final blockId = state.pathParameters['book_id'];
+        final id = state.pathParameters['book_id'];
         return CupertinoPage(
-          child: BookDetailScreen(bookId: int.tryParse(blockId ?? "")),
+          child: BookDetailScreen(bookId: int.tryParse(id ?? "")),
         );
       },
     ),
     GoRoute(
       path: AppRouter.authorDetail,
       pageBuilder: (context, state) {
-        final blockId = state.pathParameters['author_id'];
+        final id = state.pathParameters['author_id'];
         return CupertinoPage(
-          child: AuthorDetailScreen(authorId: int.tryParse(blockId ?? "")),
+          child: AuthorDetailScreen(authorId: int.tryParse(id ?? "")),
         );
       },
     ),

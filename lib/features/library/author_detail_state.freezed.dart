@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AuthorDetailState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
-  dynamic get data => throw _privateConstructorUsedError;
+  AuthorDetailModel? get data => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AuthorDetailStateCopyWith<AuthorDetailState> get copyWith =>
@@ -31,7 +31,7 @@ abstract class $AuthorDetailStateCopyWith<$Res> {
           AuthorDetailState value, $Res Function(AuthorDetailState) then) =
       _$AuthorDetailStateCopyWithImpl<$Res, AuthorDetailState>;
   @useResult
-  $Res call({bool isLoading, String? error, dynamic data});
+  $Res call({bool isLoading, String? error, AuthorDetailModel? data});
 }
 
 /// @nodoc
@@ -63,7 +63,7 @@ class _$AuthorDetailStateCopyWithImpl<$Res, $Val extends AuthorDetailState>
       data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as AuthorDetailModel?,
     ) as $Val);
   }
 }
@@ -76,7 +76,7 @@ abstract class _$$AuthorDetailStateImplCopyWith<$Res>
       __$$AuthorDetailStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, String? error, dynamic data});
+  $Res call({bool isLoading, String? error, AuthorDetailModel? data});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class __$$AuthorDetailStateImplCopyWithImpl<$Res>
       data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as AuthorDetailModel?,
     ));
   }
 }
@@ -123,7 +123,7 @@ class _$AuthorDetailStateImpl implements _AuthorDetailState {
   @override
   final String? error;
   @override
-  final dynamic data;
+  final AuthorDetailModel? data;
 
   @override
   String toString() {
@@ -138,12 +138,11 @@ class _$AuthorDetailStateImpl implements _AuthorDetailState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
-            const DeepCollectionEquality().equals(other.data, data));
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isLoading, error, const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(runtimeType, isLoading, error, data);
 
   @JsonKey(ignore: true)
   @override
@@ -157,14 +156,14 @@ abstract class _AuthorDetailState implements AuthorDetailState {
   const factory _AuthorDetailState(
       {final bool isLoading,
       final String? error,
-      final dynamic data}) = _$AuthorDetailStateImpl;
+      final AuthorDetailModel? data}) = _$AuthorDetailStateImpl;
 
   @override
   bool get isLoading;
   @override
   String? get error;
   @override
-  dynamic get data;
+  AuthorDetailModel? get data;
   @override
   @JsonKey(ignore: true)
   _$$AuthorDetailStateImplCopyWith<_$AuthorDetailStateImpl> get copyWith =>
