@@ -15,35 +15,74 @@ class AuthorDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (authorId == null) {
-      return const Scaffold(
-        body: Center(child: Text('No author selected')),
-      );
+      return const Scaffold(body: Center(child: Text('No author selected')));
     }
 
     return BlocProvider(
-      create: (context) => locator<AuthorDetailCubit>(param1: authorId)..getAuthor(),
-      child: const _AuthorDetailView(),
+      create: (context) =>
+          locator<AuthorDetailCubit>(param1: authorId)..getAuthor(),
+      child: const _View(),
     );
   }
 }
 
-class _AuthorDetailView extends StatelessWidget {
-  const _AuthorDetailView();
+class _View extends StatefulWidget {
+  const _View();
+
+  @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+  late final ScrollController _controller;
+  double _scrollOffset = 0.0;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_onScroll);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final offset = _controller.offset;
+    if ((offset - _scrollOffset).abs() > 8) {
+      setState(() => _scrollOffset = offset);
+    }
+  }
+
+  Color _appBarBg() {
+    if (!_controller.hasClients) return Colors.transparent;
+    final opacity = (_scrollOffset / 160).clamp(0.5, 1.0);
+    return Theme.of(context).scaffoldBackgroundColor.withOpacity(opacity);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: _appBarBg(),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share_rounded, color: Colors.white),
+            icon: Icon(
+              Icons.share_rounded,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
             onPressed: () {
               // TODO: share author profile
             },
@@ -62,16 +101,24 @@ class _AuthorDetailView extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline_rounded, size: 64, color: Colors.redAccent),
+                  const Icon(
+                    Icons.error_outline_rounded,
+                    size: 64,
+                    color: Colors.redAccent,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     state.error ?? 'Failed to load author',
-                    style: const TextStyle(fontSize: 18, color: Colors.redAccent),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.redAccent,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
                   OutlinedButton(
-                    onPressed: () => context.read<AuthorDetailCubit>().getAuthor(),
+                    onPressed: () =>
+                        context.read<AuthorDetailCubit>().getAuthor(),
                     child: const Text('Try Again'),
                   ),
                 ],
@@ -79,17 +126,16 @@ class _AuthorDetailView extends StatelessWidget {
             );
           }
 
-          final author = state.data as AuthorDetailModel?;
+          final author = state.data;
 
           if (author == null) {
             return const Center(child: Text('Author not found'));
           }
 
           return CustomScrollView(
+            controller: _controller,
             slivers: [
-              SliverToBoxAdapter(
-                child: _AuthorCoverHeader(author: author),
-              ),
+              SliverToBoxAdapter(child: _AuthorCoverHeader(author: author)),
 
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 140),
@@ -104,37 +150,22 @@ class _AuthorDetailView extends StatelessWidget {
                         Expanded(
                           child: Text(
                             author.fullName ?? 'Unknown Author',
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              height: 1.18,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        OutlinedButton(
-                          onPressed: () {
-                            // TODO: follow/unfollow logic
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white70, width: 1.5),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-                          ),
-                          child: const Text(
-                            'Follow',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.18,
+                                  letterSpacing: -0.3,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                ),
                           ),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 12),
-
                     // You can add born/nationality here later if added to model
                     // For now we skip it or show something else if available
-
                     const SizedBox(height: 28),
 
                     // Stats chips (books count & followers would need model extension)
@@ -148,6 +179,7 @@ class _AuthorDetailView extends StatelessWidget {
                         'About the Author',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -155,7 +187,7 @@ class _AuthorDetailView extends StatelessWidget {
                         author.bio!,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           height: 1.52,
-                          color: Colors.white.withOpacity(0.92),
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -168,6 +200,7 @@ class _AuthorDetailView extends StatelessWidget {
                       'Popular Books',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -210,13 +243,15 @@ class _AuthorDetailView extends StatelessWidget {
             // Example: context.push('/books?authorId=${author?.id}');
           },
           icon: const Icon(Icons.library_books_rounded),
-          label: const Text(
+          label: Text(
             'View All Books',
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
           ),
           style: FilledButton.styleFrom(
             minimumSize: const Size.fromHeight(56),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
           ),
         ),
       ),
@@ -232,7 +267,8 @@ final _demoPopularBooks = [
   },
   {
     'title': 'The Power of Habit',
-    'cover': 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400',
+    'cover':
+        'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400',
   },
   {
     'title': 'Deep Work',
@@ -295,16 +331,24 @@ class _AuthorCoverHeader extends StatelessWidget {
                     offset: const Offset(0, 20),
                   ),
                 ],
-                border: Border.all(color: Colors.white.withOpacity(0.4), width: 4),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.4),
+                  width: 4,
+                ),
               ),
               child: ClipOval(
                 child: CachedNetworkImage(
                   imageUrl: photo,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(color: Colors.grey.shade800),
+                  placeholder: (_, __) =>
+                      Container(color: Colors.grey.shade800),
                   errorWidget: (_, __, ___) => Container(
                     color: Colors.grey.shade800,
-                    child: const Icon(Icons.person, size: 80, color: Colors.white38),
+                    child: const Icon(
+                      Icons.person,
+                      size: 80,
+                      color: Colors.white38,
+                    ),
                   ),
                 ),
               ),
@@ -328,14 +372,12 @@ class _AuthorStatsRow extends StatelessWidget {
     final items = <Widget>[];
 
     // Example placeholder until you add real data to model
-    items.add(const _StatChip(icon: Icons.menu_book_rounded, label: 'Books • —'));
+    items.add(
+      const _StatChip(icon: Icons.menu_book_rounded, label: 'Books • —'),
+    );
     items.add(const _StatChip(icon: Icons.group, label: 'Followers • —'));
 
-    return Wrap(
-      spacing: 16,
-      runSpacing: 12,
-      children: items,
-    );
+    return Wrap(spacing: 16, runSpacing: 12, children: items);
   }
 }
 
@@ -350,18 +392,21 @@ class _StatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.13),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.18)),
+        border: Border.all(color: Theme.of(context).colorScheme.primary),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 20, color: Colors.white70),
+          Icon(icon, size: 20, color: Colors.grey),
           const SizedBox(width: 8),
           Text(
             label,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 15,
+            ),
           ),
         ],
       ),
@@ -413,7 +458,11 @@ class _BookMiniCard extends StatelessWidget {
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
         ),
       ],
@@ -431,7 +480,10 @@ class _AuthorExtraInfo extends StatelessWidget {
       children: [
         Text(
           'Find more',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         const SizedBox(height: 12),
         Wrap(
@@ -457,10 +509,14 @@ class _LinkChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionChip(
-      avatar: Icon(icon, size: 18, color: Colors.white70),
+      side: BorderSide(
+        width: 1,
+        color: Theme.of(context).colorScheme.primary
+      ),
+      avatar: Icon(icon, size: 18, color: Colors.grey),
       label: Text(label),
       backgroundColor: Colors.white.withOpacity(0.12),
-      labelStyle: const TextStyle(color: Colors.white),
+      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
       onPressed: () {
         // TODO: open link (you can make this dynamic later)
       },

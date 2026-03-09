@@ -10,6 +10,7 @@ import 'package:testabd/features/home/leaderboard_screen.dart';
 import 'package:testabd/features/home/notifications_screen.dart';
 import 'package:testabd/features/library/author_detail_screen.dart';
 import 'package:testabd/features/library/book_detail_screen.dart';
+import 'package:testabd/features/library/read_book_screen.dart';
 import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/users/user_block_detail_screen.dart';
 import 'package:testabd/features/init/init_screen.dart';
@@ -89,17 +90,18 @@ abstract class AppRouter {
   }) => '/user_connection/$userId/$connectionType';
 
   static const profileConnection = '/profile_connection/:connection_type';
-
   static String profileConnectionWithUserId({required String connectionType}) =>
       '/profile_connection/$connectionType';
 
   static const bookDetail = '/book_detail/:book_id';
-
   static String bookDetailWithArgs({int? bookId}) => '/book_detail/$bookId';
 
   static const authorDetail = '/author_detail/:author_id';
   static String authorDetailWithArgs({int? authorId}) =>
       '/author_detail/$authorId';
+
+  static const bookRead = '/book_read/:pdf_file';
+  static String bookReadWithArgs({ReadBookScreenArg? pdfFile}) => '/book_read/$pdfFile';
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -285,6 +287,15 @@ final appRouter = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: AppRouter.bookRead,
+      pageBuilder: (context, state) {
+        final pdfUrl = state.pathParameters['pdf_file'] as ReadBookScreenArg;
+        return CupertinoPage(
+          child: ReadBookScreen(pdfUrl: pdfUrl),
+        );
+      },
+    ),
     StatefulShellRoute(
       parentNavigatorKey: navigatorKey,
       navigatorContainerBuilder: (_, navShell, children) =>
@@ -299,7 +310,6 @@ final appRouter = GoRouter(
             ),
           ],
         ),
-
         StatefulShellBranch(
           routes: [
             GoRoute(

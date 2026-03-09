@@ -6,14 +6,13 @@ import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/books/entities/book_detail_model.dart';
 import 'package:testabd/features/library/book_detail_cubit.dart';
 import 'package:testabd/features/library/book_detail_state.dart';
+import 'package:testabd/features/library/read_book_screen.dart';
+import 'package:testabd/router/app_router.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final int? bookId;
 
-  const BookDetailScreen({
-    super.key,
-    this.bookId,
-  });
+  const BookDetailScreen({super.key, this.bookId});
 
   @override
   Widget build(BuildContext context) {
@@ -35,23 +34,63 @@ class BookDetailScreen extends StatelessWidget {
   }
 }
 
-class _View extends StatelessWidget {
+class _View extends StatefulWidget {
   const _View();
+
+  @override
+  State<_View> createState() => _ViewState();
+}
+
+class _ViewState extends State<_View> {
+  late final ScrollController _controller;
+  double _scrollOffset = 0.0;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_onScroll);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final offset = _controller.offset;
+    if ((offset - _scrollOffset).abs() > 8) {
+      setState(() => _scrollOffset = offset);
+    }
+  }
+
+  Color _appBarBg() {
+    if (!_controller.hasClients) return Colors.transparent;
+    final opacity = (_scrollOffset / 160).clamp(0.5, 1.0);
+    return Theme.of(context).scaffoldBackgroundColor.withOpacity(opacity);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: _appBarBg(),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share_rounded, color: Colors.white),
+            icon: Icon(
+              Icons.share_rounded,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
             onPressed: () {
               // TODO: implement share
             },
@@ -70,11 +109,18 @@ class _View extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline_rounded, size: 64, color: Colors.redAccent),
+                  const Icon(
+                    Icons.error_outline_rounded,
+                    size: 64,
+                    color: Colors.redAccent,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     state.error ?? 'Failed to load book',
-                    style: const TextStyle(fontSize: 18, color: Colors.redAccent),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.redAccent,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -94,10 +140,9 @@ class _View extends StatelessWidget {
           }
 
           return CustomScrollView(
+            controller: _controller,
             slivers: [
-              SliverToBoxAdapter(
-                child: _BookCoverHeader(book: book),
-              ),
+              SliverToBoxAdapter(child: _BookCoverHeader(book: book)),
 
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 140),
@@ -107,11 +152,13 @@ class _View extends StatelessWidget {
 
                     Text(
                       book.title ?? 'Untitled',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        height: 1.18,
-                        letterSpacing: -0.3,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            height: 1.18,
+                            letterSpacing: -0.3,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                     ),
                     const SizedBox(height: 8),
 
@@ -119,7 +166,9 @@ class _View extends StatelessWidget {
                       Text(
                         book.author!.fullName!,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.9),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.9),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -135,6 +184,7 @@ class _View extends StatelessWidget {
                         'About the book',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -142,7 +192,7 @@ class _View extends StatelessWidget {
                         book.description!,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           height: 1.52,
-                          color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.92),
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -163,12 +213,17 @@ class _View extends StatelessWidget {
                           final tagStr = tag is String ? tag : tag.toString();
                           return Chip(
                             label: Text(tagStr),
-                            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.14),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary.withOpacity(0.14),
                             labelStyle: TextStyle(
                               color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.w500,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
                           );
                         }).toList(),
                       ),
@@ -189,14 +244,13 @@ class _View extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: BlocBuilder<BookDetailCubit, BookDetailState>(
           builder: (context, state) {
-            final book = state.data as BookDetailModel?;
-            if (book == null) return const SizedBox.shrink();
-
+            if (state.data == null) return const SizedBox.shrink();
             return FilledButton.icon(
-              onPressed: () {
-                // TODO: navigate to reader screen
-                // Example: context.push('/reader/${book.id}');
-              },
+              onPressed: () => context.push(
+                AppRouter.bookReadWithArgs(
+                  pdfFile: ReadBookScreenArg(state.data?.pdfFile ?? ""),
+                ),
+              ),
               icon: const Icon(Icons.menu_book_rounded),
               label: const Text(
                 'Start Reading',
@@ -204,7 +258,9 @@ class _View extends StatelessWidget {
               ),
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(56),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             );
           },
@@ -217,7 +273,6 @@ class _View extends StatelessWidget {
 // ────────────────────────────────────────────────
 //               HELPER WIDGETS
 // ────────────────────────────────────────────────
-
 class _BookCoverHeader extends StatelessWidget {
   final BookDetailModel book;
 
@@ -237,9 +292,9 @@ class _BookCoverHeader extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withOpacity(0.12),
-                Colors.black.withOpacity(0.72),
-                Colors.black.withOpacity(0.94),
+                Colors.black.withAlpha(12),
+                Colors.black.withAlpha(72),
+                Colors.black.withAlpha(94),
               ],
             ),
           ),
@@ -249,7 +304,11 @@ class _BookCoverHeader extends StatelessWidget {
             placeholder: (_, __) => Container(color: Colors.grey.shade900),
             errorWidget: (_, __, ___) => Container(
               color: Colors.grey.shade900,
-              child: const Icon(Icons.book_rounded, size: 80, color: Colors.white24),
+              child: const Icon(
+                Icons.book_rounded,
+                size: 80,
+                color: Colors.white24,
+              ),
             ),
           ),
         ),
@@ -277,10 +336,15 @@ class _BookCoverHeader extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: cover,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(color: Colors.grey.shade800),
+                  placeholder: (_, __) =>
+                      Container(color: Colors.grey.shade800),
                   errorWidget: (_, __, ___) => Container(
                     color: Colors.grey.shade800,
-                    child: const Icon(Icons.book, size: 60, color: Colors.white38),
+                    child: const Icon(
+                      Icons.book,
+                      size: 60,
+                      color: Colors.white38,
+                    ),
                   ),
                 ),
               ),
@@ -302,27 +366,20 @@ class _BookStatsRow extends StatelessWidget {
     final items = <Widget>[];
 
     if (book.totalPages != null && book.totalPages! > 0) {
-      items.add(_StatChip(
-        icon: Icons.menu_book_rounded,
-        label: '${book.totalPages} pages',
-      ));
+      items.add(
+        _StatChip(
+          icon: Icons.menu_book_rounded,
+          label: '${book.totalPages} pages',
+        ),
+      );
     }
 
     if (book.createdAt != null) {
       final year = book.createdAt!.year;
-      items.add(_StatChip(
-        icon: Icons.calendar_today_rounded,
-        label: '$year',
-      ));
+      items.add(_StatChip(icon: Icons.calendar_today_rounded, label: '$year'));
     }
 
-    // You can add language / format if added to model later
-
-    return Wrap(
-      spacing: 16,
-      runSpacing: 12,
-      children: items,
-    );
+    return Wrap(spacing: 16, runSpacing: 12, children: items);
   }
 }
 
@@ -337,19 +394,19 @@ class _StatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.13),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.18)),
+        border: Border.all(color: Theme.of(context).colorScheme.primary),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 20, color: Colors.white70),
+          Icon(icon, size: 20, color: Colors.grey),
           const SizedBox(width: 8),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 15,
               fontWeight: FontWeight.w500,
             ),
@@ -368,12 +425,10 @@ class _BookInfoTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = <({String label, String? value})>[];
-
     // You can extend this when you add more fields to the model
     // rows.add((label: 'Publisher', value: book.publisher));
     // rows.add((label: 'ISBN',      value: book.isbn));
     // rows.add((label: 'Format',    value: book.format));
-
     if (rows.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -381,36 +436,38 @@ class _BookInfoTable extends StatelessWidget {
       children: [
         Text(
           'Book Details',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
-        ...rows.map((row) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 100,
-                child: Text(
-                  row.label,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+        ...rows.map(
+          (row) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    row.label,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Text(
-                  row.value ?? '—',
-                  style: const TextStyle(fontSize: 15),
+                Expanded(
+                  child: Text(
+                    row.value ?? '—',
+                    style: const TextStyle(fontSize: 15),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        )),
+        ),
       ],
     );
   }

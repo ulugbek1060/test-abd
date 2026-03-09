@@ -13,6 +13,11 @@ class LibraryCubit extends Cubit<LibraryState> {
   LibraryCubit(this._booksRepository, this._messageHandler)
     : super(LibraryState());
 
+  Future<void> refresh() async {
+    await getAuthor();
+    await getBooks();
+  }
+
   Future<void> getAuthor() async {
     if (state.authorsState.isLoading) return;
     emit(

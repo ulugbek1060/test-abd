@@ -27,19 +27,22 @@ class _View extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LibraryCubit, LibraryState>(
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('Library'), centerTitle: true),
-          body: state.booksState.isLoading
-              ? ProgressView()
-              : CustomScrollView(
-                  slivers: [
-                    // authors section
-                    AuthorSection(),
+        return RefreshIndicator(
+          onRefresh: context.read<LibraryCubit>().refresh,
+          child: Scaffold(
+            appBar: AppBar(title: const Text('Library'), centerTitle: true),
+            body: state.booksState.isLoading
+                ? ProgressView()
+                : CustomScrollView(
+                    slivers: [
+                      // authors section
+                      AuthorSection(),
 
-                    // main books section
-                    BooksSection(),
-                  ],
-                ),
+                      // main books section
+                      BooksSection(),
+                    ],
+                  ),
+          ),
         );
       },
     );
