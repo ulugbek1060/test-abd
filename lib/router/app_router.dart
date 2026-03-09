@@ -8,6 +8,8 @@ import 'package:testabd/features/auth/register/register_screen.dart';
 import 'package:testabd/features/home/home_screen.dart';
 import 'package:testabd/features/home/leaderboard_screen.dart';
 import 'package:testabd/features/home/notifications_screen.dart';
+import 'package:testabd/features/library/author_detail_screen.dart';
+import 'package:testabd/features/library/book_detail_screen.dart';
 import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/users/user_block_detail_screen.dart';
 import 'package:testabd/features/init/init_screen.dart';
@@ -51,24 +53,30 @@ abstract class AppRouter {
   static const changePassword = '/change_password';
 
   static const createQuestions = '/create_question/:question_id';
+
   static String createQuestionWithArgs(int? questionId) =>
       '/create_question/$questionId';
 
   static const createBlock = '/create_block/:block_id';
+
   static String createBlockWithArg(int? blockId) => '/create_block/$blockId';
 
   static const blockDetail = '/block_detail/:block_id';
+
   static String blockDetailWithBlockId(int blockId) => '/block_detail/$blockId';
 
   static const userBlockDetail = '/user_block_detail/:block_id';
+
   static String userBlockDetailWithBlockId(int blockId) =>
       '/user_block_detail/$blockId';
 
   static const userQuestionDetail = '/user_question_detail/:question_id';
+
   static String userQuestionDetailWithBlockId(int? questionId) =>
       '/user_question_detail/$questionId';
 
   static const myQuestionDetail = '/my_question_detail/:question_id';
+
   static String myQuestionDetailWithArgs(int? questionId) =>
       '/my_question_detail/$questionId';
 
@@ -84,6 +92,15 @@ abstract class AppRouter {
 
   static String profileConnectionWithUserId({required String connectionType}) =>
       '/profile_connection/$connectionType';
+
+  static const bookDetail = '/book_detail/:book_id';
+
+  static String bookDetailWithArgs({int? bookId}) => '/book_detail/$bookId';
+
+  static const authorDetail = '/author_detail/:author_id';
+
+  static String authorDetailWithArgs({int? authorId}) =>
+      '/author_detail/$authorId';
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -255,6 +272,24 @@ final appRouter = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: AppRouter.bookDetail,
+      pageBuilder: (context, state) {
+        final blockId = state.pathParameters['book_id'];
+        return CupertinoPage(
+          child: BookDetailScreen(bookId: int.tryParse(blockId ?? "")),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.authorDetail,
+      pageBuilder: (context, state) {
+        final blockId = state.pathParameters['author_id'];
+        return CupertinoPage(
+          child: AuthorDetailScreen(authorId: int.tryParse(blockId ?? "")),
+        );
+      },
+    ),
     StatefulShellRoute(
       parentNavigatorKey: navigatorKey,
       navigatorContainerBuilder: (_, navShell, children) =>
@@ -274,7 +309,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRouter.search,
-              builder: (_, state) =>  SearchScreen(),
+              builder: (_, state) => SearchScreen(),
             ),
           ],
         ),

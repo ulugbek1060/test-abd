@@ -7,4 +7,8 @@ import 'package:testabd/domain/books/entities/book_model.dart';
 abstract class BooksRepository {
   Future<Either<AppException, PagedData<BookModel>>> getBooks();
   Future<Either<AppException, PagedData<AuthorModel>>> getAuthors();
+  Future<Either<AppException, dynamic>> getAuthorById(int authorId);
+  Future<Either<AppException, dynamic>> getBookById(int bookId);
+  Future<Either<AppException, dynamic>> bookDashboard();
+  // Future<Either<AppException, dynamic>> getBookReadingSession();
 }

@@ -163,7 +163,6 @@ class _CompactUserTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final isFollowing = user.isFollowing;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(

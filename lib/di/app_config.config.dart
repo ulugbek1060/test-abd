@@ -42,6 +42,8 @@ import '../features/auth/register/register_cubit.dart' as _i163;
 import '../features/home/home_cubit.dart' as _i639;
 import '../features/home/leaderboard_cubit.dart' as _i279;
 import '../features/home/notifications_cubit.dart' as _i124;
+import '../features/library/author_detail_cubit.dart' as _i75;
+import '../features/library/book_detail_cubit.dart' as _i100;
 import '../features/library/library_cubit.dart' as _i46;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
@@ -305,6 +307,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i46.LibraryCubit>(() => _i46.LibraryCubit(
           gh<_i923.BooksRepository>(),
           gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factoryParam<_i100.BookDetailCubit, int?, dynamic>((
+      bookId,
+      _,
+    ) =>
+        _i100.BookDetailCubit(
+          bookId,
+          gh<_i923.BooksRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factoryParam<_i75.AuthorDetailCubit, int?, dynamic>((
+      authorId,
+      _,
+    ) =>
+        _i75.AuthorDetailCubit(
+          authorId,
+          gh<_i877.AppMessageHandler>(),
+          gh<_i923.BooksRepository>(),
         ));
     return this;
   }

@@ -48,4 +48,42 @@ class BooksRepositoryImpl implements BooksRepository {
       return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
     }
   }
+
+
+  ///  -------------------------------------------------------------------------
+  @override
+  Future<Either<AppException, dynamic>> bookDashboard() async {
+    try {
+      final result = await _booksSource.getDashboard();
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, dynamic>> getAuthorById(int authorId) async {
+    try {
+      final result = await _booksSource.getAuthorById(authorId);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, dynamic>> getBookById(int bookId) async {
+    try {
+      final result = await _booksSource.getBookById(bookId);
+      return Right(result);
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+    }
+  }
 }

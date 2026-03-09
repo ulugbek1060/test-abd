@@ -10,6 +10,9 @@ import 'package:testabd/data/remote_source/books/models/books_response.dart';
 abstract class BooksSource {
   Future<AuthorsResponse> getAuthor();
   Future<BooksResponse> getBooks();
+  Future<dynamic> getAuthorById(int authorId);
+  Future<dynamic> getBookById(int bookId);
+  Future<dynamic> getDashboard();
 }
 
 @Injectable(as: BooksSource)
@@ -35,6 +38,42 @@ class BooksSourceImpl implements BooksSource {
     try {
       final response = await _dio.get("/books/books/");
       return BooksResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      throw e.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<dynamic> getAuthorById(int authorId) async {
+    try {
+      final response = await _dio.get("/books/authors/$authorId");
+      return response.data;
+    } on DioException catch (e) {
+      throw e.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<dynamic> getBookById(int bookId) async {
+    try {
+      final response = await _dio.get("/books/books/$bookId");
+      return response.data;
+    } on DioException catch (e) {
+      throw e.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
+  }
+
+  @override
+  Future<dynamic> getDashboard() async {
+    try {
+      final response = await _dio.get("/books/dashboard/");
+      return response.data;
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {

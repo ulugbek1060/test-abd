@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/domain/books/entities/book_model.dart';
 import 'package:testabd/features/library/library_cubit.dart';
 import 'package:testabd/features/library/library_state.dart';
+import 'package:testabd/router/app_router.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -64,7 +66,11 @@ class BooksSection extends StatelessWidget {
             ),
             delegate: SliverChildBuilderDelegate((context, index) {
               final book = state.booksState.books[index];
-              return BookCard(book: book);
+              return BookCard(
+                book: book,
+                onTap: () =>
+                    context.push(AppRouter.bookDetailWithArgs(bookId: book.id)),
+              );
             }, childCount: state.booksState.books.length),
           ),
         );
@@ -75,92 +81,96 @@ class BooksSection extends StatelessWidget {
 
 class BookCard extends StatelessWidget {
   final BookModel book;
+  final VoidCallback onTap;
 
-  const BookCard({super.key, required this.book});
+  const BookCard({super.key, required this.book, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 6,
-      clipBehavior: Clip.hardEdge,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Background cover image
-          Image.network(
-            book.coverImage ?? "",
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: Colors.grey.shade800,
-              child: const Icon(Icons.book, size: 60, color: Colors.white54),
-            ),
-          ),
-
-          // Gradient overlay for better text readability
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-                stops: const [0.5, 1.0],
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 6,
+        clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Background cover image
+            Image.network(
+              book.coverImage ?? "",
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey.shade800,
+                child: const Icon(Icons.book, size: 60, color: Colors.white54),
               ),
             ),
-          ),
 
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  book.title ?? "",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black,
-                        offset: Offset(1, 1),
-                        blurRadius: 3,
-                      ),
-                    ],
-                  ),
+            // Gradient overlay for better text readability
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                  stops: const [0.5, 1.0],
                 ),
-                const SizedBox(height: 4),
-
-                // Author
-                Text(
-                  book.author?.fullName ?? "",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                // _RatingStars(rating: book.author),
-                Text(
-                  book.totalPages?.toString() ?? "",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    book.title ?? "",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black,
+                          offset: Offset(1, 1),
+                          blurRadius: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Author
+                  Text(
+                    book.author?.fullName ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // _RatingStars(rating: book.author),
+                  Text(
+                    book.totalPages?.toString() ?? "",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -215,7 +225,9 @@ class AuthorSection extends StatelessWidget {
                 return StoryItem(
                   username: author.fullName ?? "",
                   imageUrl: author.image ?? "",
-                  onTap: () {},
+                  onTap: () => context.push(
+                    AppRouter.authorDetailWithArgs(authorId: author.id),
+                  ),
                 );
               },
             ),
