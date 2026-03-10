@@ -10,6 +10,7 @@ import 'package:testabd/features/home/leaderboard_screen.dart';
 import 'package:testabd/features/home/notifications_screen.dart';
 import 'package:testabd/features/library/author_detail_screen.dart';
 import 'package:testabd/features/library/book_detail_screen.dart';
+import 'package:testabd/features/library/chat_after_read_screen.dart';
 import 'package:testabd/features/library/read_book_screen.dart';
 import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/users/user_block_detail_screen.dart';
@@ -101,7 +102,10 @@ abstract class AppRouter {
       '/author_detail/$authorId';
 
   static const bookRead = '/book_read/:pdf_file';
-  static String bookReadWithArgs({ReadBookScreenArg? pdfFile}) => '/book_read/$pdfFile';
+
+  static const chatAfterRead = '/chat_after_read';
+
+
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -290,9 +294,22 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.bookRead,
       pageBuilder: (context, state) {
-        final pdfUrl = state.pathParameters['pdf_file'] as ReadBookScreenArg;
+        final extra = state.extra as Map<String, dynamic>?;
         return CupertinoPage(
-          child: ReadBookScreen(pdfUrl: pdfUrl),
+          child: ReadBookScreen(pdfUrl: extra?['pdfUrl']),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.chatAfterRead,
+      pageBuilder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>;
+        return CupertinoPage(
+          child: ChatAfterReadScreen(
+            pdfUrl: extra['pdfUrl'] ?? '',
+            nextStartPage: extra['nextStartPage'] ?? 1,
+            totalPages: extra['totalPages'] ?? 100,
+          ),
         );
       },
     ),

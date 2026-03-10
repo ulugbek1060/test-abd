@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:testabd/core/utils/app_message_handler.dart';
+import 'package:testabd/data/remote_source/books/reading_source.dart';
 import 'package:testabd/domain/books/books_repository.dart';
 import 'package:testabd/features/library/book_detail_state.dart';
 
@@ -9,12 +10,14 @@ import 'package:testabd/features/library/book_detail_state.dart';
 class BookDetailCubit extends Cubit<BookDetailState> {
   final BooksRepository _booksRepository;
   final AppMessageHandler _messageHandler;
+  final ReadingSource _readingSource;
   final int? bookId;
 
   @factoryMethod
   BookDetailCubit(
     @factoryParam this.bookId,
     this._booksRepository,
+    this._readingSource,
     this._messageHandler,
   ) : super(BookDetailState.initial());
 
@@ -34,4 +37,13 @@ class BookDetailCubit extends Cubit<BookDetailState> {
       },
     );
   }
+
+  Future<void> getSession() async {
+    _readingSource.getMySessions();
+  }
+
+  Future<void> joinSession() async {
+    // _readingSource.startSession(bookId: bookId, mode: mode);
+  }
+
 }

@@ -4,5 +4,6 @@ import 'package:meta/meta.dart';
 part 'read_book_state.dart';
 
 class ReadBookCubit extends Cubit<ReadBookState> {
+  final
   ReadBookCubit() : super(ReadBookInitial());
 }

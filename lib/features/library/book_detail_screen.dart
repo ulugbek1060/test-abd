@@ -246,11 +246,17 @@ class _ViewState extends State<_View> {
           builder: (context, state) {
             if (state.data == null) return const SizedBox.shrink();
             return FilledButton.icon(
-              onPressed: () => context.push(
-                AppRouter.bookReadWithArgs(
-                  pdfFile: ReadBookScreenArg(state.data?.pdfFile ?? ""),
-                ),
-              ),
+              onPressed: (){
+                //context.push(
+                //                 AppRouter.bookRead,
+                //                 extra: {
+                //                   'pdfUrl':
+                //                       'https://backend.testabd.uz/media/books/pdfs/Ikki_eshik_orasi_OaNauPb.pdf',
+                //                 },
+                //               )
+
+                context.read<BookDetailCubit>().getSession();
+              },
               icon: const Icon(Icons.menu_book_rounded),
               label: const Text(
                 'Start Reading',

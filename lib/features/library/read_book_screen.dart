@@ -4,14 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdfrx/pdfrx.dart';
-
-class ReadBookScreenArg {
-  final String filePath;
-  ReadBookScreenArg(this.filePath);
-}
+import 'package:testabd/router/app_router.dart';
 
 class ReadBookScreen extends StatefulWidget {
-  final ReadBookScreenArg pdfUrl;           // e.g. "https://backend.testabd.uz/media/books/pdfs/Ikki_eshik_orasi_OaNauPb.pdf"
+  final String pdfUrl;           // e.g. "https://backend.testabd.uz/media/books/pdfs/Ikki_eshik_orasi_OaNauPb.pdf"
   final int initialStartPage;    // which chunk to start (1-based)
 
   const ReadBookScreen({
@@ -32,24 +28,32 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
   bool _isLoading = true;
   String? _error;
 
-  static const int pagesPerChunk = 10;
+  static const int _pagesPerChunk = 10;
 
   @override
   void initState() {
+    _controller = PdfViewerController();
     super.initState();
     _loadPdf();
   }
+
+  @override
+  void dispose() {
+    _controller = null;
+    super.dispose();
+  }
+
 
   Future<void> _loadPdf() async {
     try {
       setState(() => _isLoading = true);
 
       final tempDir = await getTemporaryDirectory();
-      final fileName = Uri.parse(widget.pdfUrl.filePath).pathSegments.last;
+      final fileName = Uri.parse(widget.pdfUrl).pathSegments.last;
       final file = File('${tempDir.path}/$fileName');
 
       if (!await file.exists()) {
-        final response = await http.get(Uri.parse(widget.pdfUrl.filePath));
+        final response = await http.get(Uri.parse(widget.pdfUrl));
         if (response.statusCode != 200) throw Exception('Failed to download PDF');
         await file.writeAsBytes(response.bodyBytes);
       }
@@ -71,16 +75,25 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
     setState(() => _currentPage = page);
 
     final chunkStart = widget.initialStartPage;
-    final chunkEnd = chunkStart + pagesPerChunk - 1;
+    final chunkEnd = chunkStart + _pagesPerChunk - 1;
 
     if (page >= chunkEnd) {
       // User reached or passed the limit → go to chat
-      context.push(
-        '/chat-after-read',
+      // context.push(
+      //   '/chat-after-read',
+      //   extra: {
+      //     'pdfUrl': widget.pdfUrl,
+      //     'nextStartPage': chunkEnd + 1,
+      //     'totalPages': _totalPages,
+      //   },
+      // );
+
+      context.pushReplacement(
+        AppRouter.chatAfterRead,
         extra: {
           'pdfUrl': widget.pdfUrl,
-          'nextStartPage': chunkEnd + 1,
-          'totalPages': _totalPages,
+          'initialStartPage': 2,
+
         },
       );
     }
@@ -103,7 +116,7 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
     }
 
     final chunkStart = widget.initialStartPage;
-    final chunkEnd = chunkStart + pagesPerChunk - 1;
+    final chunkEnd = chunkStart + _pagesPerChunk - 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -117,7 +130,7 @@ class _ReadBookScreenState extends State<ReadBookScreen> {
       ),
       body: PdfViewer.file(
         _localPdfPath!,
-        controller: _controller = PdfViewerController(),
+        controller: _controller,
         // Optional: gestureSettings, renderer, etc.
         params: PdfViewerParams(
           // calculateInitialZoom: (_, __, ___, ____){

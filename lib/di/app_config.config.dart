@@ -10,6 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:hive_flutter/adapters.dart' as _i744;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart' as _i528;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
@@ -21,12 +22,15 @@ import '../core/utils/app_mode_service.dart' as _i555;
 import '../core/utils/dio_interceptor.dart' as _i900;
 import '../core/utils/follow_listeners.dart' as _i244;
 import '../core/utils/language_service.dart' as _i456;
+import '../data/local_source/entities/read_book_entity.dart' as _i349;
 import '../data/local_source/my_info_hive_service.dart' as _i656;
+import '../data/local_source/read_books_service.dart' as _i1030;
 import '../data/remote_source/account/account_source.dart' as _i65;
 import '../data/remote_source/account/ws_leaderboard_source.dart' as _i259;
 import '../data/remote_source/account/ws_notifications_source.dart' as _i1067;
 import '../data/remote_source/auth/auth_source.dart' as _i142;
 import '../data/remote_source/books/books_source.dart' as _i83;
+import '../data/remote_source/books/reading_source.dart' as _i227;
 import '../data/remote_source/quiz/quiz_source.dart' as _i792;
 import '../data/repository/account_repository_impl.dart' as _i317;
 import '../data/repository/auth_repository_impl.dart' as _i461;
@@ -44,6 +48,7 @@ import '../features/home/leaderboard_cubit.dart' as _i279;
 import '../features/home/notifications_cubit.dart' as _i124;
 import '../features/library/author_detail_cubit.dart' as _i75;
 import '../features/library/book_detail_cubit.dart' as _i100;
+import '../features/library/chat_after_read_cubit.dart' as _i722;
 import '../features/library/library_cubit.dart' as _i46;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
@@ -127,8 +132,14 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'ConnectionFollowListener',
       dispose: _i244.disposeMethod,
     );
+    gh.factory<_i722.ChatAfterReadCubit>(() => _i722.ChatAfterReadCubit(
+          bookId: gh<String>(),
+          userId: gh<String>(),
+        ));
     gh.singleton<_i259.LeaderboardSocketService>(
         () => _i259.LeaderboardSocketServiceImpl(gh<_i792.TokenService>()));
+    gh.factory<_i1030.ReadBooksService>(() =>
+        _i1030.ReadBooksService(gh<_i744.LazyBox<_i349.ReadBookEntity>>()));
     gh.singleton<_i900.DioInterceptor>(
         () => _i900.DioInterceptor(gh<_i792.TokenService>()));
     gh.factory<_i361.Dio>(() => appModule.provideDio(
@@ -137,6 +148,7 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i528.PrettyDioLogger>(),
         ));
     gh.factory<_i792.QuizSource>(() => _i792.QuizSourceImpl(gh<_i361.Dio>()));
+    gh.factory<_i227.ReadingSource>(() => _i227.ReadingSource(gh<_i361.Dio>()));
     gh.factory<_i142.AuthSource>(() => _i142.AuthSourceImpl(gh<_i361.Dio>()));
     gh.factory<_i65.AccountSource>(
         () => _i65.AccountSourceImpl(gh<_i361.Dio>()));
@@ -286,6 +298,14 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
+    gh.factory<_i124.NotificationsCubit>(() => _i124.NotificationsCubit(
+          gh<_i575.AccountRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factory<_i168.ReferralsCubit>(() => _i168.ReferralsCubit(
+          gh<_i575.AccountRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
     gh.factory<_i688.PersonalInfoCubit>(() => _i688.PersonalInfoCubit(
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
@@ -294,26 +314,19 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i575.AccountRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
-    gh.factory<_i168.ReferralsCubit>(() => _i168.ReferralsCubit(
-          gh<_i575.AccountRepository>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
-    gh.factory<_i124.NotificationsCubit>(() => _i124.NotificationsCubit(
-          gh<_i575.AccountRepository>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
     gh.singleton<_i923.BooksRepository>(
         () => _i656.BooksRepositoryImpl(gh<_i83.BooksSource>()));
-    gh.factory<_i46.LibraryCubit>(() => _i46.LibraryCubit(
-          gh<_i923.BooksRepository>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
     gh.factoryParam<_i100.BookDetailCubit, int?, dynamic>((
       bookId,
       _,
     ) =>
         _i100.BookDetailCubit(
           bookId,
+          gh<_i923.BooksRepository>(),
+          gh<_i227.ReadingSource>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factory<_i46.LibraryCubit>(() => _i46.LibraryCubit(
           gh<_i923.BooksRepository>(),
           gh<_i877.AppMessageHandler>(),
         ));
