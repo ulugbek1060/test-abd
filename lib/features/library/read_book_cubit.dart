@@ -1,9 +1,88 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/core/utils/app_message_handler.dart';
+import 'package:testabd/data/local_source/entities/read_book_entity.dart';
+import 'package:testabd/data/local_source/read_books_service.dart';
+import 'package:testabd/data/remote_source/books/reading_source.dart';
+import 'package:testabd/features/library/read_book_state.dart';
 
-part 'read_book_state.dart';
-
+@injectable
 class ReadBookCubit extends Cubit<ReadBookState> {
-  final
-  ReadBookCubit() : super(ReadBookInitial());
+  final ReadingSource _readingSource;
+  final ReadBooksService _readBooksService;
+  final AppMessageHandler _messageHandler;
+  final int? bookId;
+
+  @factoryMethod
+  ReadBookCubit(
+    @factoryParam this.bookId,
+    this._readingSource,
+    this._readBooksService,
+    this._messageHandler,
+  ) : super(ReadBookState.initial());
+
+  Future<void> load() async {
+    try {
+      if (state.isLoading || bookId == null) return;
+
+      emit(state.copyWith(isLoading: true));
+
+      // check the data from the database
+      final exists = await _readBooksService.exists(bookId!);
+      if (exists) {
+        final bookData = await _readBooksService.get(bookId!);
+
+        // change the UI
+        emit(
+          state.copyWith(
+            isLoading: false,
+            bookId: bookData?.id,
+            totalPages: bookData?.totalPages,
+            currentPage: bookData?.currentPage,
+            pdfPath: bookData?.pdfPath,
+          ),
+        );
+      } else {
+        // load data
+        final result = await _readingSource.startSession(
+          bookId: bookId!,
+          mode: "solo",
+        );
+        final data = ReadBookEntity(
+          id: bookId,
+          totalPages: result.book?.totalPages,
+          currentPage: 1,
+          pdfPath: result.book?.pdfFile,
+        );
+
+        // save to database
+        await _readBooksService.save(data);
+
+        // change the UI
+        emit(
+          state.copyWith(
+            isLoading: false,
+            bookId: bookId,
+            totalPages: data.totalPages,
+            currentPage: data.currentPage,
+            pdfPath: data.pdfPath,
+          ),
+        );
+      }
+    } catch (e) {
+      // handel error
+      _messageHandler.handleDialog(UnknownException(e.toString()));
+    }
+  }
+
+  Future<void> changeThePage(int page) async {
+    final data = ReadBookEntity(
+      id: bookId,
+      totalPages: state.totalPages,
+      currentPage: page,
+      pdfPath: state.pdfPath,
+    );
+    await _readBooksService.save(data);
+  }
 }

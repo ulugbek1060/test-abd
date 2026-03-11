@@ -1,6 +1,17 @@
-part of 'read_book_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-sealed class ReadBookState {}
+part 'read_book_state.freezed.dart';
 
-final class ReadBookInitial extends ReadBookState {}
+@freezed
+class ReadBookState with _$ReadBookState {
+  const factory ReadBookState({
+    @Default(false) bool isLoading,
+    int? bookId,
+    int? totalPages,
+    int? currentPage,
+    String? pdfPath,
+    String? error,
+  }) = _ReadBookState;
+
+  factory ReadBookState.initial() => ReadBookState();
+}

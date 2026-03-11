@@ -8,7 +8,7 @@ part of 'read_book_entity.dart';
 
 class ReadBookEntityAdapter extends TypeAdapter<ReadBookEntity> {
   @override
-  final int typeId = 1;
+  final int typeId = 6;
 
   @override
   ReadBookEntity read(BinaryReader reader) {

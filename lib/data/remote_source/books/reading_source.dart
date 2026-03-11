@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/data/remote_source/books/models/start_session_response.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-@injectable
+@lazySingleton
 class ReadingSource {
   final Dio _dio;
 
@@ -22,7 +23,7 @@ class ReadingSource {
     }
   }
 
-  Future<dynamic> startSession({
+  Future<StartSessionResponse> startSession({
     required int bookId,
     required String mode,
     String? friendUsername,
@@ -38,7 +39,7 @@ class ReadingSource {
         '/books/reading-sessions/start_session/',
         data: body,
       );
-      return result.data;
+      return StartSessionResponse.fromJson(result.data);
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {

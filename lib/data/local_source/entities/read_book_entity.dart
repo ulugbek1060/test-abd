@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 
 part 'read_book_entity.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 6)
 class ReadBookEntity extends Equatable {
   @HiveField(0)
   final int? id;
@@ -21,4 +21,18 @@ class ReadBookEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, totalPages, currentPage, pdfPath];
+
+  ReadBookEntity copyWith({
+    int? id,
+    int? totalPages,
+    int? currentPage,
+    String? pdfPath,
+  }) {
+    return ReadBookEntity(
+      id: id ?? this.id,
+      totalPages: totalPages ?? this.totalPages,
+      currentPage: currentPage ?? this.currentPage,
+      pdfPath: pdfPath ?? this.pdfPath,
+    );
+  }
 }

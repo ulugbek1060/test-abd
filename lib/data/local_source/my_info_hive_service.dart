@@ -21,12 +21,7 @@ class MyInfoHiveService {
 
   Future<void> init() async {
     try {
-      Hive.registerAdapter(MyInfoDbAdapter());
-      Hive.registerAdapter(WeeklyTestCountDbAdapter());
-      Hive.registerAdapter(CountryHiveModelAdapter());
-      Hive.registerAdapter(RegionHiveModelAdapter());
-      Hive.registerAdapter(DistrictHiveModelAdapter());
-      Hive.registerAdapter(SettlementHiveModelAdapter());
+      _registerAdapters();
       _box = await Hive.openLazyBox<MyInfoDb>(_boxName);
 
       final data = await getInfo();
@@ -40,7 +35,7 @@ class MyInfoHiveService {
           _controller.add(event.value as MyInfoDb?);
         }
       });
-    } catch (e, stackTrace) {
+    } catch (e) {
       throw Exception('Failed to initialize UserDbService: $e');
     }
   }
@@ -96,6 +91,27 @@ class MyInfoHiveService {
   Future<void> _ensureBoxOpen() async {
     if (!_box.isOpen) {
       _box = await Hive.openLazyBox<MyInfoDb>(_boxName);
+    }
+  }
+
+  void _registerAdapters() {
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(MyInfoDbAdapter());
+    }
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(CountryHiveModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(RegionHiveModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(3)) {
+      Hive.registerAdapter(DistrictHiveModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(4)) {
+      Hive.registerAdapter(SettlementHiveModelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(5)) {
+      Hive.registerAdapter(WeeklyTestCountDbAdapter());
     }
   }
 }

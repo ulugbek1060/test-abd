@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:hive_flutter/adapters.dart';
 import 'package:injectable/injectable.dart';
 import 'package:testabd/data/local_source/entities/read_book_entity.dart';
-
 import 'package:hive/hive.dart';
 
 @injectable
@@ -12,54 +9,64 @@ class ReadBooksService {
 
   LazyBox<ReadBookEntity>? _box;
 
-  ReadBooksService(this._box){ init(); }
+  ReadBooksService() {
+    init();
+  }
 
   Future<void> init() async {
-    Hive.registerAdapter(ReadBookEntityAdapter());
-    _box ??= await Hive.openLazyBox<ReadBookEntity>(_boxName);
-  }
+    try {
+      if (!Hive.isAdapterRegistered(6)) {
+        Hive.registerAdapter(ReadBookEntityAdapter());
+      }
 
-  LazyBox<ReadBookEntity> get box {
-    if (_box == null) {
-      throw Exception('ReadBooksService not initialized. Call init() first.');
+      await _ensureBoxOpen();
+    } catch (e) {
+      throw Exception('Failed to initialize ReadBooksService: $e');
     }
-    return _box!;
   }
 
-  /// CREATE / UPDATE (Hive put is already optimized)
   Future<void> save(ReadBookEntity book) async {
-    await box.put(book.id, book);
+    await _ensureBoxOpen();
+    await _box!.put(book.id, book);
   }
 
-  /// READ single
-  Future<ReadBookEntity?> get(int id) {
-    return box.get(id);
+  Future<ReadBookEntity?> get(int id) async {
+    await _ensureBoxOpen();
+    return _box!.get(id);
   }
 
-  /// READ all (parallel fetch)
   Future<List<ReadBookEntity>> getAll() async {
-    final keys = box.keys.cast<int>().toList();
-    final books = await Future.wait(keys.map(box.get));
+    await _ensureBoxOpen();
+
+    final keys = _box!.keys.cast<int>().toList();
+    final books = await Future.wait(keys.map(_box!.get));
+
     return books.whereType<ReadBookEntity>().toList();
   }
 
-  /// DELETE
-  Future<void> delete(int id) {
-    return box.delete(id);
+  Future<void> delete(int id) async {
+    await _ensureBoxOpen();
+    await _box!.delete(id);
   }
 
-  /// CHECK exists (O(1))
-  bool exists(int id) {
-    return box.containsKey(id);
+  Future<bool> exists(int id) async {
+    await _ensureBoxOpen();
+    return _box!.containsKey(id);
   }
 
-  /// CLEAR
-  Future<void> clear() {
-    return box.clear();
+  Future<void> clear() async {
+    await _ensureBoxOpen();
+    await _box!.clear();
   }
 
-  /// COUNT
-  int count() {
-    return box.length;
+  Future<int> count() async {
+    await _ensureBoxOpen();
+    return _box!.length;
+  }
+
+  Future<void> _ensureBoxOpen() async {
+    if (_box == null || !_box!.isOpen) {
+      _box = await Hive.openLazyBox<ReadBookEntity>(_boxName);
+    }
   }
 }

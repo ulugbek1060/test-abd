@@ -101,7 +101,9 @@ abstract class AppRouter {
   static String authorDetailWithArgs({int? authorId}) =>
       '/author_detail/$authorId';
 
-  static const bookRead = '/book_read/:pdf_file';
+  static const bookRead = '/book_read/:book_id';
+  static String readBookWithArgs({int? bookId}) =>
+      '/book_read/$bookId';
 
   static const chatAfterRead = '/chat_after_read';
 
@@ -294,9 +296,9 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRouter.bookRead,
       pageBuilder: (context, state) {
-        final extra = state.extra as Map<String, dynamic>?;
+        final bookId = state.pathParameters['book_id'] ?? "";
         return CupertinoPage(
-          child: ReadBookScreen(pdfUrl: extra?['pdfUrl']),
+          child: ReadBookScreen(bookId: int.tryParse(bookId)),
         );
       },
     ),

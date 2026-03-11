@@ -10,7 +10,6 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
-import 'package:hive_flutter/adapters.dart' as _i744;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart' as _i528;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
@@ -22,7 +21,6 @@ import '../core/utils/app_mode_service.dart' as _i555;
 import '../core/utils/dio_interceptor.dart' as _i900;
 import '../core/utils/follow_listeners.dart' as _i244;
 import '../core/utils/language_service.dart' as _i456;
-import '../data/local_source/entities/read_book_entity.dart' as _i349;
 import '../data/local_source/my_info_hive_service.dart' as _i656;
 import '../data/local_source/read_books_service.dart' as _i1030;
 import '../data/remote_source/account/account_source.dart' as _i65;
@@ -50,6 +48,7 @@ import '../features/library/author_detail_cubit.dart' as _i75;
 import '../features/library/book_detail_cubit.dart' as _i100;
 import '../features/library/chat_after_read_cubit.dart' as _i722;
 import '../features/library/library_cubit.dart' as _i46;
+import '../features/library/read_book_cubit.dart' as _i333;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
@@ -80,6 +79,7 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final appModule = _$AppModule();
+    gh.factory<_i1030.ReadBooksService>(() => _i1030.ReadBooksService());
     await gh.singletonAsync<_i460.SharedPreferences>(
       () => appModule.getSharedPrefs(),
       preResolve: true,
@@ -138,8 +138,6 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.singleton<_i259.LeaderboardSocketService>(
         () => _i259.LeaderboardSocketServiceImpl(gh<_i792.TokenService>()));
-    gh.factory<_i1030.ReadBooksService>(() =>
-        _i1030.ReadBooksService(gh<_i744.LazyBox<_i349.ReadBookEntity>>()));
     gh.singleton<_i900.DioInterceptor>(
         () => _i900.DioInterceptor(gh<_i792.TokenService>()));
     gh.factory<_i361.Dio>(() => appModule.provideDio(
@@ -148,7 +146,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i528.PrettyDioLogger>(),
         ));
     gh.factory<_i792.QuizSource>(() => _i792.QuizSourceImpl(gh<_i361.Dio>()));
-    gh.factory<_i227.ReadingSource>(() => _i227.ReadingSource(gh<_i361.Dio>()));
+    gh.lazySingleton<_i227.ReadingSource>(
+        () => _i227.ReadingSource(gh<_i361.Dio>()));
     gh.factory<_i142.AuthSource>(() => _i142.AuthSourceImpl(gh<_i361.Dio>()));
     gh.factory<_i65.AccountSource>(
         () => _i65.AccountSourceImpl(gh<_i361.Dio>()));
@@ -215,6 +214,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i83.BooksSource>(() => _i83.BooksSourceImpl(gh<_i361.Dio>()));
+    gh.factoryParam<_i333.ReadBookCubit, int?, dynamic>((
+      bookId,
+      _,
+    ) =>
+        _i333.ReadBookCubit(
+          bookId,
+          gh<_i227.ReadingSource>(),
+          gh<_i1030.ReadBooksService>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
     gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
       username,
       _,
