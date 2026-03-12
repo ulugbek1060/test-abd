@@ -22,6 +22,12 @@ class ReadBookCubit extends Cubit<ReadBookState> {
     this._messageHandler,
   ) : super(ReadBookState.initial());
 
+  @override
+  Future<void> close() {
+    _readingSource.disconnectChat();
+    return super.close();
+  }
+
   Future<void> load() async {
     try {
       if (state.isLoading || bookId == null) return;
@@ -37,7 +43,7 @@ class ReadBookCubit extends Cubit<ReadBookState> {
         emit(
           state.copyWith(
             isLoading: false,
-            bookId: bookData?.id,
+            bookId: bookData?.bookId,
             totalPages: bookData?.totalPages,
             currentPage: bookData?.currentPage,
             pdfPath: bookData?.pdfPath,
@@ -49,26 +55,46 @@ class ReadBookCubit extends Cubit<ReadBookState> {
           bookId: bookId!,
           mode: "solo",
         );
-        final data = ReadBookEntity(
-          id: bookId,
-          totalPages: result.book?.totalPages,
-          currentPage: 1,
-          pdfPath: result.book?.pdfFile,
-        );
 
-        // save to database
-        await _readBooksService.save(data);
-
-        // change the UI
-        emit(
-          state.copyWith(
-            isLoading: false,
+        if (result.id != null) {
+          final data = ReadBookEntity(
+            sessionId: result.id,
             bookId: bookId,
-            totalPages: data.totalPages,
-            currentPage: data.currentPage,
-            pdfPath: data.pdfPath,
-          ),
-        );
+            totalPages: result.book?.totalPages,
+            currentPage: 1,
+            pdfPath: result.book?.pdfFile,
+          );
+
+          // save to database
+          // await _readBooksService.save(data);
+
+          _readingSource.connect(
+            result.id!,
+            onMessage: (data) {
+              _messageHandler.handleDialog(SuccessException(data.toString()));
+            },
+            onConnected: () {
+              _messageHandler.handleDialog(UnknownException("connected"));
+            },
+            onError: (error) {
+              _messageHandler.handleDialog(SuccessException(error.toString()));
+            },
+            onDisconnected: () {
+              _messageHandler.handleSnackBar(UnknownException('Disconnected!!'));
+            },
+          );
+
+          // change the UI
+          emit(
+            state.copyWith(
+              isLoading: false,
+              bookId: bookId,
+              totalPages: data.totalPages,
+              currentPage: data.currentPage,
+              pdfPath: data.pdfPath,
+            ),
+          );
+        }
       }
     } catch (e) {
       // handel error
@@ -78,7 +104,7 @@ class ReadBookCubit extends Cubit<ReadBookState> {
 
   Future<void> changeThePage(int page) async {
     final data = ReadBookEntity(
-      id: bookId,
+      bookId: bookId,
       totalPages: state.totalPages,
       currentPage: page,
       pdfPath: state.pdfPath,

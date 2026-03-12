@@ -23,6 +23,8 @@ mixin _$ProfileState {
       throw _privateConstructorUsedError;
   BlocksState get blocksState => throw _privateConstructorUsedError;
   QuestionsState get questionsState => throw _privateConstructorUsedError;
+  ReadingSessionsState get readingSessionsState =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileStateCopyWith<ProfileState> get copyWith =>
@@ -41,11 +43,13 @@ abstract class $ProfileStateCopyWith<$Res> {
       bool isLoading,
       ConnectionsState userConnectionsState,
       BlocksState blocksState,
-      QuestionsState questionsState});
+      QuestionsState questionsState,
+      ReadingSessionsState readingSessionsState});
 
   $ConnectionsStateCopyWith<$Res> get userConnectionsState;
   $BlocksStateCopyWith<$Res> get blocksState;
   $QuestionsStateCopyWith<$Res> get questionsState;
+  $ReadingSessionsStateCopyWith<$Res> get readingSessionsState;
 }
 
 /// @nodoc
@@ -67,6 +71,7 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
     Object? userConnectionsState = null,
     Object? blocksState = null,
     Object? questionsState = null,
+    Object? readingSessionsState = null,
   }) {
     return _then(_value.copyWith(
       error: freezed == error
@@ -93,6 +98,10 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
           ? _value.questionsState
           : questionsState // ignore: cast_nullable_to_non_nullable
               as QuestionsState,
+      readingSessionsState: null == readingSessionsState
+          ? _value.readingSessionsState
+          : readingSessionsState // ignore: cast_nullable_to_non_nullable
+              as ReadingSessionsState,
     ) as $Val);
   }
 
@@ -120,6 +129,15 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
       return _then(_value.copyWith(questionsState: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ReadingSessionsStateCopyWith<$Res> get readingSessionsState {
+    return $ReadingSessionsStateCopyWith<$Res>(_value.readingSessionsState,
+        (value) {
+      return _then(_value.copyWith(readingSessionsState: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -136,7 +154,8 @@ abstract class _$$ProfileStateImplCopyWith<$Res>
       bool isLoading,
       ConnectionsState userConnectionsState,
       BlocksState blocksState,
-      QuestionsState questionsState});
+      QuestionsState questionsState,
+      ReadingSessionsState readingSessionsState});
 
   @override
   $ConnectionsStateCopyWith<$Res> get userConnectionsState;
@@ -144,6 +163,8 @@ abstract class _$$ProfileStateImplCopyWith<$Res>
   $BlocksStateCopyWith<$Res> get blocksState;
   @override
   $QuestionsStateCopyWith<$Res> get questionsState;
+  @override
+  $ReadingSessionsStateCopyWith<$Res> get readingSessionsState;
 }
 
 /// @nodoc
@@ -163,6 +184,7 @@ class __$$ProfileStateImplCopyWithImpl<$Res>
     Object? userConnectionsState = null,
     Object? blocksState = null,
     Object? questionsState = null,
+    Object? readingSessionsState = null,
   }) {
     return _then(_$ProfileStateImpl(
       error: freezed == error
@@ -189,6 +211,10 @@ class __$$ProfileStateImplCopyWithImpl<$Res>
           ? _value.questionsState
           : questionsState // ignore: cast_nullable_to_non_nullable
               as QuestionsState,
+      readingSessionsState: null == readingSessionsState
+          ? _value.readingSessionsState
+          : readingSessionsState // ignore: cast_nullable_to_non_nullable
+              as ReadingSessionsState,
     ));
   }
 }
@@ -202,7 +228,8 @@ class _$ProfileStateImpl implements _ProfileState {
       this.isLoading = false,
       this.userConnectionsState = const ConnectionsState(),
       this.blocksState = const BlocksState(),
-      this.questionsState = const QuestionsState()});
+      this.questionsState = const QuestionsState(),
+      this.readingSessionsState = const ReadingSessionsState()});
 
   @override
   final String? error;
@@ -220,10 +247,13 @@ class _$ProfileStateImpl implements _ProfileState {
   @override
   @JsonKey()
   final QuestionsState questionsState;
+  @override
+  @JsonKey()
+  final ReadingSessionsState readingSessionsState;
 
   @override
   String toString() {
-    return 'ProfileState(error: $error, myInfoModel: $myInfoModel, isLoading: $isLoading, userConnectionsState: $userConnectionsState, blocksState: $blocksState, questionsState: $questionsState)';
+    return 'ProfileState(error: $error, myInfoModel: $myInfoModel, isLoading: $isLoading, userConnectionsState: $userConnectionsState, blocksState: $blocksState, questionsState: $questionsState, readingSessionsState: $readingSessionsState)';
   }
 
   @override
@@ -241,12 +271,14 @@ class _$ProfileStateImpl implements _ProfileState {
             (identical(other.blocksState, blocksState) ||
                 other.blocksState == blocksState) &&
             (identical(other.questionsState, questionsState) ||
-                other.questionsState == questionsState));
+                other.questionsState == questionsState) &&
+            (identical(other.readingSessionsState, readingSessionsState) ||
+                other.readingSessionsState == readingSessionsState));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, error, myInfoModel, isLoading,
-      userConnectionsState, blocksState, questionsState);
+      userConnectionsState, blocksState, questionsState, readingSessionsState);
 
   @JsonKey(ignore: true)
   @override
@@ -262,7 +294,8 @@ abstract class _ProfileState implements ProfileState {
       final bool isLoading,
       final ConnectionsState userConnectionsState,
       final BlocksState blocksState,
-      final QuestionsState questionsState}) = _$ProfileStateImpl;
+      final QuestionsState questionsState,
+      final ReadingSessionsState readingSessionsState}) = _$ProfileStateImpl;
 
   @override
   String? get error;
@@ -276,6 +309,8 @@ abstract class _ProfileState implements ProfileState {
   BlocksState get blocksState;
   @override
   QuestionsState get questionsState;
+  @override
+  ReadingSessionsState get readingSessionsState;
   @override
   @JsonKey(ignore: true)
   _$$ProfileStateImplCopyWith<_$ProfileStateImpl> get copyWith =>
@@ -972,4 +1007,272 @@ abstract class _QuestionsState implements QuestionsState {
   @JsonKey(ignore: true)
   _$$QuestionsStateImplCopyWith<_$QuestionsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$ReadingSessionsState {
+  bool get isLoading => throw _privateConstructorUsedError;
+  bool get isLoadingMore => throw _privateConstructorUsedError;
+  bool get isLastPage => throw _privateConstructorUsedError;
+  int get previous => throw _privateConstructorUsedError;
+  int get next => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
+  List<ReadingSessionModel> get sessions => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ReadingSessionsStateCopyWith<ReadingSessionsState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ReadingSessionsStateCopyWith<$Res> {
+  factory $ReadingSessionsStateCopyWith(ReadingSessionsState value,
+          $Res Function(ReadingSessionsState) then) =
+      _$ReadingSessionsStateCopyWithImpl<$Res, ReadingSessionsState>;
+  @useResult
+  $Res call(
+      {bool isLoading,
+      bool isLoadingMore,
+      bool isLastPage,
+      int previous,
+      int next,
+      String? error,
+      List<ReadingSessionModel> sessions});
+}
+
+/// @nodoc
+class _$ReadingSessionsStateCopyWithImpl<$Res,
+        $Val extends ReadingSessionsState>
+    implements $ReadingSessionsStateCopyWith<$Res> {
+  _$ReadingSessionsStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLastPage = null,
+    Object? previous = null,
+    Object? next = null,
+    Object? error = freezed,
+    Object? sessions = null,
+  }) {
+    return _then(_value.copyWith(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
+              as bool,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      sessions: null == sessions
+          ? _value.sessions
+          : sessions // ignore: cast_nullable_to_non_nullable
+              as List<ReadingSessionModel>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ReadingSessionsStateImplCopyWith<$Res>
+    implements $ReadingSessionsStateCopyWith<$Res> {
+  factory _$$ReadingSessionsStateImplCopyWith(_$ReadingSessionsStateImpl value,
+          $Res Function(_$ReadingSessionsStateImpl) then) =
+      __$$ReadingSessionsStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {bool isLoading,
+      bool isLoadingMore,
+      bool isLastPage,
+      int previous,
+      int next,
+      String? error,
+      List<ReadingSessionModel> sessions});
+}
+
+/// @nodoc
+class __$$ReadingSessionsStateImplCopyWithImpl<$Res>
+    extends _$ReadingSessionsStateCopyWithImpl<$Res, _$ReadingSessionsStateImpl>
+    implements _$$ReadingSessionsStateImplCopyWith<$Res> {
+  __$$ReadingSessionsStateImplCopyWithImpl(_$ReadingSessionsStateImpl _value,
+      $Res Function(_$ReadingSessionsStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isLoading = null,
+    Object? isLoadingMore = null,
+    Object? isLastPage = null,
+    Object? previous = null,
+    Object? next = null,
+    Object? error = freezed,
+    Object? sessions = null,
+  }) {
+    return _then(_$ReadingSessionsStateImpl(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoadingMore: null == isLoadingMore
+          ? _value.isLoadingMore
+          : isLoadingMore // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastPage: null == isLastPage
+          ? _value.isLastPage
+          : isLastPage // ignore: cast_nullable_to_non_nullable
+              as bool,
+      previous: null == previous
+          ? _value.previous
+          : previous // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      sessions: null == sessions
+          ? _value._sessions
+          : sessions // ignore: cast_nullable_to_non_nullable
+              as List<ReadingSessionModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ReadingSessionsStateImpl implements _ReadingSessionsState {
+  const _$ReadingSessionsStateImpl(
+      {this.isLoading = false,
+      this.isLoadingMore = false,
+      this.isLastPage = false,
+      this.previous = 0,
+      this.next = 1,
+      this.error,
+      final List<ReadingSessionModel> sessions = const []})
+      : _sessions = sessions;
+
+  @override
+  @JsonKey()
+  final bool isLoading;
+  @override
+  @JsonKey()
+  final bool isLoadingMore;
+  @override
+  @JsonKey()
+  final bool isLastPage;
+  @override
+  @JsonKey()
+  final int previous;
+  @override
+  @JsonKey()
+  final int next;
+  @override
+  final String? error;
+  final List<ReadingSessionModel> _sessions;
+  @override
+  @JsonKey()
+  List<ReadingSessionModel> get sessions {
+    if (_sessions is EqualUnmodifiableListView) return _sessions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_sessions);
+  }
+
+  @override
+  String toString() {
+    return 'ReadingSessionsState(isLoading: $isLoading, isLoadingMore: $isLoadingMore, isLastPage: $isLastPage, previous: $previous, next: $next, error: $error, sessions: $sessions)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ReadingSessionsStateImpl &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.isLoadingMore, isLoadingMore) ||
+                other.isLoadingMore == isLoadingMore) &&
+            (identical(other.isLastPage, isLastPage) ||
+                other.isLastPage == isLastPage) &&
+            (identical(other.previous, previous) ||
+                other.previous == previous) &&
+            (identical(other.next, next) || other.next == next) &&
+            (identical(other.error, error) || other.error == error) &&
+            const DeepCollectionEquality().equals(other._sessions, _sessions));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      isLoadingMore,
+      isLastPage,
+      previous,
+      next,
+      error,
+      const DeepCollectionEquality().hash(_sessions));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ReadingSessionsStateImplCopyWith<_$ReadingSessionsStateImpl>
+      get copyWith =>
+          __$$ReadingSessionsStateImplCopyWithImpl<_$ReadingSessionsStateImpl>(
+              this, _$identity);
+}
+
+abstract class _ReadingSessionsState implements ReadingSessionsState {
+  const factory _ReadingSessionsState(
+      {final bool isLoading,
+      final bool isLoadingMore,
+      final bool isLastPage,
+      final int previous,
+      final int next,
+      final String? error,
+      final List<ReadingSessionModel> sessions}) = _$ReadingSessionsStateImpl;
+
+  @override
+  bool get isLoading;
+  @override
+  bool get isLoadingMore;
+  @override
+  bool get isLastPage;
+  @override
+  int get previous;
+  @override
+  int get next;
+  @override
+  String? get error;
+  @override
+  List<ReadingSessionModel> get sessions;
+  @override
+  @JsonKey(ignore: true)
+  _$$ReadingSessionsStateImplCopyWith<_$ReadingSessionsStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

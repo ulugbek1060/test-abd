@@ -17,24 +17,27 @@ class ReadBookEntityAdapter extends TypeAdapter<ReadBookEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ReadBookEntity(
-      id: fields[0] as int?,
-      totalPages: fields[1] as int?,
-      currentPage: fields[2] as int?,
-      pdfPath: fields[3] as String?,
+      bookId: fields[0] as int?,
+      sessionId: fields[1] as int?,
+      totalPages: fields[2] as int?,
+      currentPage: fields[3] as int?,
+      pdfPath: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ReadBookEntity obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.bookId)
       ..writeByte(1)
-      ..write(obj.totalPages)
+      ..write(obj.sessionId)
       ..writeByte(2)
-      ..write(obj.currentPage)
+      ..write(obj.totalPages)
       ..writeByte(3)
+      ..write(obj.currentPage)
+      ..writeByte(4)
       ..write(obj.pdfPath);
   }
 

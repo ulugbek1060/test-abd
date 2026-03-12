@@ -1,21 +1,34 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:testabd/core/app_constants.dart';
 import 'package:testabd/core/errors/app_exception.dart';
+import 'package:testabd/core/services/token_service.dart';
+import 'package:testabd/data/remote_source/books/models/reading_sessions_response.dart';
 import 'package:testabd/data/remote_source/books/models/start_session_response.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-@lazySingleton
+@injectable
 class ReadingSource {
   final Dio _dio;
+  final TokenService _tokenService;
 
-  ReadingSource(this._dio);
+  ReadingSource(this._dio, this._tokenService);
 
   // ── REST ────────────────────────────────────────────────
-  Future<dynamic> getMySessions() async {
+  Future<ReadingSessionsResponse> getMySessions(
+    int? page,
+    int? pageSize,
+  ) async {
     try {
-      final result = await _dio.get('/books/reading-sessions/');
-      return result.data;
+      final result = await _dio.get(
+        '/books/reading-sessions/',
+        queryParameters: {
+          if (page != null) 'page': page,
+          if (page != null) 'page_size': pageSize,
+        },
+      );
+      return ReadingSessionsResponse.fromJson(result.data);
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
@@ -31,7 +44,8 @@ class ReadingSource {
     try {
       final body = {
         'book_id': bookId,
-        'mode': mode, // "solo" | "friend" | "followers"
+        'mode': mode,
+        // "solo" | "friend" | "followers" Show "Waiting for participants..." screen (for friend/followers)
         if (friendUsername != null) 'friend_username': friendUsername,
       };
 
@@ -60,23 +74,30 @@ class ReadingSource {
   // ── WebSocket Chat ──────────────────────────────────────
   WebSocketChannel? _channel;
 
-  void connectToChat(
+  void connect(
     int sessionId, {
-    required Function(Map<String, dynamic>) onMessage,
+    required Function(dynamic) onMessage,
     required Function() onConnected,
     required Function(dynamic) onError,
     required Function() onDisconnected,
-  }) {
-    final wsUrl =
-        'wss://backend.testabd.uz/ws/reading/$sessionId/'; // ← confirm this !!!
+  }) async {
+    final token = await _tokenService.getToken();
+    final wsUrl = Uri.parse('wss://backend.testabd.uz/ws/notifications/239/');
+    // final wsUrl = Uri.parse('wss://echo.websocket.org');
+    // final wsUrl = Uri(
+    //   scheme: 'wss',                          // ← force secure WebSocket
+    //   host: 'backend.testabd.uz',
+    //   path: '/ws/reading/$sessionId/',        // trailing slash matches your route
+    //   // queryParameters: {'token': '${token?.access}'},  // if needed
+    // );
     // or wss://backend.testabd.uz/ws/session/$sessionId/chat/
 
-    _channel = WebSocketChannel.connect(Uri.parse(wsUrl));
+    _channel = WebSocketChannel.connect(wsUrl);
 
     _channel!.stream.listen(
       (data) {
-        final msg = jsonDecode(data as String) as Map<String, dynamic>;
-        onMessage(msg);
+        // final msg = jsonDecode(data as String) as Map<String, dynamic>;
+        onMessage(data);
       },
       onError: onError,
       onDone: onDisconnected,

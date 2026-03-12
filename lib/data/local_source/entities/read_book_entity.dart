@@ -6,30 +6,47 @@ part 'read_book_entity.g.dart';
 @HiveType(typeId: 6)
 class ReadBookEntity extends Equatable {
   @HiveField(0)
-  final int? id;
+  final int? bookId;
 
   @HiveField(1)
-  final int? totalPages;
+  final int? sessionId;
 
   @HiveField(2)
-  final int? currentPage;
+  final int? totalPages;
 
   @HiveField(3)
+  final int? currentPage;
+
+  @HiveField(4)
   final String? pdfPath;
 
-  ReadBookEntity({this.id, this.totalPages, this.currentPage, this.pdfPath});
+  const ReadBookEntity({
+    this.bookId,
+    this.sessionId,
+    this.totalPages,
+    this.currentPage,
+    this.pdfPath,
+  });
 
   @override
-  List<Object?> get props => [id, totalPages, currentPage, pdfPath];
+  List<Object?> get props => [
+    bookId,
+    sessionId,
+    totalPages,
+    currentPage,
+    pdfPath,
+  ];
 
   ReadBookEntity copyWith({
-    int? id,
+    int? bookId,
+    int? sessionId,
     int? totalPages,
     int? currentPage,
     String? pdfPath,
   }) {
     return ReadBookEntity(
-      id: id ?? this.id,
+      bookId: bookId ?? this.bookId,
+      sessionId: bookId ?? this.sessionId,
       totalPages: totalPages ?? this.totalPages,
       currentPage: currentPage ?? this.currentPage,
       pdfPath: pdfPath ?? this.pdfPath,

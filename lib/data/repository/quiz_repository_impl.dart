@@ -3,9 +3,11 @@ import 'package:injectable/injectable.dart';
 import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
+import 'package:testabd/data/remote_source/books/reading_source.dart';
 import 'package:testabd/data/remote_source/quiz/models/create_question_data_request.dart';
 import 'package:testabd/data/remote_source/quiz/quiz_source.dart';
 import 'package:testabd/core/enums/access_enum.dart';
+import 'package:testabd/domain/books/entities/reading_session_model.dart';
 import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
@@ -18,8 +20,9 @@ import 'package:testabd/domain/quiz/quiz_repository.dart';
 @LazySingleton(as: QuizRepository)
 class QuizRepositoryImpl extends QuizRepository {
   final QuizSource _quizSource;
+  final ReadingSource _readingSource;
 
-  QuizRepositoryImpl(this._quizSource);
+  QuizRepositoryImpl(this._quizSource, this._readingSource);
 
   @override
   Future<Either<AppException, PagedData<QuestionModel>>> getFollowedQuestions({
@@ -120,9 +123,7 @@ class QuizRepositoryImpl extends QuizRepository {
     try {
       final result = await _quizSource.getQuestionsBookmark(page, pageSize);
       final data = PagedData(
-        data: result.results
-            .map((e) => QuestionModel.fromBookmarkResponse(e))
-            .toList(),
+        data: result.results.map(QuestionModel.fromBookmarkResponse).toList(),
         next: result.next,
         previous: result.previous,
       );
@@ -298,6 +299,25 @@ class QuizRepositoryImpl extends QuizRepository {
     try {
       final result = await _quizSource.bookmarkQuestions(questionId);
       return Right(result);
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
+
+  @override
+  Future<Either<AppException, PagedData<ReadingSessionModel>>>
+  getReadingSessions({int? page,  int? pageSize}) async {
+    try {
+      final result = await _readingSource.getMySessions(page, pageSize);
+      final data = PagedData(
+        data: result.results.map(ReadingSessionModel.fromResponse).toList(),
+        next: result.next,
+        previous: result.previous,
+        count: result.count,
+      );
+      return Right(data);
     } on AppException catch (e) {
       return Left(e);
     } catch (e, stackTrace) {

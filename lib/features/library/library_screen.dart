@@ -69,7 +69,7 @@ class BooksSection extends StatelessWidget {
             ),
             delegate: SliverChildBuilderDelegate((context, index) {
               final book = state.booksState.books[index];
-              return BookCard(
+              return _BookCard(
                 book: book,
                 onTap: () =>
                     context.push(AppRouter.bookDetailWithArgs(bookId: book.id)),
@@ -82,11 +82,11 @@ class BooksSection extends StatelessWidget {
   }
 }
 
-class BookCard extends StatelessWidget {
+class _BookCard extends StatelessWidget {
   final BookModel book;
   final VoidCallback onTap;
 
-  const BookCard({super.key, required this.book, required this.onTap});
+  const _BookCard({super.key, required this.book, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -100,12 +100,22 @@ class BookCard extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             // Background cover image
-            Image.network(
-              book.coverImage ?? "",
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                color: Colors.grey.shade800,
-                child: const Icon(Icons.book, size: 60, color: Colors.white54),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Image.network(
+                book.coverImage ?? "",
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: Colors.grey.shade800,
+                  child: const Icon(
+                    Icons.book,
+                    size: 60,
+                    color: Colors.white54,
+                  ),
+                ),
               ),
             ),
 
@@ -179,31 +189,31 @@ class BookCard extends StatelessWidget {
   }
 }
 
-class _RatingStars extends StatelessWidget {
-  final double rating;
-
-  const _RatingStars({required this.rating});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(5, (index) {
-        final filled = rating >= index + 1;
-        final halfFilled = rating > index && rating < index + 1;
-
-        return Icon(
-          filled
-              ? Icons.star_rounded
-              : halfFilled
-              ? Icons.star_half_rounded
-              : Icons.star_border_rounded,
-          size: 18,
-          color: const Color(0xFFFFC107),
-        );
-      }),
-    );
-  }
-}
+// class _RatingStars extends StatelessWidget {
+//   final double rating;
+//
+//   const _RatingStars({required this.rating});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       children: List.generate(5, (index) {
+//         final filled = rating >= index + 1;
+//         final halfFilled = rating > index && rating < index + 1;
+//
+//         return Icon(
+//           filled
+//               ? Icons.star_rounded
+//               : halfFilled
+//               ? Icons.star_half_rounded
+//               : Icons.star_border_rounded,
+//           size: 18,
+//           color: const Color(0xFFFFC107),
+//         );
+//       }),
+//     );
+//   }
+// }
 
 // ---------------- Author ----------------
 class AuthorSection extends StatelessWidget {
@@ -225,7 +235,7 @@ class AuthorSection extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(width: 14),
               itemBuilder: (context, index) {
                 final author = state.authorsState.authors[index];
-                return StoryItem(
+                return AuthorItem(
                   username: author.fullName ?? "",
                   imageUrl: author.image ?? "",
                   onTap: () => context.push(
@@ -241,12 +251,12 @@ class AuthorSection extends StatelessWidget {
   }
 }
 
-class StoryItem extends StatelessWidget {
+class AuthorItem extends StatelessWidget {
   final String username;
   final String imageUrl;
   final VoidCallback onTap;
 
-  const StoryItem({
+  const AuthorItem({
     super.key,
     required this.onTap,
     required this.username,
@@ -286,7 +296,10 @@ class StoryItem extends StatelessWidget {
             username,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white, fontSize: 12),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 12,
+            ),
           ),
         ],
       ),

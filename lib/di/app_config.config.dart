@@ -146,15 +146,15 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i528.PrettyDioLogger>(),
         ));
     gh.factory<_i792.QuizSource>(() => _i792.QuizSourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i227.ReadingSource>(
-        () => _i227.ReadingSource(gh<_i361.Dio>()));
     gh.factory<_i142.AuthSource>(() => _i142.AuthSourceImpl(gh<_i361.Dio>()));
+    gh.factory<_i227.ReadingSource>(() => _i227.ReadingSource(
+          gh<_i361.Dio>(),
+          gh<_i792.TokenService>(),
+        ));
     gh.factory<_i65.AccountSource>(
         () => _i65.AccountSourceImpl(gh<_i361.Dio>()));
     gh.factory<_i259.WsLeaderboardSource>(
         () => _i259.WsLeaderboardSourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i156.QuizRepository>(
-        () => _i75.QuizRepositoryImpl(gh<_i792.QuizSource>()));
     gh.singleton<_i893.AuthRepository>(() => _i461.AuthRepositoryImpl(
           gh<_i142.AuthSource>(),
           gh<_i371.SessionService>(),
@@ -162,57 +162,19 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i575.LeaderboardRepository>(() =>
         _i317.LeaderboardRepositoryImpl(gh<_i259.LeaderboardSocketService>()));
-    gh.factoryParam<_i929.UserQuestionDetailCubit, int?, dynamic>((
-      questionId,
-      _,
-    ) =>
-        _i929.UserQuestionDetailCubit(
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-          questionId,
-        ));
-    gh.factoryParam<_i296.MyBlockDetailCubit, int, dynamic>((
-      id,
-      _,
-    ) =>
-        _i296.MyBlockDetailCubit.create(
-          id,
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
-    gh.factoryParam<_i84.CreateQuestionCubit, int?, dynamic>((
-      questionId,
-      _,
-    ) =>
-        _i84.CreateQuestionCubit(
-          questionId,
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-          gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
-        ));
-    gh.factory<_i137.BookmarkQuestionsCubit>(() => _i137.BookmarkQuestionsCubit(
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
     gh.lazySingleton<_i575.AccountRepository>(() => _i317.AccountRepositoryImpl(
           gh<_i65.AccountSource>(),
           gh<_i656.MyInfoHiveService>(),
           gh<_i259.WsLeaderboardSource>(),
         ));
-    gh.factoryParam<_i341.CreateBlockCubit, int?, dynamic>((
-      blockId,
-      _,
-    ) =>
-        _i341.CreateBlockCubit(
-          blockId,
-          gh<_i156.QuizRepository>(),
-          gh<_i877.AppMessageHandler>(),
-          gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
-        ));
     gh.factory<_i36.ForgotPswdCubit>(
         () => _i36.ForgotPswdCubit(gh<_i893.AuthRepository>()));
     gh.factory<_i523.EditProfileCubit>(
         () => _i523.EditProfileCubit(gh<_i893.AuthRepository>()));
+    gh.lazySingleton<_i156.QuizRepository>(() => _i75.QuizRepositoryImpl(
+          gh<_i792.QuizSource>(),
+          gh<_i227.ReadingSource>(),
+        ));
     gh.factory<_i83.BooksSource>(() => _i83.BooksSourceImpl(gh<_i361.Dio>()));
     gh.factoryParam<_i333.ReadBookCubit, int?, dynamic>((
       bookId,
@@ -289,6 +251,24 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
           gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
         ));
+    gh.factoryParam<_i929.UserQuestionDetailCubit, int?, dynamic>((
+      questionId,
+      _,
+    ) =>
+        _i929.UserQuestionDetailCubit(
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          questionId,
+        ));
+    gh.factoryParam<_i296.MyBlockDetailCubit, int, dynamic>((
+      id,
+      _,
+    ) =>
+        _i296.MyBlockDetailCubit.create(
+          id,
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
     gh.factoryParam<_i297.UserConnectionCubit, int, dynamic>((
       userId,
       _,
@@ -325,6 +305,30 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.singleton<_i923.BooksRepository>(
         () => _i656.BooksRepositoryImpl(gh<_i83.BooksSource>()));
+    gh.factoryParam<_i84.CreateQuestionCubit, int?, dynamic>((
+      questionId,
+      _,
+    ) =>
+        _i84.CreateQuestionCubit(
+          questionId,
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileQuestionsUpdater'),
+        ));
+    gh.factory<_i137.BookmarkQuestionsCubit>(() => _i137.BookmarkQuestionsCubit(
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factoryParam<_i341.CreateBlockCubit, int?, dynamic>((
+      blockId,
+      _,
+    ) =>
+        _i341.CreateBlockCubit(
+          blockId,
+          gh<_i156.QuizRepository>(),
+          gh<_i877.AppMessageHandler>(),
+          gh<_i760.UpdateListener>(instanceName: 'ProfileBlockUpdater'),
+        ));
     gh.factoryParam<_i100.BookDetailCubit, int?, dynamic>((
       bookId,
       _,

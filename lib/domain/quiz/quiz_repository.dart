@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/utils/paged_data.dart';
 import 'package:testabd/core/enums/access_enum.dart';
+import 'package:testabd/domain/books/entities/reading_session_model.dart';
 import 'package:testabd/domain/entity/block_detail_model.dart';
 import 'package:testabd/domain/entity/block_model.dart';
 import 'package:testabd/domain/entity/category_model.dart';
@@ -81,4 +82,7 @@ abstract class QuizRepository {
     required Set<int> selectedAnswers,
     int? duration,
   });
+
+  Future<Either<AppException, PagedData<ReadingSessionModel>>>
+  getReadingSessions({int? page, int? pageSize});
 }

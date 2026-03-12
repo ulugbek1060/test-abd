@@ -23,6 +23,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   static const int _blocksPageSize = 10;
   static const int _questionsPageSize = 10;
+  static const int _sessionPageSize = 10;
 
   ProfileCubit(
     this._accountRepository,
@@ -57,6 +58,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     fetchUserInfo();
     getBlocks();
     getQuestions();
+    getReadingSessions();
   }
 
   Future<void> refresh() async => await load();
@@ -308,6 +310,100 @@ class ProfileCubit extends Cubit<ProfileState> {
               previous: value.previousPage(),
               isLastPage:
                   value.data.length < _questionsPageSize || value.next == null,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // ------------------------------------------------------
+  // Reading Sessions
+  // ------------------------------------------------------
+  Future<void> getReadingSessions() async {
+    if (state.readingSessionsState.isLoading) return;
+
+    emit(
+      state.copyWith(
+        readingSessionsState: state.readingSessionsState.copyWith(
+          isLoading: true,
+        ),
+      ),
+    );
+
+    final result = await _quizRepository.getReadingSessions(
+      page: 1,
+      pageSize: _sessionPageSize,
+    );
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(
+          state.copyWith(
+            readingSessionsState: state.readingSessionsState.copyWith(
+              isLoading: false,
+              error: error.message,
+            ),
+          ),
+        );
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            readingSessionsState: state.readingSessionsState.copyWith(
+              isLoading: false,
+              error: null,
+              sessions: value.data,
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage: value.next == null,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> getReadingSessionsByPage() async {
+    final current = state.readingSessionsState;
+    if (current.isLoading || current.isLoadingMore || current.isLastPage) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        readingSessionsState: current.copyWith(isLoadingMore: true),
+      ),
+    );
+
+    final result = await _quizRepository.getReadingSessions(
+      page: current.next,
+      pageSize: _sessionPageSize,
+    );
+    result.fold(
+      (error) {
+        _messageHandler.handleDialog(error);
+        emit(
+          state.copyWith(
+            readingSessionsState: state.readingSessionsState.copyWith(
+              isLoadingMore: false,
+              error: error.message,
+            ),
+          ),
+        );
+      },
+      (value) {
+        emit(
+          state.copyWith(
+            readingSessionsState: state.readingSessionsState.copyWith(
+              isLoadingMore: false,
+              error: null,
+              sessions: List.of(state.readingSessionsState.sessions)
+                ..addAll(value.data),
+              next: value.nextPage(),
+              previous: value.previousPage(),
+              isLastPage:
+                  value.next == null || value.data.length < _sessionPageSize,
             ),
           ),
         );

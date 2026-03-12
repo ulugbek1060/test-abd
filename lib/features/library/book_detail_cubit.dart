@@ -39,7 +39,7 @@ class BookDetailCubit extends Cubit<BookDetailState> {
   }
 
   Future<void> getSession() async {
-    _readingSource.getMySessions();
+    // _readingSource.getMySessions();
   }
 
   Future<void> joinSession() async {

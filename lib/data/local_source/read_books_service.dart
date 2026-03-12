@@ -27,7 +27,7 @@ class ReadBooksService {
 
   Future<void> save(ReadBookEntity book) async {
     await _ensureBoxOpen();
-    await _box!.put(book.id, book);
+    await _box!.put(book.bookId, book);
   }
 
   Future<ReadBookEntity?> get(int id) async {

@@ -472,7 +472,7 @@ class QuestionModel extends Equatable {
 
   static QuestionModel fromAny(dynamic data) {
     return QuestionModel(
-      id: data.id,
+      id: data.bookId,
       test: data.test,
       testTitle: data.testTitle,
       questionText: data.questionText,
@@ -483,7 +483,7 @@ class QuestionModel extends Equatable {
       answers: data.answers
           ?.map(
             (answer) => AnswerModel(
-              id: answer.id,
+              id: answer.bookId,
               letter: answer.letter,
               answerText: answer.answerText,
               isCorrect: answer.isCorrect,
@@ -498,7 +498,7 @@ class QuestionModel extends Equatable {
       difficultyPercentage: data.difficultyPercentage?.toDouble(),
       userAttemptCount: data.userAttemptCount,
       user: UserItemModel(
-        id: data.user?.id,
+        id: data.user?.bookId,
         username: data.user?.username,
         profileImage: data.user?.profileImage,
         isBadged: data.user?.isBadged,

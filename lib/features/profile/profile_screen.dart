@@ -9,6 +9,7 @@ import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
+import 'package:testabd/domain/books/entities/book_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
@@ -59,6 +60,7 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
       final cubit = context.read<ProfileCubit>();
       if (_currentPage == PageType.questions) cubit.getQuestionsByPage();
       if (_currentPage == PageType.block) cubit.getBlockByPage();
+      if (_currentPage == PageType.books) cubit.getReadingSessionsByPage();
     }
   }
 
@@ -194,7 +196,8 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                         _BlocksSection(state: state.blocksState),
                       if (_currentPage == PageType.questions)
                         _QuestionsSection(state: state.questionsState),
-                      if (_currentPage == PageType.books) const _BooksSection(),
+                      if (_currentPage == PageType.books)
+                        _BooksSection(state: state.readingSessionsState),
                     ],
                   ),
           ),
@@ -976,15 +979,137 @@ class _DifficultyBadge extends StatelessWidget {
 }
 
 class _BooksSection extends StatelessWidget {
-  const _BooksSection();
+  final ReadingSessionsState state;
+
+  const _BooksSection({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    return const SliverFillRemaining(
-      child: Center(
-        child: Text(
-          "Books section coming soon...",
-          style: TextStyle(fontSize: 17, color: Colors.grey),
+    if (state.isLoading) return const SliverToBoxAdapter(child: ProgressView());
+
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(6),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 3 / 4,
+            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final session = state.sessions[index];
+              return _BookCard(
+                book: session.book,
+                onTap: () => context.push(
+                  AppRouter.bookDetailWithArgs(bookId: session.book?.id),
+                ),
+              );
+            }, childCount: state.sessions.length),
+          ),
+        ),
+
+        if (state.isLoadingMore)
+          const SliverToBoxAdapter(
+            child: SizedBox(width: 40, height: 40, child: ProgressView()),
+          ),
+      ],
+    );
+  }
+}
+
+class _BookCard extends StatelessWidget {
+  final BookModel? book;
+  final VoidCallback onTap;
+
+  const _BookCard({super.key, this.book, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 6,
+        clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Background cover image
+            Image.network(
+              book?.coverImage ?? "",
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey.shade800,
+                child: const Icon(Icons.book, size: 60, color: Colors.white54),
+              ),
+            ),
+
+            // Gradient overlay for better text readability
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                  stops: const [0.5, 1.0],
+                ),
+              ),
+            ),
+
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    book?.title ?? "",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black,
+                          offset: Offset(1, 1),
+                          blurRadius: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Author
+                  Text(
+                    book?.author?.fullName ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // _RatingStars(rating: book.author),
+                  Text(
+                    book?.totalPages?.toString() ?? "",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
