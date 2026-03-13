@@ -17,11 +17,12 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ReadBookState {
   bool get isLoading => throw _privateConstructorUsedError;
-  int? get bookId => throw _privateConstructorUsedError;
+  int? get sessionId => throw _privateConstructorUsedError;
+  BookModel? get book => throw _privateConstructorUsedError;
   int? get totalPages => throw _privateConstructorUsedError;
   int? get currentPage => throw _privateConstructorUsedError;
-  String? get pdfPath => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  String? get localFilePath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ReadBookStateCopyWith<ReadBookState> get copyWith =>
@@ -36,11 +37,12 @@ abstract class $ReadBookStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isLoading,
-      int? bookId,
+      int? sessionId,
+      BookModel? book,
       int? totalPages,
       int? currentPage,
-      String? pdfPath,
-      String? error});
+      String? error,
+      String? localFilePath});
 }
 
 /// @nodoc
@@ -57,21 +59,26 @@ class _$ReadBookStateCopyWithImpl<$Res, $Val extends ReadBookState>
   @override
   $Res call({
     Object? isLoading = null,
-    Object? bookId = freezed,
+    Object? sessionId = freezed,
+    Object? book = freezed,
     Object? totalPages = freezed,
     Object? currentPage = freezed,
-    Object? pdfPath = freezed,
     Object? error = freezed,
+    Object? localFilePath = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      bookId: freezed == bookId
-          ? _value.bookId
-          : bookId // ignore: cast_nullable_to_non_nullable
+      sessionId: freezed == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
               as int?,
+      book: freezed == book
+          ? _value.book
+          : book // ignore: cast_nullable_to_non_nullable
+              as BookModel?,
       totalPages: freezed == totalPages
           ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
@@ -80,13 +87,13 @@ class _$ReadBookStateCopyWithImpl<$Res, $Val extends ReadBookState>
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      pdfPath: freezed == pdfPath
-          ? _value.pdfPath
-          : pdfPath // ignore: cast_nullable_to_non_nullable
-              as String?,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      localFilePath: freezed == localFilePath
+          ? _value.localFilePath
+          : localFilePath // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -102,11 +109,12 @@ abstract class _$$ReadBookStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool isLoading,
-      int? bookId,
+      int? sessionId,
+      BookModel? book,
       int? totalPages,
       int? currentPage,
-      String? pdfPath,
-      String? error});
+      String? error,
+      String? localFilePath});
 }
 
 /// @nodoc
@@ -121,21 +129,26 @@ class __$$ReadBookStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isLoading = null,
-    Object? bookId = freezed,
+    Object? sessionId = freezed,
+    Object? book = freezed,
     Object? totalPages = freezed,
     Object? currentPage = freezed,
-    Object? pdfPath = freezed,
     Object? error = freezed,
+    Object? localFilePath = freezed,
   }) {
     return _then(_$ReadBookStateImpl(
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      bookId: freezed == bookId
-          ? _value.bookId
-          : bookId // ignore: cast_nullable_to_non_nullable
+      sessionId: freezed == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
               as int?,
+      book: freezed == book
+          ? _value.book
+          : book // ignore: cast_nullable_to_non_nullable
+              as BookModel?,
       totalPages: freezed == totalPages
           ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
@@ -144,13 +157,13 @@ class __$$ReadBookStateImplCopyWithImpl<$Res>
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      pdfPath: freezed == pdfPath
-          ? _value.pdfPath
-          : pdfPath // ignore: cast_nullable_to_non_nullable
-              as String?,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+      localFilePath: freezed == localFilePath
+          ? _value.localFilePath
+          : localFilePath // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -161,29 +174,32 @@ class __$$ReadBookStateImplCopyWithImpl<$Res>
 class _$ReadBookStateImpl implements _ReadBookState {
   const _$ReadBookStateImpl(
       {this.isLoading = false,
-      this.bookId,
+      this.sessionId,
+      this.book,
       this.totalPages,
       this.currentPage,
-      this.pdfPath,
-      this.error});
+      this.error,
+      this.localFilePath});
 
   @override
   @JsonKey()
   final bool isLoading;
   @override
-  final int? bookId;
+  final int? sessionId;
+  @override
+  final BookModel? book;
   @override
   final int? totalPages;
   @override
   final int? currentPage;
   @override
-  final String? pdfPath;
-  @override
   final String? error;
+  @override
+  final String? localFilePath;
 
   @override
   String toString() {
-    return 'ReadBookState(isLoading: $isLoading, bookId: $bookId, totalPages: $totalPages, currentPage: $currentPage, pdfPath: $pdfPath, error: $error)';
+    return 'ReadBookState(isLoading: $isLoading, sessionId: $sessionId, book: $book, totalPages: $totalPages, currentPage: $currentPage, error: $error, localFilePath: $localFilePath)';
   }
 
   @override
@@ -193,18 +209,21 @@ class _$ReadBookStateImpl implements _ReadBookState {
             other is _$ReadBookStateImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
-            (identical(other.bookId, bookId) || other.bookId == bookId) &&
+            (identical(other.sessionId, sessionId) ||
+                other.sessionId == sessionId) &&
+            (identical(other.book, book) || other.book == book) &&
             (identical(other.totalPages, totalPages) ||
                 other.totalPages == totalPages) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
-            (identical(other.pdfPath, pdfPath) || other.pdfPath == pdfPath) &&
-            (identical(other.error, error) || other.error == error));
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.localFilePath, localFilePath) ||
+                other.localFilePath == localFilePath));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isLoading, bookId, totalPages, currentPage, pdfPath, error);
+  int get hashCode => Object.hash(runtimeType, isLoading, sessionId, book,
+      totalPages, currentPage, error, localFilePath);
 
   @JsonKey(ignore: true)
   @override
@@ -216,24 +235,27 @@ class _$ReadBookStateImpl implements _ReadBookState {
 abstract class _ReadBookState implements ReadBookState {
   const factory _ReadBookState(
       {final bool isLoading,
-      final int? bookId,
+      final int? sessionId,
+      final BookModel? book,
       final int? totalPages,
       final int? currentPage,
-      final String? pdfPath,
-      final String? error}) = _$ReadBookStateImpl;
+      final String? error,
+      final String? localFilePath}) = _$ReadBookStateImpl;
 
   @override
   bool get isLoading;
   @override
-  int? get bookId;
+  int? get sessionId;
+  @override
+  BookModel? get book;
   @override
   int? get totalPages;
   @override
   int? get currentPage;
   @override
-  String? get pdfPath;
-  @override
   String? get error;
+  @override
+  String? get localFilePath;
   @override
   @JsonKey(ignore: true)
   _$$ReadBookStateImplCopyWith<_$ReadBookStateImpl> get copyWith =>

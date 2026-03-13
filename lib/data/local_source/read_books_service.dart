@@ -35,6 +35,18 @@ class ReadBooksService {
     return _box!.get(id);
   }
 
+  Future<void> updatePage(int bookId, int newPage) async {
+    await _ensureBoxOpen();
+
+    final book = await _box!.get(bookId);
+
+    if (book != null) {
+      final updatedBook = book.copyWith(currentPage: newPage);
+
+      await _box!.put(bookId, updatedBook);
+    }
+  }
+
   Future<List<ReadBookEntity>> getAll() async {
     await _ensureBoxOpen();
 

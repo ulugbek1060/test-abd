@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:testabd/domain/books/entities/book_model.dart';
 
 part 'read_book_state.freezed.dart';
 
@@ -6,11 +7,12 @@ part 'read_book_state.freezed.dart';
 class ReadBookState with _$ReadBookState {
   const factory ReadBookState({
     @Default(false) bool isLoading,
-    int? bookId,
+    int? sessionId,
+    BookModel? book,
     int? totalPages,
     int? currentPage,
-    String? pdfPath,
     String? error,
+    String? localFilePath
   }) = _ReadBookState;
 
   factory ReadBookState.initial() => ReadBookState();

@@ -34,9 +34,11 @@ import '../data/repository/account_repository_impl.dart' as _i317;
 import '../data/repository/auth_repository_impl.dart' as _i461;
 import '../data/repository/books_repository_impl.dart' as _i656;
 import '../data/repository/quiz_repository_impl.dart' as _i75;
+import '../data/repository/session_repository_impl.dart' as _i158;
 import '../domain/account/account_repository.dart' as _i575;
 import '../domain/auth/auth_repository.dart' as _i893;
 import '../domain/books/books_repository.dart' as _i923;
+import '../domain/books/session_repository.dart' as _i361;
 import '../domain/quiz/quiz_repository.dart' as _i156;
 import '../features/auth/forgotpswd/forgot_pswd_cubit.dart' as _i36;
 import '../features/auth/login/login_cubit.dart' as _i958;
@@ -162,6 +164,8 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i575.LeaderboardRepository>(() =>
         _i317.LeaderboardRepositoryImpl(gh<_i259.LeaderboardSocketService>()));
+    gh.factory<_i361.SessionRepository>(
+        () => _i158.SessionRepositoryImpl(gh<_i227.ReadingSource>()));
     gh.lazySingleton<_i575.AccountRepository>(() => _i317.AccountRepositoryImpl(
           gh<_i65.AccountSource>(),
           gh<_i656.MyInfoHiveService>(),
@@ -176,16 +180,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i227.ReadingSource>(),
         ));
     gh.factory<_i83.BooksSource>(() => _i83.BooksSourceImpl(gh<_i361.Dio>()));
-    gh.factoryParam<_i333.ReadBookCubit, int?, dynamic>((
-      bookId,
-      _,
-    ) =>
-        _i333.ReadBookCubit(
-          bookId,
-          gh<_i227.ReadingSource>(),
-          gh<_i1030.ReadBooksService>(),
-          gh<_i877.AppMessageHandler>(),
-        ));
     gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
       username,
       _,
@@ -341,6 +335,18 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i46.LibraryCubit>(() => _i46.LibraryCubit(
           gh<_i923.BooksRepository>(),
+          gh<_i877.AppMessageHandler>(),
+        ));
+    gh.factoryParam<_i333.ReadBookCubit, int?, dynamic>((
+      bookId,
+      _,
+    ) =>
+        _i333.ReadBookCubit(
+          bookId,
+          gh<_i361.Dio>(),
+          gh<_i361.SessionRepository>(),
+          gh<_i923.BooksRepository>(),
+          gh<_i1030.ReadBooksService>(),
           gh<_i877.AppMessageHandler>(),
         ));
     gh.factoryParam<_i75.AuthorDetailCubit, int?, dynamic>((

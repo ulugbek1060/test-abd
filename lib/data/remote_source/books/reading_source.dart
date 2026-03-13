@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:testabd/core/app_constants.dart';
 import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/core/services/token_service.dart';
 import 'package:testabd/data/remote_source/books/models/reading_sessions_response.dart';
@@ -15,7 +14,6 @@ class ReadingSource {
 
   ReadingSource(this._dio, this._tokenService);
 
-  // ── REST ────────────────────────────────────────────────
   Future<ReadingSessionsResponse> getMySessions(
     int? page,
     int? pageSize,
@@ -61,9 +59,10 @@ class ReadingSource {
     }
   }
 
-  Future<void> joinSession(int sessionId) async {
+  Future<dynamic> joinSession(int sessionId) async {
     try {
-      await _dio.post('/books/reading-sessions/$sessionId/join_session/');
+     final result = await _dio.post('/books/reading-sessions/$sessionId/join_session/');
+     return result.data;
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
