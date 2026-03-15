@@ -14,6 +14,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+
   // For demo — in real app use controller + search logic
   final List<UserConnectionModel> _users = [
     UserConnectionModel(

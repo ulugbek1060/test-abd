@@ -42,7 +42,7 @@ abstract class AccountSource {
 
   Future<ChangePswdResponse> updatePassword(ChangePswdRequest requestData);
 
-  Future<dynamic> search(String? query);
+  Future<dynamic> search(String query, int? page, int? pageSize);
 }
 
 @Injectable(as: AccountSource)
@@ -242,7 +242,17 @@ class AccountSourceImpl implements AccountSource {
   }
 
   @override
-  Future<dynamic> search(String? query) async {
-
+  Future<dynamic> search(String? query, int? page, int? pageSize) async {
+    try {
+      final response = await _dio.get(
+        '/accounts/search/',
+        queryParameters: {"q": query, "page": page, "page_size": pageSize},
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw e.handleDioException();
+    } catch (e, stackTrace) {
+      throw UnknownException(e.toString(), stackTrace: stackTrace);
+    }
   }
 }

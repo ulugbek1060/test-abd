@@ -20,6 +20,7 @@ mixin _$ReadBookState {
   int? get sessionId => throw _privateConstructorUsedError;
   BookModel? get book => throw _privateConstructorUsedError;
   int? get totalPages => throw _privateConstructorUsedError;
+  int get initialPage => throw _privateConstructorUsedError;
   int? get currentPage => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   String? get localFilePath => throw _privateConstructorUsedError;
@@ -40,6 +41,7 @@ abstract class $ReadBookStateCopyWith<$Res> {
       int? sessionId,
       BookModel? book,
       int? totalPages,
+      int initialPage,
       int? currentPage,
       String? error,
       String? localFilePath});
@@ -62,6 +64,7 @@ class _$ReadBookStateCopyWithImpl<$Res, $Val extends ReadBookState>
     Object? sessionId = freezed,
     Object? book = freezed,
     Object? totalPages = freezed,
+    Object? initialPage = null,
     Object? currentPage = freezed,
     Object? error = freezed,
     Object? localFilePath = freezed,
@@ -83,6 +86,10 @@ class _$ReadBookStateCopyWithImpl<$Res, $Val extends ReadBookState>
           ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
               as int?,
+      initialPage: null == initialPage
+          ? _value.initialPage
+          : initialPage // ignore: cast_nullable_to_non_nullable
+              as int,
       currentPage: freezed == currentPage
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
@@ -112,6 +119,7 @@ abstract class _$$ReadBookStateImplCopyWith<$Res>
       int? sessionId,
       BookModel? book,
       int? totalPages,
+      int initialPage,
       int? currentPage,
       String? error,
       String? localFilePath});
@@ -132,6 +140,7 @@ class __$$ReadBookStateImplCopyWithImpl<$Res>
     Object? sessionId = freezed,
     Object? book = freezed,
     Object? totalPages = freezed,
+    Object? initialPage = null,
     Object? currentPage = freezed,
     Object? error = freezed,
     Object? localFilePath = freezed,
@@ -153,6 +162,10 @@ class __$$ReadBookStateImplCopyWithImpl<$Res>
           ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
               as int?,
+      initialPage: null == initialPage
+          ? _value.initialPage
+          : initialPage // ignore: cast_nullable_to_non_nullable
+              as int,
       currentPage: freezed == currentPage
           ? _value.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
@@ -177,6 +190,7 @@ class _$ReadBookStateImpl implements _ReadBookState {
       this.sessionId,
       this.book,
       this.totalPages,
+      this.initialPage = 1,
       this.currentPage,
       this.error,
       this.localFilePath});
@@ -191,6 +205,9 @@ class _$ReadBookStateImpl implements _ReadBookState {
   @override
   final int? totalPages;
   @override
+  @JsonKey()
+  final int initialPage;
+  @override
   final int? currentPage;
   @override
   final String? error;
@@ -199,7 +216,7 @@ class _$ReadBookStateImpl implements _ReadBookState {
 
   @override
   String toString() {
-    return 'ReadBookState(isLoading: $isLoading, sessionId: $sessionId, book: $book, totalPages: $totalPages, currentPage: $currentPage, error: $error, localFilePath: $localFilePath)';
+    return 'ReadBookState(isLoading: $isLoading, sessionId: $sessionId, book: $book, totalPages: $totalPages, initialPage: $initialPage, currentPage: $currentPage, error: $error, localFilePath: $localFilePath)';
   }
 
   @override
@@ -214,6 +231,8 @@ class _$ReadBookStateImpl implements _ReadBookState {
             (identical(other.book, book) || other.book == book) &&
             (identical(other.totalPages, totalPages) ||
                 other.totalPages == totalPages) &&
+            (identical(other.initialPage, initialPage) ||
+                other.initialPage == initialPage) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
             (identical(other.error, error) || other.error == error) &&
@@ -223,7 +242,7 @@ class _$ReadBookStateImpl implements _ReadBookState {
 
   @override
   int get hashCode => Object.hash(runtimeType, isLoading, sessionId, book,
-      totalPages, currentPage, error, localFilePath);
+      totalPages, initialPage, currentPage, error, localFilePath);
 
   @JsonKey(ignore: true)
   @override
@@ -238,6 +257,7 @@ abstract class _ReadBookState implements ReadBookState {
       final int? sessionId,
       final BookModel? book,
       final int? totalPages,
+      final int initialPage,
       final int? currentPage,
       final String? error,
       final String? localFilePath}) = _$ReadBookStateImpl;
@@ -250,6 +270,8 @@ abstract class _ReadBookState implements ReadBookState {
   BookModel? get book;
   @override
   int? get totalPages;
+  @override
+  int get initialPage;
   @override
   int? get currentPage;
   @override

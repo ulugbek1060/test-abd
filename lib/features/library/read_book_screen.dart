@@ -84,6 +84,7 @@ class _ViewState extends State<_View> {
               ? ProgressView.medium()
               : PdfViewer.file(
                   state.localFilePath ?? "",
+                  initialPageNumber: state.initialPage,
                   controller: _controller,
                   params: PdfViewerParams(
                     // calculateInitialZoom: (_, __, ___, ____){

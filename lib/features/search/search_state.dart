@@ -1,6 +1,13 @@
-part of 'search_cubit.dart';
 
-@immutable
-sealed class SearchState {}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-final class SearchInitial extends SearchState {}
+part 'search_state.freezed.dart';
+
+@freezed
+class SearchState with _$SearchState {
+  const factory SearchState({
+    @Default(false) bool isLoading,
+    String? error,
+    dynamic data,
+  }) = _SearchState;
+}

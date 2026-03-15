@@ -266,6 +266,23 @@ class AccountRepositoryImpl implements AccountRepository {
       return Left(UnknownException(e.toString(), stackTrace: stackTrace));
     }
   }
+
+  @override
+  Future<Either<AppException, PagedData<dynamic>>> searchAccount({
+    required String query,
+    required int page,
+    required int pageSize,
+  }) async {
+    try {
+      final result = await _accountSource.search(query, page, pageSize);
+      final data = PagedData(data: result);
+      return Right(data);
+    } on AppException catch (e) {
+      return Left(e);
+    } catch (e, stackTrace) {
+      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+    }
+  }
 }
 
 @LazySingleton(as: LeaderboardRepository)

@@ -51,7 +51,7 @@ class ReadBookCubit extends Cubit<ReadBookState> {
       // check the data from the database
       final exists = await _readBooksService.exists(bookId!);
 
-      if (!exists) {
+      if (exists) {
         final session = await _readBooksService.get(bookId!);
         final result = await _booksRepository.getBookById(session?.bookId ?? 0);
         final localFilePath = await _loadPdf(session?.pdfPath ?? "");
@@ -76,6 +76,7 @@ class ReadBookCubit extends Cubit<ReadBookState> {
                 book: BookModel.fromBookDetailModel(value),
                 totalPages: session?.totalPages,
                 currentPage: session?.currentPage,
+                initialPage: session?.currentPage ?? 1,
                 localFilePath: localFilePath,
               ),
             );
@@ -87,8 +88,8 @@ class ReadBookCubit extends Cubit<ReadBookState> {
         // load data
         final result = await _sessionRepository.startSession(
           bookId: bookId!,
-          mode: "followers",
-          friendUsername: "abdulaziz"
+          mode: "solo",
+          // friendUsername: "KAXXOROV"
         );
         result.fold(
           (error) {

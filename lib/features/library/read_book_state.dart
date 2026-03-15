@@ -10,6 +10,7 @@ class ReadBookState with _$ReadBookState {
     int? sessionId,
     BookModel? book,
     int? totalPages,
+    @Default(1) int initialPage,
     int? currentPage,
     String? error,
     String? localFilePath
