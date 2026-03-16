@@ -451,7 +451,7 @@ class QuestionModel extends Equatable {
 
   static QuestionModel fromBookmarkResponse(BookmarkedQuizResult response) {
     return QuestionModel(
-      id: response.id,
+      id: response.questionDetail?.id,
       testTitle: response.questionDetail?.testTitle,
       questionText: response.questionDetail?.questionText,
       questionType: QuestionType.fromString(

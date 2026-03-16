@@ -14,6 +14,8 @@ class BookmarkQuestionsCubit extends Cubit<BookmarkQuestionsState> {
 
   static final int _pageSize = 10;
 
+  Future<void> refresh() => getQuestions();
+
   Future<void> getQuestions() async {
     if (state.isLoading || state.isLoadingMore || state.isLast) return;
     emit(state.copyWith(isLoading: true));
@@ -34,6 +36,7 @@ class BookmarkQuestionsCubit extends Cubit<BookmarkQuestionsState> {
             next: value.nextPage(),
             previous: value.previousPage(),
             isLast: value.next == null || value.data.length < _pageSize,
+            error: null,
           ),
         );
       },
@@ -66,4 +69,12 @@ class BookmarkQuestionsCubit extends Cubit<BookmarkQuestionsState> {
       },
     );
   }
+
+  void onFollow(int? id) {}
+
+  void toggleBookmark(int? id) {}
+
+  void setMultipleAnswer(int? answerId) {}
+
+  void submitAnswer(Set<int> answers) {}
 }

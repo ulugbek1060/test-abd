@@ -12,6 +12,7 @@ import 'package:testabd/features/library/author_detail_screen.dart';
 import 'package:testabd/features/library/book_detail_screen.dart';
 import 'package:testabd/features/library/chat_after_read_screen.dart';
 import 'package:testabd/features/library/read_book_screen.dart';
+import 'package:testabd/features/profile/book_mark_question_detail_screen.dart';
 import 'package:testabd/features/profile/profile_screen.dart';
 import 'package:testabd/features/users/user_block_detail_screen.dart';
 import 'package:testabd/features/init/init_screen.dart';
@@ -91,23 +92,30 @@ abstract class AppRouter {
   }) => '/user_connection/$userId/$connectionType';
 
   static const profileConnection = '/profile_connection/:connection_type';
+
   static String profileConnectionWithUserId({required String connectionType}) =>
       '/profile_connection/$connectionType';
 
   static const bookDetail = '/book_detail/:book_id';
+
   static String bookDetailWithArgs({int? bookId}) => '/book_detail/$bookId';
 
   static const authorDetail = '/author_detail/:author_id';
+
   static String authorDetailWithArgs({int? authorId}) =>
       '/author_detail/$authorId';
 
   static const bookRead = '/book_read/:book_id';
-  static String readBookWithArgs({int? bookId}) =>
-      '/book_read/$bookId';
+
+  static String readBookWithArgs({int? bookId}) => '/book_read/$bookId';
+
+  static const bookMarkQuestionDetail =
+      '/book_mark_question_detail/:question_id';
+
+  static String bookMarkQuestionDetailWithArgs({int? questionId}) =>
+      '/book_mark_question_detail/$questionId';
 
   static const chatAfterRead = '/chat_after_read';
-
-
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -311,6 +319,17 @@ final appRouter = GoRouter(
             pdfUrl: extra['pdfUrl'] ?? '',
             nextStartPage: extra['nextStartPage'] ?? 1,
             totalPages: extra['totalPages'] ?? 100,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRouter.bookMarkQuestionDetail,
+      pageBuilder: (context, state) {
+        final questionId = state.pathParameters['question_id'] ?? "";
+        return CupertinoPage(
+          child: BookMarkQuestionDetailScreen(
+            questionId: int.tryParse(questionId),
           ),
         );
       },

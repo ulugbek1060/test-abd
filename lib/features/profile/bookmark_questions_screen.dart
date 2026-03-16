@@ -1,14 +1,23 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/theme/app_colors.dart';
+import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
+import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/profile/bookmark_questions_cubit.dart';
 import 'package:testabd/features/profile/bookmark_questions_state.dart';
+import 'package:testabd/features/users/user_profile_state.dart';
+import 'package:testabd/l10n/l10n_extension.dart';
+import 'package:testabd/main.dart';
 import 'package:testabd/router/app_router.dart';
 
 class BookmarkQuestionsScreen extends StatelessWidget {
@@ -67,33 +76,36 @@ class _ViewState extends State<_View> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Saqlangan savollar')),
-      body: BlocBuilder<BookmarkQuestionsCubit, BookmarkQuestionsState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: ProgressView.medium());
-          }
+    return RefreshIndicator(
+      onRefresh: context.read<BookmarkQuestionsCubit>().refresh,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Saqlangan savollar')),
+        body: BlocBuilder<BookmarkQuestionsCubit, BookmarkQuestionsState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: ProgressView.medium());
+            }
 
-          if (state.questions.isEmpty && !state.isLoadingMore) {
-            return const _EmptyState();
-          }
+            if (state.questions.isEmpty && !state.isLoadingMore) {
+              return const _EmptyState();
+            }
 
-          return CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              _QuestionsList(state: state),
-              if (state.isLoadingMore)
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Center(child: ProgressView.small()),
+            return CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                _QuestionsList(state: state),
+                if (state.isLoadingMore)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(child: ProgressView.small()),
+                    ),
                   ),
-                ),
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            ],
-          );
-        },
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -152,13 +164,11 @@ class _QuestionsList extends StatelessWidget {
           final question = state.questions[index];
           return _QuestionCard(
             question: question,
+            onTap: () => context.push(
+              AppRouter.bookMarkQuestionDetailWithArgs(questionId: question.id),
+            ),
             isFirst: index == 0,
-            onTap: () {
-              final id = question.id;
-              if (id != null) {
-                context.push(AppRouter.userQuestionDetailWithBlockId(id));
-              }
-            },
+            isLast: index == state.questions.length - 1,
           );
         },
       ),
@@ -166,15 +176,21 @@ class _QuestionsList extends StatelessWidget {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+//                     QUESTION ITEM CARD
+// ─────────────────────────────────────────────────────────────
 class _QuestionCard extends StatelessWidget {
   final QuestionModel question;
   final VoidCallback onTap;
+  final bool isLast;
   final bool isFirst;
 
   const _QuestionCard({
+    super.key,
     required this.question,
     required this.onTap,
     required this.isFirst,
+    required this.isLast,
   });
 
   @override
@@ -189,46 +205,38 @@ class _QuestionCard extends StatelessWidget {
         margin: EdgeInsets.only(top: isFirst ? 16 : 0),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: scheme.surfaceContainerLow,
+          color: scheme.surface,
           borderRadius: BorderRadius.circular(28),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row
+            // Top row: Difficulty badge + Date
             Row(
               children: [
                 _DifficultyBadge(difficulty: difficulty),
                 const Spacer(),
-                if (question.createdAt != null)
-                  Text(
-                    formatDate(question.createdAt!),
-                    style: TextStyle(
-                      fontSize: 13.5,
-                      color: scheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
+                Text(
+                  formatDate(question.createdAt),
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
                   ),
+                ),
               ],
             ),
 
             const SizedBox(height: 16),
 
-            // Question
+            // Question Text (big & bold)
             Text(
-              question.questionText ?? 'Savol matni mavjud emas',
+              question.questionText ?? '',
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 18,
-                height: 1.38,
+                fontSize: 18.5,
+                height: 1.35,
                 fontWeight: FontWeight.w700,
                 color: scheme.onSurface,
               ),
@@ -236,100 +244,81 @@ class _QuestionCard extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Stats + action
+            // Bottom stats row
             Row(
               children: [
+                // Correct / Wrong (if available)
                 if (question.correctCount != null ||
-                    question.wrongCount != null) ...[
-                  _StatItem(
-                    icon: Icons.check_circle_rounded,
-                    color: Colors.green,
-                    value: question.correctCount ?? 0,
+                    question.wrongCount != null)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "${question.correctCount ?? 0}",
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.green,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Icon(
+                        Icons.cancel_rounded,
+                        color: Colors.redAccent,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "${question.wrongCount ?? 0}",
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 24),
-                  _StatItem(
-                    icon: Icons.cancel_rounded,
-                    color: Colors.redAccent,
-                    value: question.wrongCount ?? 0,
-                  ),
-                ],
+
                 const Spacer(),
-                _ViewButton(onTap: onTap),
+
+                // View button pill
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 9,
+                  ),
+                  decoration: BoxDecoration(
+                    color: scheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Ko‘rish",
+                        style: TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                          color: scheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 18,
+                        color: scheme.primary,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final int value;
-
-  const _StatItem({
-    required this.icon,
-    required this.color,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 6),
-        Text(
-          '$value',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: color,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ViewButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _ViewButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Material(
-      color: scheme.primary.withOpacity(0.12),
-      borderRadius: BorderRadius.circular(30),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(30),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Ko‘rish",
-                style: TextStyle(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                  color: scheme.primary,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Icon(
-                Icons.arrow_forward_rounded,
-                size: 18,
-                color: scheme.primary,
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -346,19 +335,16 @@ class _DifficultyBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
       decoration: BoxDecoration(
-        color: difficulty.color.withOpacity(0.15),
+        color: difficulty.color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: difficulty.color.withOpacity(0.35),
-          width: 1.2,
-        ),
+        border: Border.all(color: difficulty.color.withOpacity(0.3), width: 1),
       ),
       child: Text(
         difficulty.name.toUpperCase(),
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w800,
-          letterSpacing: 0.4,
+          letterSpacing: 0.5,
           color: difficulty.color,
         ),
       ),

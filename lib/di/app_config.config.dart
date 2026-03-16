@@ -51,6 +51,7 @@ import '../features/library/book_detail_cubit.dart' as _i100;
 import '../features/library/chat_after_read_cubit.dart' as _i722;
 import '../features/library/library_cubit.dart' as _i46;
 import '../features/library/read_book_cubit.dart' as _i333;
+import '../features/profile/book_mark_question_detail_cubit.dart' as _i410;
 import '../features/profile/bookmark_questions_cubit.dart' as _i137;
 import '../features/profile/create_block_cubit.dart' as _i341;
 import '../features/profile/create_question_cubit.dart' as _i84;
@@ -180,6 +181,15 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i227.ReadingSource>(),
         ));
     gh.factory<_i83.BooksSource>(() => _i83.BooksSourceImpl(gh<_i361.Dio>()));
+    gh.factoryParam<_i410.BookMarkQuestionDetailCubit, int?, dynamic>((
+      questionId,
+      _,
+    ) =>
+        _i410.BookMarkQuestionDetailCubit(
+          questionId,
+          gh<_i877.AppMessageHandler>(),
+          gh<_i156.QuizRepository>(),
+        ));
     gh.factoryParam<_i445.UserProfileCubit, String, dynamic>((
       username,
       _,
