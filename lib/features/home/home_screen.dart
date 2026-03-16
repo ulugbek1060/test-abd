@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => locator<HomeCubit>()..getQuestions()),
       ],
-      child: _View(),
+      child: const _View(),
     );
   }
 }
@@ -172,7 +172,6 @@ class QuestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4.0),
-      color: Theme.of(context).colorScheme.surface,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(32),
 

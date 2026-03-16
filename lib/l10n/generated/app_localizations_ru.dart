@@ -237,4 +237,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get notifications => 'Уведомления';
+
+  @override
+  String get edit => 'Изменить';
 }

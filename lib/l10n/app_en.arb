@@ -86,7 +86,7 @@
   "correctCount": "Correct count",
   "wrongCount": "Wrong count",
 
-  "notifications": "Notifications"
-
+  "notifications": "Notifications",
+  "edit": "edit"
 
 }

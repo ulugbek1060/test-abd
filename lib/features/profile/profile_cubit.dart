@@ -410,6 +410,14 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
   }
+
+  void onFollow(int? id) {}
+
+  void submitAnswer(Set<int> answerIds) {}
+
+  void setMultipleAnswer(int? answerId) {}
+
+  void toggleBookmark(int? questionId) {}
 }
 
 abstract class UpdateListener {

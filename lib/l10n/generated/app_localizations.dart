@@ -543,6 +543,12 @@ abstract class AppLocalizations {
   /// In uz, this message translates to:
   /// **'Bildirishnomalar'**
   String get notifications;
+
+  /// No description provided for @edit.
+  ///
+  /// In uz, this message translates to:
+  /// **'Tahrirlash'**
+  String get edit;
 }
 
 class _AppLocalizationsDelegate

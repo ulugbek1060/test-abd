@@ -1,15 +1,19 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:testabd/core/enums/connections_enum.dart';
 import 'package:testabd/core/enums/knowledge_level_enum.dart';
+import 'package:testabd/core/enums/question_type_enum.dart';
 import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
 import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/domain/books/entities/book_model.dart';
+import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';
 import 'package:testabd/features/profile/profile_cubit.dart';
 import 'package:testabd/features/profile/profile_state.dart';
@@ -612,7 +616,7 @@ class _ModernTabDelegate extends SliverPersistentHeaderDelegate {
 }
 
 // ─────────────────────────────────────────────────────────────
-//                     BLOCKS, QUESTIONS, BOOKS SECTIONS
+//                     BLOCKS SECTION
 // ─────────────────────────────────────────────────────────────
 class _BlocksSection extends StatelessWidget {
   final BlocksState state;
@@ -632,7 +636,7 @@ class _BlocksSection extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 14,
           mainAxisSpacing: 14,
-          childAspectRatio: 1.05,
+          childAspectRatio: 7 / 8,
         ),
         delegate: SliverChildBuilderDelegate((context, index) {
           final block = state.blocks[index];
@@ -688,7 +692,7 @@ class _ModernBlockCard extends StatelessWidget {
                   child: Icon(
                     Icons.library_books_rounded,
                     color: scheme.primary,
-                    size: 24,
+                    size: 18,
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -766,7 +770,9 @@ class _ModernBlockCard extends StatelessWidget {
   }
 }
 
-// (You can continue with _QuestionsSection and _BooksSection in the same modern card style – let me know if you want the full expanded version for those too)
+// ─────────────────────────────────────────────────────────────
+//                     QUESTIONS SECTIONS
+// ─────────────────────────────────────────────────────────────
 class _QuestionsSection extends StatelessWidget {
   final QuestionsState state;
 
@@ -778,22 +784,21 @@ class _QuestionsSection extends StatelessWidget {
 
     return SliverMainAxisGroup(
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverList.separated(
-            itemCount: state.questions.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 14),
-            itemBuilder: (context, index) {
-              final q = state.questions[index];
-              return _ModernQuestionCard(
-                question: q,
-                isLast: index == state.questions.length,
-                isFirst: index == 0,
-                onTap: () =>
-                    context.push(AppRouter.myQuestionDetailWithArgs(q.id)),
-              );
-            },
-          ),
+        SliverList.separated(
+          itemCount: state.questions.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 14),
+          itemBuilder: (context, index) {
+            final q = state.questions[index];
+            return _QuestionCard(
+              question: q,
+              submitAnswer: (answerIds) =>
+                  context.read<ProfileCubit>().submitAnswer(answerIds),
+              setMultipleAnswer: (answerId) =>
+                  context.read<ProfileCubit>().setMultipleAnswer(answerId),
+              toggleBookmark: () =>
+                  context.read<ProfileCubit>().toggleBookmark(q.id),
+            );
+          },
         ),
 
         if (state.isLoadingMore)
@@ -805,179 +810,725 @@ class _QuestionsSection extends StatelessWidget {
   }
 }
 
-class _ModernQuestionCard extends StatelessWidget {
-  final QuestionModel question;
-  final VoidCallback onTap;
-  final bool isLast;
-  final bool isFirst;
+class _QuestionCard extends StatelessWidget {
+  final QuestionModel? question;
+  final void Function(Set<int> answers) submitAnswer;
+  final void Function(int? answerId) setMultipleAnswer;
+  final VoidCallback toggleBookmark;
 
-  const _ModernQuestionCard({
+  const _QuestionCard({
     super.key,
     required this.question,
-    required this.onTap,
-    required this.isFirst,
-    required this.isLast,
+    required this.submitAnswer,
+    required this.setMultipleAnswer,
+    required this.toggleBookmark,
   });
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final difficulty =
-        question.difficultyPercentage?.toDifficulty() ?? Difficulty.easy;
+    return Container(
+      padding: const EdgeInsets.all(4.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(top: isFirst ? 16 : 0),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: scheme.surface,
-          borderRadius: BorderRadius.circular(28),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top row: Difficulty badge + Date
-            Row(
-              children: [
-                _DifficultyBadge(difficulty: difficulty),
-                const Spacer(),
-                Text(
-                  formatDate(question.createdAt),
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    color: scheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
+        // ← Clips EVERYTHING (image + content + bottom)
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Stack(
+            children: [
+              // Background Image (now perfectly rounded thanks to outer ClipRRect)
+              CachedNetworkImage(
+                imageUrl: question?.roundImage ?? '',
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(color: Colors.black87),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.black54,
+                  child: const Icon(
+                    Icons.broken_image_rounded,
+                    color: Colors.white38,
+                    size: 48,
                   ),
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Question Text (big & bold)
-            Text(
-              question.questionText ?? '',
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 18.5,
-                height: 1.35,
-                fontWeight: FontWeight.w700,
-                color: scheme.onSurface,
               ),
-            ),
 
-            const SizedBox(height: 20),
-
-            // Bottom stats row
-            Row(
-              children: [
-                // Correct / Wrong (if available)
-                if (question.correctCount != null ||
-                    question.wrongCount != null)
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle_rounded,
-                        color: Colors.green,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        "${question.correctCount ?? 0}",
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Icon(
-                        Icons.cancel_rounded,
-                        color: Colors.redAccent,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        "${question.wrongCount ?? 0}",
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.redAccent,
-                        ),
-                      ),
+              // Gradient Overlay (keeps text readable)
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xB3000000), // 70% black top
+                      Color(0xE6000000), // 90% black
+                      Color(0xFF0A0A0A), // near black bottom
                     ],
-                  ),
-
-                const Spacer(),
-
-                // View button pill
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 9,
-                  ),
-                  decoration: BoxDecoration(
-                    color: scheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Ko‘rish",
-                        style: TextStyle(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w700,
-                          color: scheme.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 18,
-                        color: scheme.primary,
-                      ),
-                    ],
+                    stops: [0.1, 0.65, 1.0],
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+
+              // Header + Question + Answers
+              Column(
+                children: [
+                  _ModernHeader(
+                    quiz: question,
+                    onNavigateToProfile: () => context.push(
+                      AppRouter.userProfileWithUsername(
+                        question?.user?.username,
+                      ),
+                    ),
+                    onFollowBtn: () => context.read<ProfileCubit>().onFollow(
+                      question?.user?.id,
+                    ),
+                  ),
+
+                  // Question + Answers
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 12),
+                          Text(
+                            question?.questionText ?? '',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.25,
+                                  letterSpacing: -0.3,
+                                ),
+                          ),
+                          const SizedBox(height: 12),
+                          _AnswersList(
+                            questionId: question?.id,
+                            answers: question?.answers ?? [],
+                            questionType: question?.questionType,
+                            myAnswersId: question?.myAnswersId ?? {},
+                            isCompleted: question?.isCompleted ?? false,
+                            isLoading: question?.isLoading ?? false,
+                            setMultipleAnswer: setMultipleAnswer,
+                            submitAnswer: submitAnswer,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // === Bottom Bar (also clipped to 32px corners) ===
+                  _ModernBottomBar(
+                    quiz: question,
+                    toggleBookmark: toggleBookmark,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _DifficultyBadge extends StatelessWidget {
-  final Difficulty difficulty;
+class _ModernHeader extends StatelessWidget {
+  final QuestionModel? quiz;
+  final VoidCallback onNavigateToProfile;
+  final VoidCallback onFollowBtn;
 
-  const _DifficultyBadge({required this.difficulty});
+  const _ModernHeader({
+    required this.quiz,
+    required this.onNavigateToProfile,
+    required this.onFollowBtn,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: onNavigateToProfile,
+              child: Row(
+                children: [
+                  _HeaderUserImage(
+                    imageUrl: quiz?.user?.profileImage,
+                    username: quiz?.user?.username ?? '',
+                    size: 48,
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          capitalize(quiz?.user?.username ?? ''),
+                          style: const TextStyle(
+                            fontSize: 16.5,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          formatDate(quiz?.createdAt),
+                          style: TextStyle(
+                            fontSize: 13.5,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          OutlinedButton(
+            onPressed: onFollowBtn,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: const BorderSide(color: Colors.white70, width: 1.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+            ),
+            child: Text(
+              context.l10n.edit,
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderUserImage extends StatelessWidget {
+  final String? imageUrl;
+  final String username;
+  final double size;
+  final double borderWidth;
+  final Color borderColor;
+
+  const _HeaderUserImage({
+    this.imageUrl,
+    required this.username,
+    this.size = 50.0,
+    this.borderWidth = 2.0,
+    this.borderColor = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-      decoration: BoxDecoration(
-        color: difficulty.color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: difficulty.color.withOpacity(0.3), width: 1),
-      ),
-      child: Text(
-        difficulty.name.toUpperCase(),
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 0.5,
-          color: difficulty.color,
+      width: size,
+      height: size,
+      padding: EdgeInsets.all(borderWidth),
+      decoration: BoxDecoration(color: borderColor, shape: BoxShape.circle),
+      child: ClipOval(
+        child: CachedNetworkImage(
+          width: 36,
+          height: 36,
+          imageUrl: imageUrl ?? '',
+          fit: BoxFit.cover,
+          placeholder: (_, __) =>
+              Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
+          errorWidget: (_, __, ___) =>
+              Image.asset(AppImages.defaultAvatar, fit: BoxFit.cover),
         ),
       ),
     );
   }
 }
 
+class _ModernBottomBar extends StatelessWidget {
+  final QuestionModel? quiz;
+  final VoidCallback toggleBookmark;
+
+  const _ModernBottomBar({this.quiz, required this.toggleBookmark});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        color: Theme.of(context).colorScheme.surface,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Stats + actions row
+          Row(
+            children: [
+              if (quiz?.correctCount != null)
+                _StatItem(
+                  icon: Icons.check_circle,
+                  color: Colors.green,
+                  count: quiz?.correctCount?.toString() ?? '',
+                ),
+              const SizedBox(width: 24),
+              if (quiz?.wrongCount != null)
+                _StatItem(
+                  icon: Icons.cancel,
+                  color: Colors.red,
+                  count: quiz?.wrongCount?.toString() ?? '',
+                ),
+              const Spacer(),
+
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.share_rounded,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              IconButton(
+                onPressed: toggleBookmark,
+                icon: quiz?.isBookmarkLoading ?? false
+                    ? const ProgressView()
+                    : Icon(
+                        quiz?.isBookmarked ?? false
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        color: quiz?.isBookmarked ?? false
+                            ? Colors.amber
+                            : Theme.of(context).colorScheme.onSurface,
+                      ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          // Title & description
+          Text(
+            quiz?.testTitle ?? '',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (quiz?.testDescription?.isNotEmpty == true)
+            Text(
+              quiz?.testDescription ?? "",
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String count;
+
+  const _StatItem({
+    required this.icon,
+    required this.color,
+    required this.count,
+  });
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Icon(icon, color: color, size: 20),
+      const SizedBox(width: 6),
+      Text(
+        count,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+    ],
+  );
+}
+
+class _AnswersList extends StatelessWidget {
+  final int? questionId;
+  final List<AnswerItemModel> answers;
+  final Set<int> myAnswersId;
+  final QuestionType? questionType;
+  final bool isCompleted;
+  final bool isLoading;
+  final void Function(int? answerId) setMultipleAnswer;
+  final void Function(Set<int> answerId) submitAnswer;
+
+  const _AnswersList({
+    super.key,
+    required this.questionId,
+    required this.answers,
+    required this.myAnswersId,
+    required this.questionType,
+    required this.isCompleted,
+    required this.isLoading,
+    required this.setMultipleAnswer,
+    required this.submitAnswer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    switch (questionType) {
+      case QuestionType.multipleSelect:
+        return MultipleAnswerCard(
+          answers: answers,
+          myAnswersId: myAnswersId,
+          isCompleted: isCompleted,
+          isLoading: isLoading,
+          onItemTap: setMultipleAnswer,
+          onSubmitTap: submitAnswer,
+        );
+
+      case QuestionType.singleSelect:
+        return SingleAnswerCard(
+          answers: answers,
+          myAnswersId: myAnswersId,
+          isCompleted: isCompleted,
+          isLoading: isLoading,
+          onSubmitTap: submitAnswer,
+        );
+
+      case QuestionType.trueFalse:
+        return TrueFalseAnswerCard(
+          answers: answers,
+          myAnswersId: myAnswersId,
+          isCompleted: isCompleted,
+          isLoading: isLoading,
+          onSubmitTap: submitAnswer,
+        );
+
+      // TODO: Beautiful text input card later
+      case QuestionType.textQuestion:
+        return const Center(
+          child: Text(
+            "Text answer coming soon...",
+            style: TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+        );
+
+      default:
+        return SingleAnswerCard(
+          answers: answers,
+          myAnswersId: myAnswersId,
+          isCompleted: isCompleted,
+          isLoading: isLoading,
+          onSubmitTap: submitAnswer,
+        );
+    }
+  }
+}
+
+class _GlassAnswerTile extends StatelessWidget {
+  final String letter;
+  final String text;
+  final bool isSelected;
+  final bool isCorrect;
+  final bool isCompleted;
+  final bool isLoading;
+  final VoidCallback? onTap;
+  final bool showCheckbox;
+
+  const _GlassAnswerTile({
+    super.key,
+    required this.letter,
+    required this.text,
+    this.isSelected = false,
+    this.isCorrect = false,
+    this.isCompleted = false,
+    this.isLoading = false,
+    this.onTap,
+    this.showCheckbox = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor = isCompleted
+        ? (isSelected
+              ? (isCorrect ? Colors.green : Colors.red)
+              : (isCorrect
+                    ? Colors.green.withOpacity(0.7)
+                    : Colors.white.withOpacity(0.3)))
+        : (isSelected ? Colors.greenAccent : Colors.white.withOpacity(0.35));
+
+    final bgOpacity = isCompleted
+        ? (isSelected ? 0.20 : (isCorrect ? 0.12 : 0.085))
+        : (isSelected ? 0.16 : 0.085);
+
+    return GestureDetector(
+      onTap: isCompleted ? null : onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(26),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(26),
+              border: Border.all(
+                color: borderColor,
+                width: isSelected || (isCompleted && isCorrect) ? 2.8 : 1.6,
+              ),
+              color: Colors.white.withOpacity(bgOpacity),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Letter Badge
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.12),
+                    border: Border.all(
+                      color: borderColor.withOpacity(0.7),
+                      width: 2.2,
+                    ),
+                  ),
+                  child: isLoading
+                      ? SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: ProgressView(color: Colors.white),
+                        )
+                      : Center(
+                          child: Text(
+                            letter,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              height: 1,
+                            ),
+                          ),
+                        ),
+                ),
+
+                const SizedBox(width: 18),
+
+                // Answer Text
+                Expanded(
+                  child: Text(
+                    text,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: isSelected || (isCompleted && isCorrect)
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+
+                // Right indicator
+                if (showCheckbox && !isCompleted)
+                  Checkbox(
+                    value: isSelected,
+                    onChanged: (_) => onTap?.call(),
+                    activeColor: Colors.green,
+                    checkColor: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    side: const BorderSide(color: Colors.white70, width: 1.5),
+                  )
+                else if (isCompleted)
+                  Icon(
+                    isSelected || isCorrect
+                        ? (isCorrect
+                              ? Icons.check_circle_rounded
+                              : Icons.cancel_rounded)
+                        : null,
+                    color: isCorrect ? Colors.green : Colors.red,
+                    size: 32,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MultipleAnswerCard extends StatelessWidget {
+  final List<AnswerItemModel> answers;
+  final Set<int> myAnswersId;
+  final bool isCompleted;
+  final bool isLoading;
+  final void Function(int answerId) onItemTap;
+  final void Function(Set<int> answers) onSubmitTap;
+
+  const MultipleAnswerCard({
+    super.key,
+    required this.answers,
+    required this.myAnswersId,
+    required this.isCompleted,
+    required this.isLoading,
+    required this.onItemTap,
+    required this.onSubmitTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ...answers.asMap().entries.map((entry) {
+          final index = entry.key;
+          final answer = entry.value;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: _GlassAnswerTile(
+              letter: String.fromCharCode(65 + index),
+              text: answer.answerText ?? '',
+              isSelected: myAnswersId.contains(answer.id),
+              isCorrect: answer.isCorrect,
+              isCompleted: isCompleted,
+              onTap: () => onItemTap(answer.id!),
+              showCheckbox: true,
+            ),
+          );
+        }),
+
+        if (!isCompleted)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: SizedBox(
+              width: double.infinity,
+              height: 58,
+              child: ElevatedButton(
+                onPressed: myAnswersId.isNotEmpty && !isLoading
+                    ? () => onSubmitTap(myAnswersId)
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green.shade600,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 0,
+                  textStyle: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                child: isLoading
+                    ? const ProgressView()
+                    : const Text("Submit Answers"),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class SingleAnswerCard extends StatelessWidget {
+  final List<AnswerItemModel> answers;
+  final Set<int> myAnswersId;
+  final bool isCompleted;
+  final bool isLoading;
+  final void Function(Set<int> answerId) onSubmitTap;
+
+  const SingleAnswerCard({
+    super.key,
+    required this.answers,
+    required this.myAnswersId,
+    required this.isCompleted,
+    required this.onSubmitTap,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: answers.asMap().entries.map((entry) {
+        final index = entry.key;
+        final answer = entry.value;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 14),
+          child: _GlassAnswerTile(
+            letter: String.fromCharCode(65 + index),
+            text: answer.answerText ?? '',
+            isSelected: myAnswersId.contains(answer.id),
+            isCorrect: answer.isCorrect,
+            isLoading: answer.isLoading,
+            isCompleted: isCompleted,
+            onTap: () => onSubmitTap({answer.id ?? 0}),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class TrueFalseAnswerCard extends StatelessWidget {
+  final List<AnswerItemModel> answers;
+  final Set<int> myAnswersId;
+  final bool isCompleted;
+  final bool isLoading;
+  final void Function(Set<int> answerId) onSubmitTap;
+
+  const TrueFalseAnswerCard({
+    super.key,
+    required this.answers,
+    required this.myAnswersId,
+    required this.isCompleted,
+    required this.onSubmitTap,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 14,
+      children: answers.asMap().entries.map((entry) {
+        final index = entry.key;
+        final answer = entry.value;
+
+        return Expanded(
+          child: _GlassAnswerTile(
+            letter: index == 0 ? "✓" : "✕",
+            text: answer.answerText ?? (index == 0 ? "True" : "False"),
+            isSelected: myAnswersId.contains(answer.id),
+            isCorrect: answer.isCorrect,
+            isCompleted: isCompleted,
+            onTap: () => onSubmitTap({answer.id ?? 0}),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+//                    BOOKS SECTIONS
+// ─────────────────────────────────────────────────────────────
 class _BooksSection extends StatelessWidget {
   final ReadingSessionsState state;
 

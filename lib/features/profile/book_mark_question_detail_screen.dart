@@ -187,7 +187,6 @@ class _QuestionCard extends StatelessWidget {
   }
 }
 
-// ==================== MODERN HEADER ====================
 class _ModernHeader extends StatelessWidget {
   final QuestionModel? quiz;
   final VoidCallback onNavigateToProfile;
@@ -308,7 +307,6 @@ class _HeaderUserImage extends StatelessWidget {
   }
 }
 
-// ==================== MODERN BOTTOM BAR ====================
 class _ModernBottomBar extends StatelessWidget {
   final QuestionModel? quiz;
   final VoidCallback toggleBookmark;
@@ -425,7 +423,6 @@ class _StatItem extends StatelessWidget {
   );
 }
 
-// ====================== _AnswersList ANSWER TILE ======================
 class _AnswersList extends StatelessWidget {
   final int? questionId;
   final List<AnswerItemModel> answers;
@@ -500,7 +497,6 @@ class _AnswersList extends StatelessWidget {
   }
 }
 
-// ====================== SHARED GLASS ANSWER TILE ======================
 class _GlassAnswerTile extends StatelessWidget {
   final String letter;
   final String text;
@@ -641,7 +637,6 @@ class _GlassAnswerTile extends StatelessWidget {
   }
 }
 
-// ====================== MULTIPLE SELECT ======================
 class MultipleAnswerCard extends StatelessWidget {
   final List<AnswerItemModel> answers;
   final Set<int> myAnswersId;
@@ -714,7 +709,6 @@ class MultipleAnswerCard extends StatelessWidget {
   }
 }
 
-// ====================== SINGLE SELECT ======================
 class SingleAnswerCard extends StatelessWidget {
   final List<AnswerItemModel> answers;
   final Set<int> myAnswersId;
@@ -754,7 +748,6 @@ class SingleAnswerCard extends StatelessWidget {
   }
 }
 
-// ====================== TRUE / FALSE ======================
 class TrueFalseAnswerCard extends StatelessWidget {
   final List<AnswerItemModel> answers;
   final Set<int> myAnswersId;
