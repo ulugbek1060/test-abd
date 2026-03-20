@@ -20,25 +20,25 @@ class ChangePswdCubit extends Cubit<ChangePswdState> {
   }) async {
     if (oldPswd.isEmpty) {
       _messageHandler.handleSnackBar(
-        UnknownException('Please fill in the old password'),
+        UnknownErrorMsg('Please fill in the old password'),
       );
       return;
     }
     if (newPswd.isEmpty) {
       _messageHandler.handleSnackBar(
-        UnknownException('Please fill in the new password'),
+        UnknownErrorMsg('Please fill in the new password'),
       );
       return;
     }
     if (confirmPswd.isEmpty) {
       _messageHandler.handleSnackBar(
-        UnknownException('Please fill in the confirm password'),
+        UnknownErrorMsg('Please fill in the confirm password'),
       );
       return;
     }
     if (confirmPswd != newPswd) {
       _messageHandler.handleSnackBar(
-        UnknownException('Please correct the password'),
+        UnknownErrorMsg('Please correct the password'),
       );
       return;
     }
@@ -63,7 +63,7 @@ class ChangePswdCubit extends Cubit<ChangePswdState> {
           state.copyWith(isLoading: false, isSuccess: true, isEditModel: false),
         );
         _messageHandler.handleDialog(
-          SuccessException('Your password has been successfully changed'),
+          SuccessMsg('Your password has been successfully changed'),
         );
       },
     );

@@ -83,26 +83,26 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
     if (state.selectedAccessType == null) {
       _messageHandler.handleDialog(
-        UnknownException("Visibility type is required"),
+        UnknownErrorMsg("Visibility type is required"),
       );
       return;
     }
     if (state.selectedCategory?.id == null) {
-      _messageHandler.handleDialog(UnknownException("Category is required"));
+      _messageHandler.handleDialog(UnknownErrorMsg("Category is required"));
       return;
     }
     if (title.isEmpty) {
-      _messageHandler.handleDialog(UnknownException("Title is required"));
+      _messageHandler.handleDialog(UnknownErrorMsg("Title is required"));
       return;
     }
     if (description.isEmpty) {
-      _messageHandler.handleDialog(UnknownException("Description is required"));
+      _messageHandler.handleDialog(UnknownErrorMsg("Description is required"));
       return;
     }
 
     emit(state.copyWith(isLoading: true));
 
-    Either<AppException, BlockDetailModel> result;
+    Either<Messenger, BlockDetailModel> result;
 
     if (blockId != null) {
       /// update existing block option
@@ -148,7 +148,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
   void successMessage() async {
     _messageHandler.handleDialog(
-      SuccessException("Block created successfully"),
+      SuccessMsg("Block created successfully"),
     );
   }
 }

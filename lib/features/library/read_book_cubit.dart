@@ -113,19 +113,19 @@ class ReadBookCubit extends Cubit<ReadBookState> {
             _sessionRepository.connect(
               session.id!,
               onMessage: (data) {
-                _messageHandler.handleDialog(SuccessException(data.toString()));
+                _messageHandler.handleDialog(SuccessMsg(data.toString()));
               },
               onConnected: () {
-                _messageHandler.handleDialog(UnknownException("connected"));
+                _messageHandler.handleDialog(UnknownErrorMsg("connected"));
               },
               onError: (error) {
                 _messageHandler.handleDialog(
-                  SuccessException(error.toString()),
+                  SuccessMsg(error.toString()),
                 );
               },
               onDisconnected: () {
                 _messageHandler.handleSnackBar(
-                  UnknownException('Disconnected!!'),
+                  UnknownErrorMsg('Disconnected!!'),
                 );
               },
             );
@@ -145,7 +145,7 @@ class ReadBookCubit extends Cubit<ReadBookState> {
       }
     } catch (e) {
       // handel error
-      _messageHandler.handleDialog(UnknownException(e.toString()));
+      _messageHandler.handleDialog(UnknownErrorMsg(e.toString()));
     }
   }
 

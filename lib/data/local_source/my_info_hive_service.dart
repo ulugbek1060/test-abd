@@ -47,7 +47,7 @@ class MyInfoHiveService {
       await _ensureBoxOpen();
       await _box.put(_key, myInfo);
     } catch (e, stackTrace) {
-      throw HiveError('Failed to save user: $e', stackTrace: stackTrace);
+      throw HiveErrorMsg('Failed to save user: $e', stackTrace: stackTrace);
     }
   }
 
@@ -56,7 +56,7 @@ class MyInfoHiveService {
       await _ensureBoxOpen();
       return await _box.get(_key);
     } catch (e, stackTrace) {
-      throw HiveError(
+      throw HiveErrorMsg(
         'Failed to retrieve user: $e',
         stackTrace: stackTrace,
       );
@@ -72,7 +72,7 @@ class MyInfoHiveService {
       await _ensureBoxOpen();
       await _box.clear();
     } catch (e, stackTrace) {
-      throw HiveError('Failed to clear user: $e', stackTrace: stackTrace);
+      throw HiveErrorMsg('Failed to clear user: $e', stackTrace: stackTrace);
     }
   }
 
@@ -81,7 +81,7 @@ class MyInfoHiveService {
       await _box.close();
       await _controller.close();
     } catch (e, stackTrace) {
-      throw HiveError(
+      throw HiveErrorMsg(
         'Failed to close UserDbService: $e',
         stackTrace: stackTrace,
       );

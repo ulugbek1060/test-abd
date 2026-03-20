@@ -3,18 +3,18 @@ import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/domain/books/entities/reading_session_model.dart';
 
 abstract class SessionRepository {
-  Future<Either<AppException, dynamic>> getMySessions({
+  Future<Either<Messenger, dynamic>> getMySessions({
     int? page,
     int? pageSize,
   });
 
-  Future<Either<AppException, ReadingSessionModel>> startSession({
+  Future<Either<Messenger, ReadingSessionModel>> startSession({
     required int bookId,
     required String mode,
     String? friendUsername,
   });
 
-  Future<Either<AppException, dynamic>> joinSession(int sessionId);
+  Future<Either<Messenger, dynamic>> joinSession(int sessionId);
 
   Future<void> connect(
     int sessionId, {

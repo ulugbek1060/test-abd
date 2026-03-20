@@ -76,7 +76,7 @@ class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
     if (state.question?.isCompleted == true) return;
 
     if (questionId == null) {
-      _messageHandler.handleDialog(UnknownException("Question id is null"));
+      _messageHandler.handleDialog(UnknownErrorMsg("Question id is null"));
       return;
     }
 
@@ -133,7 +133,7 @@ class UserQuestionDetailCubit extends Cubit<UserQuestionDetailState> {
     if (state.question?.isCompleted == true) return;
 
     if (questionId == null) {
-      _messageHandler.handleDialog(UnknownException("Question id is null"));
+      _messageHandler.handleDialog(UnknownErrorMsg("Question id is null"));
       return;
     }
 

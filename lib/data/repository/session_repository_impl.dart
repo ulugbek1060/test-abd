@@ -31,7 +31,7 @@ class SessionRepositoryImpl implements SessionRepository {
   void disconnectChat() => _readingSource.disconnectChat();
 
   @override
-  Future<Either<AppException, PagedData<ReadingSessionModel>>> getMySessions({
+  Future<Either<Messenger, PagedData<ReadingSessionModel>>> getMySessions({
     int? page,
     int? pageSize,
   }) async {
@@ -44,27 +44,27 @@ class SessionRepositoryImpl implements SessionRepository {
         count: result.count,
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, dynamic>> joinSession(int sessionId) async {
+  Future<Either<Messenger, dynamic>> joinSession(int sessionId) async {
     try {
       final result = await _readingSource.joinSession(sessionId);
       return Right(result);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, ReadingSessionModel>> startSession({
+  Future<Either<Messenger, ReadingSessionModel>> startSession({
     required int bookId,
     required String mode,
     String? friendUsername,
@@ -76,10 +76,10 @@ class SessionRepositoryImpl implements SessionRepository {
         friendUsername: friendUsername,
       );
       return Right(ReadingSessionModel.fromStartSessionResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 }

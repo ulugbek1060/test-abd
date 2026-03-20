@@ -37,89 +37,89 @@ class AccountRepositoryImpl implements AccountRepository {
       _hiveService.userStream.map((e) => MyInfoModel.fromDb(e));
 
   @override
-  Future<Either<AppException, MyInfoModel>> fetchMyInfo() async {
+  Future<Either<Messenger, MyInfoModel>> fetchMyInfo() async {
     try {
       final result = await _accountSource.getUserInfo();
       final model = MyInfoModel.fromResponse(result);
       final dbModel = MyInfoModel.toDb(model);
       _hiveService.saveMyInfo(dbModel);
       return Right(model);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<NotificationModel>>>
+  Future<Either<Messenger, List<NotificationModel>>>
   getNotifications() async {
     try {
       final result = await _accountSource.notifications();
       final list = result.map(NotificationModel.fromResponse).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, Unit>> getStories() async {
+  Future<Either<Messenger, Unit>> getStories() async {
     try {
       final result = await _accountSource.getStories();
       logger.d(result);
       return Right(unit);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, UserProfileModel>> getUserProfile(
+  Future<Either<Messenger, UserProfileModel>> getUserProfile(
     String username,
   ) async {
     try {
       final result = await _accountSource.getProfile(username);
       return Right(UserProfileModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, UserConnectionsModel>> getUserConnections(
+  Future<Either<Messenger, UserConnectionsModel>> getUserConnections(
     int userId,
   ) async {
     try {
       final result = await _accountSource.getFollowers(userId);
       return Right(UserConnectionsModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, String>> followUser(int userId) async {
+  Future<Either<Messenger, String>> followUser(int userId) async {
     try {
       final result = await _accountSource.followUser(userId);
       return Right(result);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<LeaderboardUser>>> getLeaderboard(
+  Future<Either<Messenger, PagedData<LeaderboardUser>>> getLeaderboard(
     int page,
     int pageSize,
   ) async {
@@ -132,15 +132,15 @@ class AccountRepositoryImpl implements AccountRepository {
         count: result.count,
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, Unit>> updatePersonalInfo(
+  Future<Either<Messenger, Unit>> updatePersonalInfo(
     PersonalInfoDto personalInfoDto,
   ) async {
     try {
@@ -151,82 +151,82 @@ class AccountRepositoryImpl implements AccountRepository {
       final dbModel = MyInfoModel.toDb(model);
       _hiveService.saveMyInfo(dbModel);
       return Right(unit);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<CountryModel>>> getCountries() async {
+  Future<Either<Messenger, List<CountryModel>>> getCountries() async {
     try {
       final result = await _accountSource.getCountries();
       final list = result.map((e) => CountryModel.fromResponse(e)).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<RegionModel>>> getRegions(
+  Future<Either<Messenger, List<RegionModel>>> getRegions(
     int? countryId,
   ) async {
     try {
       final result = await _accountSource.getRegions(countryId);
       final list = result.map((e) => RegionModel.fromResponse(e)).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<DistrictModel>>> getDistricts(
+  Future<Either<Messenger, List<DistrictModel>>> getDistricts(
     int? regionId,
   ) async {
     try {
       final result = await _accountSource.getDistricts(regionId);
       final list = result.map((e) => DistrictModel.fromResponse(e)).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<SettlementModel>>> getSettlements(
+  Future<Either<Messenger, List<SettlementModel>>> getSettlements(
     int? districtId,
   ) async {
     try {
       final result = await _accountSource.getSettlements(districtId);
       final list = result.map((e) => SettlementModel.fromResponse(e)).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, ReferralListModel>> getReferralsList(
+  Future<Either<Messenger, ReferralListModel>> getReferralsList(
     int page,
   ) async {
     try {
       final result = await _accountSource.getReferralsList();
       return Right(ReferralListModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
@@ -238,15 +238,15 @@ class AccountRepositoryImpl implements AccountRepository {
       // final dbModel = MyInfoModel.toDb(models);
       // _hiveService.saveMyInfo(dbModel);
       return Right(result);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, String?>> changePassword({
+  Future<Either<Messenger, String?>> changePassword({
     required String oldPswd,
     required String newPswd,
     required String confirmPswd,
@@ -260,15 +260,15 @@ class AccountRepositoryImpl implements AccountRepository {
         ),
       );
       return Right(result.detail);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<dynamic>>> searchAccount({
+  Future<Either<Messenger, PagedData<dynamic>>> searchAccount({
     required String query,
     required int page,
     required int pageSize,
@@ -277,10 +277,10 @@ class AccountRepositoryImpl implements AccountRepository {
       final result = await _accountSource.search(query, page, pageSize);
       final data = PagedData(data: result);
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 }

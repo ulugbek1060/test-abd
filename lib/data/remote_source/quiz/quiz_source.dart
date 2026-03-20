@@ -102,7 +102,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -120,7 +120,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -143,7 +143,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -166,7 +166,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -185,7 +185,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -197,7 +197,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -212,7 +212,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -227,7 +227,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -245,7 +245,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -259,7 +259,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -284,7 +284,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -310,7 +310,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -324,7 +324,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -342,7 +342,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -354,7 +354,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -366,7 +366,7 @@ class QuizSourceImpl implements QuizSource {
     } on DioException catch (error) {
       throw error.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 }

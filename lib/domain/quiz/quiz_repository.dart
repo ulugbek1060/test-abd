@@ -15,16 +15,16 @@ abstract class QuizRepository {
   // ------------------------------------------------------
   // Blocks
   // ------------------------------------------------------
-  Future<Either<AppException, List<MyBlockModel>>> getMyBlocks();
+  Future<Either<Messenger, List<MyBlockModel>>> getMyBlocks();
 
-  Future<Either<AppException, BlockDetailModel>> createBlock({
+  Future<Either<Messenger, BlockDetailModel>> createBlock({
     required String title,
     required String description,
     required int categoryId,
     required AccessType accessType,
   });
 
-  Future<Either<AppException, BlockDetailModel>> updateBlock({
+  Future<Either<Messenger, BlockDetailModel>> updateBlock({
     required int blockId,
     required String title,
     required String description,
@@ -32,57 +32,57 @@ abstract class QuizRepository {
     required AccessType accessType,
   });
 
-  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId({
+  Future<Either<Messenger, PagedData<BlockModel>>> getBocksByUserId({
     required int userId,
     int? page,
     int? pageSize,
   });
 
-  Future<Either<AppException, BlockDetailModel>> getBlockById(int id);
+  Future<Either<Messenger, BlockDetailModel>> getBlockById(int id);
 
   // ------------------------------------------------------
   // Questions
   // ------------------------------------------------------
-  Future<Either<AppException, QuestionModel>> createQuestion({
+  Future<Either<Messenger, QuestionModel>> createQuestion({
     required CreateQuestionModel model,
   });
 
-  Future<Either<AppException, QuestionModel>> updateQuestion({
+  Future<Either<Messenger, QuestionModel>> updateQuestion({
     required int questionId,
     required CreateQuestionModel model,
   });
 
-  Future<Either<AppException, QuestionModel>> getQuestionById(int questionId);
+  Future<Either<Messenger, QuestionModel>> getQuestionById(int questionId);
 
-  Future<Either<AppException, PagedData<QuestionModel>>> getQuestionsBookmark({
+  Future<Either<Messenger, PagedData<QuestionModel>>> getQuestionsBookmark({
     required int pageSize,
     required int page,
   });
 
-  Future<Either<AppException, PagedData<QuestionModel>>> getUserQuestions(
+  Future<Either<Messenger, PagedData<QuestionModel>>> getUserQuestions(
     int userId,
     int page,
     int pageSize,
   );
 
-  Future<Either<AppException, dynamic>> bookmarkQuestion(int questionId);
+  Future<Either<Messenger, dynamic>> bookmarkQuestion(int questionId);
 
   // ------------------------------------------------------
   // Others
   // ------------------------------------------------------
-  Future<Either<AppException, List<CategoryModel>>> getCategories();
+  Future<Either<Messenger, List<CategoryModel>>> getCategories();
 
-  Future<Either<AppException, PagedData<QuestionModel>>> getFollowedQuestions({
+  Future<Either<Messenger, PagedData<QuestionModel>>> getFollowedQuestions({
     required int page,
     required int pageSize,
   });
 
-  Future<Either<AppException, CheckAnswerModel>> submitAnswer({
+  Future<Either<Messenger, CheckAnswerModel>> submitAnswer({
     required int questionId,
     required Set<int> selectedAnswers,
     int? duration,
   });
 
-  Future<Either<AppException, PagedData<ReadingSessionModel>>>
+  Future<Either<Messenger, PagedData<ReadingSessionModel>>>
   getReadingSessions({int? page, int? pageSize});
 }

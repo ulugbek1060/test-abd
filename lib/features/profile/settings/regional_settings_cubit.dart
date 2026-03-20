@@ -267,22 +267,22 @@ class RegionalSettingsCubit extends Cubit<RegionalSettingsState> {
     if (_personalInfoDto == null) return;
 
     if (state.countries.selected == null) {
-      _appMessageHandler.handleSnackBar(UnknownException('Select country'));
+      _appMessageHandler.handleSnackBar(UnknownErrorMsg('Select country'));
       return;
     }
 
     if (state.regions.selected == null) {
-      _appMessageHandler.handleSnackBar(UnknownException('Select region'));
+      _appMessageHandler.handleSnackBar(UnknownErrorMsg('Select region'));
       return;
     }
 
     if (state.districts.selected == null) {
-      _appMessageHandler.handleSnackBar(UnknownException('Select district'));
+      _appMessageHandler.handleSnackBar(UnknownErrorMsg('Select district'));
       return;
     }
 
     if (state.settlement.selected == null) {
-      _appMessageHandler.handleSnackBar(UnknownException('Select settlement'));
+      _appMessageHandler.handleSnackBar(UnknownErrorMsg('Select settlement'));
       return;
     }
 

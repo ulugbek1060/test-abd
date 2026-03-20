@@ -25,7 +25,7 @@ class QuizRepositoryImpl extends QuizRepository {
   QuizRepositoryImpl(this._quizSource, this._readingSource);
 
   @override
-  Future<Either<AppException, PagedData<QuestionModel>>> getFollowedQuestions({
+  Future<Either<Messenger, PagedData<QuestionModel>>> getFollowedQuestions({
     required int page,
     required int pageSize,
   }) async {
@@ -38,15 +38,15 @@ class QuizRepositoryImpl extends QuizRepository {
         data: result.results.map(QuestionModel.fromFollowedResponse).toList(),
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, CheckAnswerModel>> submitAnswer({
+  Future<Either<Messenger, CheckAnswerModel>> submitAnswer({
     required int questionId,
     required Set<int> selectedAnswers,
     int? duration,
@@ -58,15 +58,15 @@ class QuizRepositoryImpl extends QuizRepository {
         duration,
       );
       return Right(CheckAnswerModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<BlockModel>>> getBocksByUserId({
+  Future<Either<Messenger, PagedData<BlockModel>>> getBocksByUserId({
     required int userId,
     int? page,
     int? pageSize,
@@ -83,15 +83,15 @@ class QuizRepositoryImpl extends QuizRepository {
         data: result.results.map(BlockModel.fromResponse).toList(),
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<QuestionModel>>> getUserQuestions(
+  Future<Either<Messenger, PagedData<QuestionModel>>> getUserQuestions(
     int userId,
     int page,
     int pageSize,
@@ -108,15 +108,15 @@ class QuizRepositoryImpl extends QuizRepository {
         count: result.count,
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<QuestionModel>>> getQuestionsBookmark({
+  Future<Either<Messenger, PagedData<QuestionModel>>> getQuestionsBookmark({
     required int pageSize,
     required int page,
   }) async {
@@ -128,41 +128,41 @@ class QuizRepositoryImpl extends QuizRepository {
         previous: result.previous,
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<MyBlockModel>>> getMyBlocks() async {
+  Future<Either<Messenger, List<MyBlockModel>>> getMyBlocks() async {
     try {
       final result = await _quizSource.getMyBlocks();
       final list = result.map(MyBlockModel.fromResponse).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, List<CategoryModel>>> getCategories() async {
+  Future<Either<Messenger, List<CategoryModel>>> getCategories() async {
     try {
       final result = await _quizSource.getCategories();
       final list = result.map(CategoryModel.fromResponse).toList();
       return Right(list);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, BlockDetailModel>> createBlock({
+  Future<Either<Messenger, BlockDetailModel>> createBlock({
     required String title,
     required String description,
     required int categoryId,
@@ -176,15 +176,15 @@ class QuizRepositoryImpl extends QuizRepository {
         accessType,
       );
       return Right(BlockDetailModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, BlockDetailModel>> updateBlock({
+  Future<Either<Messenger, BlockDetailModel>> updateBlock({
     required int blockId,
     required String title,
     required String description,
@@ -200,15 +200,15 @@ class QuizRepositoryImpl extends QuizRepository {
         accessType,
       );
       return Right(BlockDetailModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, QuestionModel>> createQuestion({
+  Future<Either<Messenger, QuestionModel>> createQuestion({
     required CreateQuestionModel model,
   }) async {
     try {
@@ -230,15 +230,15 @@ class QuizRepositoryImpl extends QuizRepository {
       );
       final result = await _quizSource.createQuestion(data);
       return Right(QuestionModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, QuestionModel>> updateQuestion({
+  Future<Either<Messenger, QuestionModel>> updateQuestion({
     required int questionId,
     required CreateQuestionModel model,
   }) async {
@@ -261,53 +261,53 @@ class QuizRepositoryImpl extends QuizRepository {
       );
       final result = await _quizSource.updateQuestion(questionId, data);
       return Right(QuestionModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, BlockDetailModel>> getBlockById(int id) async {
+  Future<Either<Messenger, BlockDetailModel>> getBlockById(int id) async {
     try {
       final result = await _quizSource.getBlockById(id);
       return Right(BlockDetailModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, QuestionModel>> getQuestionById(
+  Future<Either<Messenger, QuestionModel>> getQuestionById(
     int questionId,
   ) async {
     try {
       final result = await _quizSource.getQuestionById(questionId);
       return Right(QuestionModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, dynamic>> bookmarkQuestion(int questionId) async {
+  Future<Either<Messenger, dynamic>> bookmarkQuestion(int questionId) async {
     try {
       final result = await _quizSource.bookmarkQuestions(questionId);
       return Right(result);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<ReadingSessionModel>>>
+  Future<Either<Messenger, PagedData<ReadingSessionModel>>>
   getReadingSessions({int? page,  int? pageSize}) async {
     try {
       final result = await _readingSource.getMySessions(page, pageSize);
@@ -318,10 +318,10 @@ class QuizRepositoryImpl extends QuizRepository {
         count: result.count,
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnknownException(e.toString(), stackTrace: stackTrace));
+      return Left(UnknownErrorMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 }

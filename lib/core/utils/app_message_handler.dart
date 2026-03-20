@@ -4,81 +4,16 @@ import 'package:testabd/core/errors/app_exception.dart';
 import 'package:testabd/l10n/l10n_extension.dart';
 import 'package:testabd/router/app_router.dart';
 
-enum MessageType { info, success, warning, error }
-
-extension MessageTypeX on MessageType {
-  Color getColor(BuildContext context) {
-    switch (this) {
-      case MessageType.success:
-        return Colors.green;
-      case MessageType.warning:
-        return Colors.orange;
-      case MessageType.error:
-        return Theme.of(context).colorScheme.error;
-      case MessageType.info:
-        return Theme.of(context).colorScheme.primary;
-    }
-  }
-
-  IconData get icon {
-    switch (this) {
-      case MessageType.success:
-        return Icons.check_circle_outline;
-      case MessageType.warning:
-        return Icons.warning_amber_rounded;
-      case MessageType.error:
-        return Icons.error_outline;
-      case MessageType.info:
-        return Icons.info_outline;
-    }
-  }
-}
-
-extension MessageTypeXOnAppException on AppException {
-  MessageType getMessageType() {
-    switch (runtimeType) {
-      case NetworkException _:
-      case TimeoutException _:
-        return MessageType.warning;
-      case BadRequestException _:
-        return MessageType.warning;
-      case UnauthorizedException _:
-        return MessageType.error;
-      case NotFoundException _:
-        return MessageType.info;
-      case ServerException _:
-        return MessageType.error;
-      case HiveError _:
-        return MessageType.error;
-      case UnknownException _:
-      default:
-        return MessageType.error;
-    }
-  }
-
-  String title(BuildContext context) {
-    if (this is NetworkException || this is TimeoutException) {
-      return context.l10n.error_timeout_title;
-    } else if (this is BadRequestException) {
-      return context.l10n.error_bad_request_title;
-    } else if (this is UnauthorizedException) {
-      return context.l10n.error_unauthorized_title;
-    } else if (this is NotFoundException) {
-      return context.l10n.error_not_found_title;
-    } else if (this is ServerException) {
-      return context.l10n.error_server_title;
-    } else if (this is HiveError) {
-      return context.l10n.error_storage_title;
-    } else {
-      return context.l10n.error_unknown_title;
-    }
-  }
-}
-
 abstract class AppMessageHandler {
-  void handleDialog(AppException exception);
+  void handleDialog(
+    Messenger exception, {
+    (String, VoidCallback)? secondaryAction,
+  });
 
-  void handleSnackBar(AppException exception);
+  void handleSnackBar(
+    Messenger exception, {
+    (String, VoidCallback)? secondaryAction,
+  });
 }
 
 @Singleton(as: AppMessageHandler)
@@ -89,81 +24,190 @@ class AppMessenger implements AppMessageHandler {
   bool _isSnackBarEnabled = false;
 
   @override
-  void handleDialog(AppException exception) async {
+  void handleDialog(
+    Messenger exception, {
+    (String, VoidCallback)? secondaryAction,
+  }) async {
     if (_isDialogEnabled) return;
     _isDialogEnabled = true;
-    showModalBottomSheet(
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final title = exception.title(context);
+    final message = exception.message;
+    final type = exception.getMessageType();
+    final accentColor = type.getColor(context);
+    final icon = type.icon;
+
+    // TODO Make secondaryAction for each type
+    await showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withOpacity(0.5),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) {
-        final theme = Theme.of(context);
-
-        final title = exception.title(context);
-        final message = exception.message;
-        final type = exception.getMessageType();
-        final color = type.getColor(context);
-
+      builder: (sheetContext) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // drag handle
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.dividerColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+          padding: MediaQuery.of(sheetContext).viewInsets, // ← keyboard support
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(28),
               ),
-              const SizedBox(height: 16),
-
-              Icon(type.icon, size: 48, color: color),
-              const SizedBox(height: 12),
-
-              Text(
-                title,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.12),
+                  blurRadius: 16,
+                  offset: const Offset(0, -4),
                 ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 8),
-
-              Text(
-                message,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Modern drag handle (thicker + more contrast)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, bottom: 8),
+                  child: Container(
+                    width: 42,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onSurfaceVariant.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 8),
 
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'),
+                // Animated icon area
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return Transform.scale(
+                      scale: 0.85 + value * 0.15,
+                      child: Opacity(opacity: value, child: child),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: accentColor.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(icon, size: 56, color: accentColor),
+                  ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 24),
+
+                // Title
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    title,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: colorScheme.onSurface,
+                      height: 1.24,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Message
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    message,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      height: 1.4,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Buttons area
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
+                  child: Row(
+                    children: [
+                      // Optional secondary button (e.g. "Retry", "Details")
+                      if (secondaryAction != null) ...[
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.pop(sheetContext);
+                              secondaryAction.$2.call();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              side: BorderSide(
+                                color: accentColor.withOpacity(0.6),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: Text(
+                              secondaryAction.$1,
+                              style: TextStyle(color: accentColor),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+
+                      // Primary button
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () => Navigator.pop(sheetContext),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: accentColor,
+                            foregroundColor: colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 1,
+                          ),
+                          child: const Text(
+                            'Got it',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
-    ).then((_) {
-      _isDialogEnabled = false;
-    });
+    );
+
+    _isDialogEnabled = false;
   }
 
   @override
-  void handleSnackBar(AppException exception) {
+  void handleSnackBar(
+    Messenger exception, {
+    (String, VoidCallback)? secondaryAction,
+  }) {
     if (_isSnackBarEnabled) return;
     _isSnackBarEnabled = true;
     ScaffoldMessenger.of(

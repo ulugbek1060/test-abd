@@ -16,52 +16,52 @@ import 'package:testabd/domain/account/entities/user_profile_model.dart';
 abstract class AccountRepository {
   Stream<MyInfoModel?> get userInfoStream;
 
-  Future<Either<AppException, MyInfoModel>> fetchMyInfo();
+  Future<Either<Messenger, MyInfoModel>> fetchMyInfo();
 
-  Future<Either<AppException, List<NotificationModel>>> getNotifications();
+  Future<Either<Messenger, List<NotificationModel>>> getNotifications();
 
-  Future<Either<AppException, Unit>> getStories();
+  Future<Either<Messenger, Unit>> getStories();
 
-  Future<Either<AppException, UserProfileModel>> getUserProfile(
+  Future<Either<Messenger, UserProfileModel>> getUserProfile(
     String username,
   );
 
-  Future<Either<AppException, UserConnectionsModel>> getUserConnections(
+  Future<Either<Messenger, UserConnectionsModel>> getUserConnections(
     int userId,
   );
 
-  Future<Either<AppException, String>> followUser(int userId);
+  Future<Either<Messenger, String>> followUser(int userId);
 
-  Future<Either<AppException, PagedData<LeaderboardUser>>> getLeaderboard(
+  Future<Either<Messenger, PagedData<LeaderboardUser>>> getLeaderboard(
     int page,
     int pageSize,
   );
 
-  Future<Either<AppException, Unit>> updatePersonalInfo(
+  Future<Either<Messenger, Unit>> updatePersonalInfo(
     PersonalInfoDto personalInfoDto,
   );
 
-  Future<Either<AppException, List<CountryModel>>> getCountries();
+  Future<Either<Messenger, List<CountryModel>>> getCountries();
 
-  Future<Either<AppException, List<DistrictModel>>> getDistricts(int? regionId);
+  Future<Either<Messenger, List<DistrictModel>>> getDistricts(int? regionId);
 
-  Future<Either<AppException, List<RegionModel>>> getRegions(int? countryId);
+  Future<Either<Messenger, List<RegionModel>>> getRegions(int? countryId);
 
-  Future<Either<AppException, List<SettlementModel>>> getSettlements(
+  Future<Either<Messenger, List<SettlementModel>>> getSettlements(
     int? districtId,
   );
 
-  Future<Either<AppException, ReferralListModel>> getReferralsList(int page);
+  Future<Either<Messenger, ReferralListModel>> getReferralsList(int page);
 
   Future<dynamic> updateProfileImage(String path);
 
-  Future<Either<AppException, String?>> changePassword({
+  Future<Either<Messenger, String?>> changePassword({
     required String oldPswd,
     required String newPswd,
     required String confirmPswd,
   });
 
-  Future<Either<AppException, PagedData<dynamic>>> searchAccount({
+  Future<Either<Messenger, PagedData<dynamic>>> searchAccount({
     required String query,
     required int page,
     required int pageSize,

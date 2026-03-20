@@ -37,7 +37,7 @@ class _ShellScreenState extends State<ShellScreen> {
     final userLocal = locator<MyInfoHiveService>();
     final userId = await userLocal.userStream.first;
     _notificationsSource.connectWebSocket(userId?.id ?? 0, (data) {
-      locator<AppMessageHandler>().handleDialog(SuccessException('Test completed'));
+      locator<AppMessageHandler>().handleDialog(SuccessMsg('Test completed'));
     });
   }
 

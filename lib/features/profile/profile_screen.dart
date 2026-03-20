@@ -11,7 +11,6 @@ import 'package:testabd/core/theme/app_images.dart';
 import 'package:testabd/core/utils/formatters.dart';
 import 'package:testabd/core/widgets/loading_widget.dart';
 import 'package:testabd/di/app_config.dart';
-import 'package:testabd/core/enums/difficulty.dart';
 import 'package:testabd/domain/books/entities/book_model.dart';
 import 'package:testabd/domain/entity/answer_item_model.dart';
 import 'package:testabd/domain/entity/question_model.dart';

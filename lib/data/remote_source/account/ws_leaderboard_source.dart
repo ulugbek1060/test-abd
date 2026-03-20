@@ -33,7 +33,7 @@ class WsLeaderboardSourceImpl implements WsLeaderboardSource {
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 }

@@ -39,13 +39,13 @@ class AuthSourceImpl implements AuthSource {
       return UserRegisterResponse.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw BadRequestException(
+        throw BadRequestMsg(
           e.response?.data['username'].toString() ?? "Unknown error",
         );
       }
       throw e.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -61,7 +61,7 @@ class AuthSourceImpl implements AuthSource {
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -76,7 +76,7 @@ class AuthSourceImpl implements AuthSource {
     } on DioException catch (e) {
       throw e.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 
@@ -88,11 +88,11 @@ class AuthSourceImpl implements AuthSource {
       return response.data;
     } on DioException catch (e) {
       if (e.response?.statusCode == 403) {
-        throw BadRequestException(e.response?.data['detail']);
+        throw BadRequestMsg(e.response?.data['detail']);
       }
       throw e.handleDioException();
     } catch (e, stackTrace) {
-      throw UnknownException(e.toString(), stackTrace: stackTrace);
+      throw UnknownErrorMsg(e.toString(), stackTrace: stackTrace);
     }
   }
 }

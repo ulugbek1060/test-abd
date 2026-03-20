@@ -16,7 +16,7 @@ class BooksRepositoryImpl implements BooksRepository {
   BooksRepositoryImpl(this._booksSource);
 
   @override
-  Future<Either<AppException, PagedData<BookModel>>> getBooks() async {
+  Future<Either<Messenger, PagedData<BookModel>>> getBooks() async {
     try {
       final result = await _booksSource.getBooks();
       final data = PagedData(
@@ -26,15 +26,15 @@ class BooksRepositoryImpl implements BooksRepository {
         data: result.results.map(BookModel.fromResponse).toList(),
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, PagedData<AuthorModel>>> getAuthors() async {
+  Future<Either<Messenger, PagedData<AuthorModel>>> getAuthors() async {
     try {
       final result = await _booksSource.getAuthor();
       final data = PagedData(
@@ -44,49 +44,49 @@ class BooksRepositoryImpl implements BooksRepository {
         data: result.results.map(AuthorModel.fromResponse).toList(),
       );
       return Right(data);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   ///  -------------------------------------------------------------------------
   @override
-  Future<Either<AppException, dynamic>> bookDashboard() async {
+  Future<Either<Messenger, dynamic>> bookDashboard() async {
     try {
       final result = await _booksSource.getDashboard();
       return Right(result);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, AuthorDetailModel>> getAuthorById(
+  Future<Either<Messenger, AuthorDetailModel>> getAuthorById(
     int authorId,
   ) async {
     try {
       final result = await _booksSource.getAuthorById(authorId);
       return Right(AuthorDetailModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, BookDetailModel>> getBookById(int bookId) async {
+  Future<Either<Messenger, BookDetailModel>> getBookById(int bookId) async {
     try {
       final result = await _booksSource.getBookById(bookId);
       return Right(BookDetailModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 }

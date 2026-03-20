@@ -20,7 +20,7 @@ class AuthRepositoryImpl implements AuthRepository {
   );
 
   @override
-  Future<Either<AppException, RegisterModel>> register({
+  Future<Either<Messenger, RegisterModel>> register({
     required String username,
     required String email,
     required String password,
@@ -34,15 +34,15 @@ class AuthRepositoryImpl implements AuthRepository {
         referralCode,
       );
       return Right(RegisterModel.fromResponse(result));
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, Unit>> login(
+  Future<Either<Messenger, Unit>> login(
     String username,
     String password,
   ) async {
@@ -55,35 +55,35 @@ class AuthRepositoryImpl implements AuthRepository {
       await _tokenService.saveToken(tokenData);
       await _sessionService.saveSessionStatus(SessionStatus.authenticated);
       return Right(unit);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, Unit>> logout() async {
+  Future<Either<Messenger, Unit>> logout() async {
     try {
       _tokenService.clear();
       _sessionService.clear();
       return Right(unit);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 
   @override
-  Future<Either<AppException, Unit>> forgotPassword(String email) async {
+  Future<Either<Messenger, Unit>> forgotPassword(String email) async {
     try {
       await _authSource.resendVerificationEmail(email);
       return Right(unit);
-    } on AppException catch (e) {
+    } on Messenger catch (e) {
       return Left(e);
     } catch (e, stackTrace) {
-      return Left(UnauthorizedException(e.toString(), stackTrace: stackTrace));
+      return Left(UnauthorizedMsg(e.toString(), stackTrace: stackTrace));
     }
   }
 }

@@ -84,8 +84,8 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     ]);
 
     final categoriesResult =
-        results[0] as Either<AppException, List<CategoryModel>>;
-    final blocksResult = results[1] as Either<AppException, List<MyBlockModel>>;
+        results[0] as Either<Messenger, List<CategoryModel>>;
+    final blocksResult = results[1] as Either<Messenger, List<MyBlockModel>>;
 
     List<CategoryModel>? categories;
     List<MyBlockModel>? blocks;
@@ -114,11 +114,11 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
     final categoryId = state.selectedCategory?.id;
 
     if (categoryId == null) {
-      _appMessageHandler.handleDialog(UnknownException("Category id is null"));
+      _appMessageHandler.handleDialog(UnknownErrorMsg("Category id is null"));
       return;
     }
     if (blockId == null) {
-      _appMessageHandler.handleDialog(UnknownException("Block id is null"));
+      _appMessageHandler.handleDialog(UnknownErrorMsg("Block id is null"));
       return;
     }
 
@@ -133,7 +133,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
       answers: state.answers,
     );
 
-    Either<AppException, QuestionModel> result;
+    Either<Messenger, QuestionModel> result;
 
     if (questionId != null) {
       /// update a existing question
@@ -162,7 +162,7 @@ class CreateQuestionCubit extends Cubit<CreateQuestionState> {
 
   void successMessage() {
     _appMessageHandler.handleSnackBar(
-      SuccessException("Question created successfully"),
+      SuccessMsg("Question created successfully"),
     );
     _updateListener.onUpdate();
   }
