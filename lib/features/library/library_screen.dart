@@ -30,15 +30,10 @@ class _View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return RefreshIndicator(
       onRefresh: context.read<LibraryCubit>().refresh,
       color: theme.colorScheme.primary,
       child: Scaffold(
-        backgroundColor: isDark
-            ? const Color(0xFF0F0F17)
-            : const Color(0xFFF8F9FF),
         appBar: AppBar(
           title: const Text(
             'My Library',
@@ -53,7 +48,7 @@ class _View extends StatelessWidget {
         body: BlocBuilder<LibraryCubit, LibraryState>(
           builder: (context, state) {
             if (state.booksState.isLoading && state.authorsState.isLoading) {
-              return const ProgressView();
+              return const ProgressView.medium();
             }
 
             return CustomScrollView(
@@ -206,28 +201,9 @@ class AuthorItem extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
                 color: Theme.of(context).colorScheme.onSurface,
-                // shadows: [
-                //   Shadow(
-                //     blurRadius: 6,
-                //     color: Colors.black54,
-                //     offset: Offset(0, 2),
-                //   ),
-                // ],
               ),
             ),
           ),
-
-          // Optional: small subtitle (e.g. books count, genre, country)
-          // if (author.subtitle != null) ...[
-          //   const SizedBox(height: 2),
-          //   Text(
-          //     author.subtitle!,
-          //     style: TextStyle(
-          //       fontSize: 11,
-          //       color: Colors.white.withOpacity(0.65),
-          //     ),
-          //   ),
-          // ],
         ],
       ),
     );
@@ -265,7 +241,7 @@ class BooksSection extends StatelessWidget {
               child: Text(
                 'No books yet...\nStart reading!',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ),
           );

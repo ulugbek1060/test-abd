@@ -88,7 +88,6 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         return Scaffold(
@@ -175,17 +174,18 @@ class _ViewState extends State<_View> with SingleTickerProviderStateMixin {
                             ),
                             labelStyle: const TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 15.5,
+                              fontSize: 12,
                             ),
                             unselectedLabelStyle: const TextStyle(
                               fontWeight: FontWeight.w600,
+                              fontSize: 10,
                             ),
                             labelColor: scheme.onSurface,
                             unselectedLabelColor: scheme.onSurface.withOpacity(
                               0.6,
                             ),
                             indicatorColor: scheme.primary,
-                            indicatorWeight: 3,
+                            indicatorWeight: 2,
                             tabs: [
                               Tab(text: context.l10n.questions),
                               Tab(text: context.l10n.blockTest),
@@ -554,7 +554,7 @@ class _StatCard extends StatelessWidget {
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -565,7 +565,7 @@ class _StatCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 14.5,
+              fontSize: 13,
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
