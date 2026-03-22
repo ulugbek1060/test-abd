@@ -360,7 +360,7 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRouter.testMain,
-              builder: (_, state) => const TestScreen(),
+              builder: (_, state) => const QuestionsSwipeScreen(),
             ),
           ],
         ),
