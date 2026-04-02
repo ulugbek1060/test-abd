@@ -1,4 +1,4 @@
-<img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="72"/>
+<img src="assets/images/logo.png" width="72"/>
 
 # TestAbd
 
