@@ -1,3 +1,5 @@
+<img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="72"/>
+
 # TestAbd
 
 **TestAbd** is a social quiz and learning platform built with Flutter. Users can answer and create quiz questions, read books, follow other learners, and compete on leaderboards — all in one app.
